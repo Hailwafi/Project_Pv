@@ -22,21 +22,21 @@ class LoginController extends Controller
         if (config('app.recaptcha_enabled')) {
             $validator->after(function ($validator) use ($request) {
                 $recaptchaResponse = $request->input('g-recaptcha-response');
-                
+
                 if (!$recaptchaResponse || !NoCaptcha::verifyResponse($recaptchaResponse)) {
                     $validator->errors()->add('g-recaptcha-response', 'ReCAPTCHA validation failed.');
                 }
             });
-        }        
-        
-        if ($validator->fails()) 
+        }
+
+        if ($validator->fails())
         {
             return response()->json($validator->errors(), 422);
         }
 
-        $credentials = $request->only('email', 'username', 'password');
+        $credentials = $request->only('email', 'username', 'role', 'password');
 
-        if (!$token = auth()->guard('api')->attempt($credentials)) 
+        if (!$token = auth()->guard('api')->attempt($credentials))
         {
             return response()->json([
                 'success' => false,
@@ -46,7 +46,7 @@ class LoginController extends Controller
 
         return response()->json([
             'success' => true,
-            'user' => auth()->guard('api')->user()->only(['email', 'username', 'role']),
+            'user' => auth()->guard('api')->user()->only(['email', 'username']),
             'permissions' => auth()->guard('api')->user()->getAllPermissions()->pluck('name'),
             'token' => $token,
         ], 200);
