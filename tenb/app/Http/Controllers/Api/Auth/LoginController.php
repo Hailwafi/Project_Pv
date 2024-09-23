@@ -34,7 +34,7 @@ class LoginController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $credentials = $request->only('email', 'username', 'role', 'password');
+        $credentials = $request->only('email', 'username', 'password');
 
         if (!$token = auth()->guard('api')->attempt($credentials)) 
         {
