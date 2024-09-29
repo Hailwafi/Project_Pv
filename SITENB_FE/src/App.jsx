@@ -42,7 +42,7 @@ import ListUser from "./pages/Dashboard/Admin/ListUser"
 import TambahUser from "./pages/Dashboard/Admin/TambahUser"
 
 import withAuthenticationAdmin from './service/withAuthenticationAdmin'; 
-import withAuthenticationKepala from './service/withAuthenticationKepala'; 
+import withAuthenticationLeader from './service/withAuthenticationLeader'; 
 import withAuthenticationStaff from './service/withAuthenticationStaff'; 
 
 const App = () => {
@@ -66,6 +66,8 @@ const App = () => {
 
 
   <Route path='/Dashboard/*' element={<AdminLayout />} />
+  <Route path='/Leader/*' element={<LeaderLayout />} />
+  <Route path='/Staff/*' element={<StaffLayout />} />
         
           </Routes>
         </div>
@@ -95,4 +97,30 @@ const AdminLayout = withAuthenticationAdmin(() => (
   </>
 ));
 
+const LeaderLayout = withAuthenticationLeader(() => (
+  <>
+    <NavbarDb />
+    <div>
+      <Routes>
+        <Route path="/" element={<Dashboard/>}/>
+     
+    
+      </Routes>
+    </div>
+  </>
+));
+
+const StaffLayout = withAuthenticationStaff(() => (
+  <>
+    <NavbarDb />
+    <div>
+      <Routes>
+        <Route path="/" element={<Dashboard/>}/>
+      
+    
+      </Routes>
+    </div>
+  </>
+));
+ 
 export default App;

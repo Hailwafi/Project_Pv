@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-
+// withAuthenticationAdmin.jsx
 const withAuthenticationAdmin = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
 
+    console.log('Token:', token);
+    console.log('Role:', role);
 
-    // Tambahkan pengalihan jika pengguna tidak terotentikasi
-    if (localStorage.getItem('token') == "") {
+    if (!token || token === "") {
       return <Navigate to="/login" />;
     }
-   
-    if (localStorage.getItem('role') != "admin") {
-      return <Navigate to="/login" />;
+
+    if (role !== "admin") {
+      return <Navigate to="/" />; // Atau rute lain yang sesuai
     }
 
-    // Kembalikan komponen terotentikasi jika pengguna terotentikasi
     return <WrappedComponent {...props} />;
   };
 
   return AuthenticatedComponent;
 };
-
 export default withAuthenticationAdmin;
+

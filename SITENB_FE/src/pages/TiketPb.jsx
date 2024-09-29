@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
-import NavbarDb from '../components/NavbarDb';
+import Navbar from '../components/Navbar';
 
 const TiketPb = () => {
 
   return (
     <>
       <div className='relative isolate px-4 pt-24 sm:px-6 lg:px-8'>
-        <NavbarDb />
+        <Navbar/>
 
 
   <div className='flex justify-between items-center'>

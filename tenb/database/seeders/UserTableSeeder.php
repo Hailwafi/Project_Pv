@@ -30,18 +30,18 @@ class UserTableSeeder extends Seeder
         //assign role with permission to user
         $user = User::find(1);
         $user->assignRole($role->name);
-        
+
     // Kepala Subbag
         //create data kepala subbag
         User::create([
-            'email'         => 'gemilang parhadiyan@gmail.com',
+            'email'         => 'gemilangparhadiyan@gmail.com',
             'username'      => 'gemilang parhadiyan',
-            'role'          => 'kepala subbag',
+            'role'          => 'kepala_subbag',
             'password'      => bcrypt('123'),
         ]);
 
         $role = Role::find(2);
-        $permissions = Permission::whereIn('name', 
+        $permissions = Permission::whereIn('name',
         [
             'users.create',
             'posts.index',
@@ -76,36 +76,36 @@ class UserTableSeeder extends Seeder
 
         //assign role with permission to kepala subbag
         $user = User::find(2);
-        $user->assignRole($role->name); 
+        $user->assignRole($role->name);
 
     // Staf
         $stafData = [
             [
-                'email'    => 'yovi roinaldo@gmail.com',
+                'email'    => 'yoviroinaldo@gmail.com',
                 'username' => 'yovi roinaldo',
                 'role'     => 'staf',
                 'password' => bcrypt('datacenter'),
             ],
             [
-                'email'    => 'dini hariyani@gmail.com',
+                'email'    => 'dinihariyani@gmail.com',
                 'username' => 'dini hariyani',
                 'role'     => 'staf',
                 'password' => bcrypt('biwara'),
             ],
             [
-                'email'    => 'stepanus andy@gmail.com',
+                'email'    => 'stepanusandy@gmail.com',
                 'username' => 'stepanus andy',
                 'role'     => 'staf',
                 'password' => bcrypt('siber'),
             ],
             [
-                'email'    => 'andre rizki@gmail.com',
+                'email'    => 'andrerizki@gmail.com',
                 'username' => 'andre rizki',
                 'role'     => 'staf',
                 'password' => bcrypt('biologi'),
             ],
             [
-                'email'    => 'rizky pahlawan@gmail.com',
+                'email'    => 'rizkypahlawan@gmail.com',
                 'username' => 'rizky pahlawan',
                 'role'     => 'staf',
                 'password' => bcrypt('pildunasik'),
@@ -127,7 +127,7 @@ class UserTableSeeder extends Seeder
         $role->syncPermissions($permissions);
 
         // loop melalui data staf dan buat user
-        foreach ($stafData as $staf) 
+        foreach ($stafData as $staf)
         {
             $user = User::create($staf);
 

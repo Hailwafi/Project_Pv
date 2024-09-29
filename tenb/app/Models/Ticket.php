@@ -12,14 +12,14 @@ class Ticket extends Model
     protected $table = 'tickets';
 
     protected $fillable = [
-        'nama_lengkap', 
-        'jabatan', 
-        'kategori', 
-        'sub_kategori', 
-        'email', 
+        'nama_lengkap',
+        'jabatan',
+        'kategori',
+        'sub_kategori',
+        'email',
         'nomor_induk_pegawai',
-        'jenis_tiket', 
-        'deskripsi', 
+        'jenis_tiket',
+        'deskripsi',
         'unggah_file',
         'status',
         'assigned_to',
@@ -27,9 +27,8 @@ class Ticket extends Model
     ];
 
     // Relasi ke model User untuk assigned staff
-    public function assignedTo()
+    public function assignedStaff()
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }
 }
-

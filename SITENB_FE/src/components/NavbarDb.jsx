@@ -14,6 +14,10 @@ const navigation = [
   {name: 'Pantau pekerjaan', href: '/Dashboard/WorkStaff',role: 'admin' },
   {name: 'Users', href: '/Dashboard/ListUser',role: 'admin' },
 
+  {name: 'Dashboard', href: '/Leader',role: 'kepala_subbag'},
+  {name: 'Tiket', href: '/Leader/Tiket',role: 'kepala_subbag' },
+  {name: 'Pantau pekerjaan', href: '/Leader/WorkStaff',role: 'kepala_subbag' },
+
 ]
 
 const NavbarDb =({  })  => {

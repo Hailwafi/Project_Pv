@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
     // lupa password
         Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
         Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
-        
+
     // notifikasi
         Route::get('/notifications', function() {
             return auth()->user()->notifications;
@@ -55,12 +55,12 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:posts.index|posts.store|posts.update|posts.delete');
 
         // permissions
-            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function () 
+            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function ()
             {
                 Route::get('/permissions', [App\Http\Controllers\Api\Admin\PermissionController::class, 'index']);
                 Route::get('/permissions/all', [App\Http\Controllers\Api\Admin\PermissionController::class, 'all']);
             });
-                        
+
         // roles
             Route::apiResource('/roles', App\Http\Controllers\Api\Admin\RoleController::class)
             ->middleware('permission:roles.index|roles.store|roles.update|roles.delete');
@@ -95,7 +95,7 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:publiks.update-status');
 
             Route::put('publiks/{id}/assign', [App\Http\Controllers\PublikController::class, 'assignPublik'])
-            ->middleware('permission:publiks.assign-ticket');           
+            ->middleware('permission:publiks.assign-ticket');
     });
 });
 
@@ -127,12 +127,12 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:posts.index|posts.store|posts.update|posts.delete');
 
         // permissions
-            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function () 
+            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function ()
             {
                 Route::get('/permissions', [App\Http\Controllers\Api\Admin\PermissionController::class, 'index']);
                 Route::get('/permissions/all', [App\Http\Controllers\Api\Admin\PermissionController::class, 'all']);
             });
-                        
+
         // roles
             Route::apiResource('/roles', App\Http\Controllers\Api\Admin\RoleController::class)
             ->middleware('permission:roles.index|roles.store|roles.update|roles.delete');
@@ -168,7 +168,7 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:publiks.update-status');
 
             Route::put('publiks/{id}/assign', [App\Http\Controllers\PublikController::class, 'assignPublik'])
-            ->middleware('permission:publiks.assign-ticket');           
+            ->middleware('permission:publiks.assign-ticket');
     });
 });
 
@@ -179,10 +179,14 @@ use Illuminate\Support\Facades\Route;
 
         // group route with middleware "auth"
             Route::group(['middleware' => 'auth:api'], function () {
-            
+
             // logout
             Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
         });
+
+   // dashboard
+   Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
+
 
        // notifikasi
             Route::get('/notifications', function() {
@@ -203,6 +207,6 @@ use Illuminate\Support\Facades\Route;
 
         // bukti pengerjaan ticket pegawai dan publik
             Route::post('/tickets/{ticket}/proof-of-work', [App\Http\Controllers\ProofOfWorkController::class, 'store'])
-            ->middleware('permission:proof_of_works.create');    
+            ->middleware('permission:proof_of_works.create');
     });
 });

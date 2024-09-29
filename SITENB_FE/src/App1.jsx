@@ -11,6 +11,7 @@ import Ck_Tiket from "./pages/Ck_Tiket"
 import Ft_pass from "./pages/Ft_pass"
 
 import From from "./pages/From"
+import FromPb from "./pages/FromPb"
 import Dashboard from "./pages/Dashboard"
 
 import FormModal from "./components/FormModal"
@@ -25,7 +26,7 @@ import ProductTable from "./pages/Dashboard/Staff/ProductTable"
 import Task from "./pages/Dashboard/Staff/Task"
 
 import TiketPb from "./pages/TiketPb"
-// import TiketPw from "./pages/TiketPw"
+import TiketPw from "./pages/TiketPw"
 
 
 import Tiket from "./pages/Dashboard/Tiket"
@@ -71,6 +72,7 @@ function App(){
   <Route path="/Ch_pass" element={<Ch_pass/>}/>
   <Route path="/Ck_Tiket" element={<Ck_Tiket/>}/>
   <Route path="/From" element={<From/>}/>
+  <Route path="/FromPb" element={<FromPb/>}/>
    <Route path="/Tes" element={<Tes/>}/>
   <Route path="/Tes2" element={<Tes2/>}/>
   <Route path="/Tes3" element={<Tes3/>}/>
@@ -85,7 +87,7 @@ function App(){
   <Route path="/ListUser" element={<ListUser/>}/> 
   <Route path="/TambahUser" element={<TambahUser/>}/> 
   <Route path="/TiketPb" element={<TiketPb/>}/> 
-  {/* <Route path="/TiketPw" element={<TiketPw/>}/>  */}
+  <Route path="/TiketPw" element={<TiketPw/>}/> 
 </Routes>
 </BrowserRouter>
 </>

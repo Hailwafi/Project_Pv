@@ -12,19 +12,20 @@ class Publik extends Model
     protected $table = 'publiks';
 
     protected $fillable = [
-        'nama_lengkap', 
-        'kategori', 
-        'sub_kategori', 
-        'email', 
-        'jenis_tiket', 
-        'deskripsi', 
+        'nama_lengkap',
+        'kategori',
+        'sub_kategori',
+        'email',
+        'jenis_tiket',
+        'deskripsi',
         'unggah_file',
         'status',
-        'assigned_to'
+        'assigned_to',
+        'kode_tiket'
     ];
 
     // Relasi ke model User untuk assigned staff
-    public function assignedTo()
+    public function assignedStaff()
     {
         return $this->belongsTo(User::class, 'assigned_to');
     }

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Auth\Passwords\CanResetPassword;
 
 class User extends Authenticatable implements JWTSubject
@@ -20,7 +19,7 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'username',
         'role',
-        'password',
+        'password',  // Hapus 'role' dari fillable
     ];
 
     protected $hidden = [
@@ -34,32 +33,31 @@ class User extends Authenticatable implements JWTSubject
 
     // Custom method to get permissions as an array
     public function getPermissionArray() {
-        return $this->getAllPermissions()->pluck('role')->toArray();
+        return $this->getAllPermissions()->pluck('name')->toArray(); // Ganti pluck 'role' dengan 'name'
     }
 
-    /** get jwt identifier */
+    /** Get JWT identifier */
     public function getJWTIdentifier() {
         return $this->getKey();
     }
 
+    /** Get JWT custom claims */
     public function getJWTCustomClaims() {
-        return [];
+        // Jika Anda ingin menambahkan role ke dalam klaim JWT, tambahkan di sini
+        return [
+            'role' => $this->getRoleNames(), // Klaim custom untuk JWT
+        ];
     }
 
-    // public function notifications()
-    // {
-    //     return $this->hasMany(Notification::class);
-    // }
+    // Relasi ke tiket yang ditugaskan kepada pengguna
+    public function assignedTickets()
+    {
+        return $this->hasMany(Ticket::class, 'assigned_to');
+    }
 
-    // role
-    // public function roles(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Role::class, 'role_user');
-    // }
-
-    // ticket
-    // public function tickets()
-    // {
-    //     return $this->hasMany(Ticket::class, 'user_id', 'id');
-    // }
+    // Jika pengguna juga bisa membuat tiket, aktifkan relasi ini
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'user_id','id');
+    }
 }

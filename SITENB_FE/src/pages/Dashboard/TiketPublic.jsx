@@ -46,7 +46,7 @@ const closeDetail = () => setIsOpen(false);
     <>
       <div className='relative isolate px-4 pt-24 sm:px-6 lg:px-8'>
         <NavbarDb />
-        <a href="/Tiket" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 inline-flex items-center">
+        <a href="/Dashboard/Tiket" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 inline-flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
             <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-4.28 9.22a.75.75 0 0 0 0 1.06l3 3a.75.75 0 1 0 1.06-1.06l-1.72-1.72h5.69a.75.75 0 0 0 0-1.5h-5.69l1.72-1.72a.75.75 0 0 0-1.06-1.06l-3 3Z" clipRule="evenodd" />
           </svg>
@@ -54,7 +54,7 @@ const closeDetail = () => setIsOpen(false);
         </a>
 
         <div className="flex justify-between items-center w-full">
-          <p>v Tiket Pegawai Public</p>
+          <p>v Tiket Public</p>
           <form className="flex items-center w-full sm:max-w-xs">
             <label htmlFor="simple-search" className="sr-only">Search</label>
             <div className="relative w-full">

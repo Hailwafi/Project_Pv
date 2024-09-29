@@ -1,8 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-// withAuthenticationStaff.jsx
-const withAuthenticationStaff = (WrappedComponent) => {
+// withAuthenticationLeader.jsx
+const withAuthenticationLeader = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
@@ -14,7 +14,7 @@ const withAuthenticationStaff = (WrappedComponent) => {
       return <Navigate to="/login" />;
     }
 
-    if (role !== "Staf") {
+    if (role !== "kepala_subbag") {
       return <Navigate to="/" />; // Atau rute lain yang sesuai
     }
 
@@ -24,4 +24,4 @@ const withAuthenticationStaff = (WrappedComponent) => {
   return AuthenticatedComponent;
 };
 
-export default withAuthenticationStaff;
+export default withAuthenticationLeader;

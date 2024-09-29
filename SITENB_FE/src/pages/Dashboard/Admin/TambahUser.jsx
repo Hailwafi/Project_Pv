@@ -7,57 +7,101 @@ import 'react-toastify/dist/ReactToastify.css';
 import NavbarDb from '../../../components/NavbarDb';
 
 const TambahUser = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    role: "staf", // Default role
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   if (password !== confirmPassword) {
+  //     toast.error("Password dan konfirmasi password tidak cocok.");
+  //     return;
+  //   }
+  //   try {
+  //     const response = await axios.post('http://127.0.0.1:8000/api/admin/users', {
+  //       email,
+  //       password
+  //     });
+
+  //     console.log('Response:', response.data);
+  //     localStorage.setItem('token', response.data.token);
+
+  //     const token = response.data.token; // Simpan token di sini
+  //     // Anda bisa menyimpannya ke localStorage atau state untuk digunakan nanti
+  //     localStorage.setItem('authToken', token);
+  //     const { permissions } = response.data;
+
+  //     if (permissions && permissions['roles.index']) {
+  //       localStorage.setItem('role', "admin");
+  //       toast.success('Login berhasil! Mengarahkan ke halaman admin...');
+  //       setTimeout(() => {
+  //         navigate("/Dashboard");
+  //       }, 3000);
+
+  //     } else {
+  //       localStorage.setItem('role', "user");
+  //       toast.success('Login berhasil!');
+  //       setTimeout(() => {
+  //         navigate("/tes");
+  //       }, 3000);
+
+  //     }
+  //   } catch (error) {
+  //     const errorMessage = error.response?.data?.message || 'Terjadi kesalahan. Silakan coba lagi.';
+  //     toast.error(errorMessage)
+  //   }
+
+
+  // };
+  // const togglePasswordVisibility = () => {
+  //   setShowPassword((prevShowPassword) => !prevShowPassword);
+  // }
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      toast.error("Password dan konfirmasi password tidak cocok.");
-      return;
-    }
+    console.log(formData);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/login', {
-        email,
-        password
+      const response = await fetch("http://127.0.0.1:8000/api/admin/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for admin authentication
+        },
+        body: JSON.stringify(formData),
       });
 
-      console.log('Response:', response.data);
-      localStorage.setItem('token', response.data.token);
+      const data = await response.json();
 
-      const token = response.data.token; // Simpan token di sini
-      // Anda bisa menyimpannya ke localStorage atau state untuk digunakan nanti
-      localStorage.setItem('authToken', token);
-      const { permissions } = response.data;
-
-      if (permissions && permissions['roles.index']) {
-        localStorage.setItem('role', "admin");
-        toast.success('Login berhasil! Mengarahkan ke halaman admin...');
-        setTimeout(() => {
-          navigate("/Dashboard");
-        }, 3000);
-
+      if (response.ok) {
+        toast.success('User berhasil ditambahkan!');
       } else {
-        localStorage.setItem('role', "user");
-        toast.success('Login berhasil!');
-        setTimeout(() => {
-          navigate("/tes");
-        }, 3000);
-
+        console.log("Data error dari respons:", data); // Cetak seluruh respons error
+        toast.error(`Error: ${data.message || "Terjadi kesalahan."}`);
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Terjadi kesalahan. Silakan coba lagi.';
-      toast.error(errorMessage)
+      console.error("Error adding user:", error);
+      alert("Terjadi kesalahan saat menambahkan pengguna.");
     }
-
-
   };
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
-  }
+  };
 
   return (
     <div>
@@ -76,20 +120,20 @@ const TambahUser = () => {
           </div>
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
                UserName
                 </label>
                 <div className="mt-2">
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
+                    id="username"
+                    name="username"
+                    type="username"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
+                    value={formData.username}
+                    onChange={handleChange}
+                    autoComplete="username"
                     placeholder="Masukan username yang akan di buat"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
                   />
@@ -97,21 +141,39 @@ const TambahUser = () => {
               </div>
 
               <div>
+                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+               Email
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                    placeholder="Masukan email yang akan di buat"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
+                  />
+                </div>
+              </div>
+
               <div>
-                  <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+              <div>
+                  <label htmlFor="role" className="block text-sm font-medium leading-6 text-gray-900">
                   Pilih Peran
                   </label>
                   <div className="relative mt-2">
                     <select
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={showPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      id="role"
+                      name="role"
+                      value={formData.role}
+                      onChange={handleChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
                     >
-                         <option>Staff Subbag TI</option>
-                         <option>Kepala Subbag TI</option>
+                         <option value="staf">Staf</option>
+                         <option value="Kepala_Subbag">Kepala Subbag</option>
                     </select>
                   </div>
                 </div>
@@ -120,11 +182,7 @@ const TambahUser = () => {
                   <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
                   Password
                   </label>
-                  {/* <div className="text-sm">
-                    <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                      Forgot password?
-                    </a>
-                  </div> */}
+               
                 </div>
                 
                 <div className="relative mt-2">
@@ -133,9 +191,9 @@ const TambahUser = () => {
                     name="password"
                     type={showPassword ? "text" : "password"}
                     required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    autoComplete="password"
                     placeholder="Masukan password yang akan di buat"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
                   />
@@ -169,11 +227,11 @@ const TambahUser = () => {
                   <div className="relative mt-2">
                     <input
                       id="confirmPassword"
-                      name="confirmPassword"
+                      name="password_confirmation"
                       type={showPassword ? "text" : "password"}
                       required
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      value={formData.password_confirmation}
+      onChange={handleChange}
                       autoComplete="current-password"
                       placeholder="Confirmasi password anda"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"

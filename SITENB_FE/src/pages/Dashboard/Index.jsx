@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// import NavbarDb from '../../components/NavbarDb';
+import NavbarDb from '../../components/NavbarDb';
 import Tesnav from '../../components/Tesnav';
 
 const Index = () => {
   
   const [TotalUserCount, setTotalUserCount] = useState(0);
   const [TotalCategoriesCount, setTotalCategoriesCount] = useState(0);
-  const [TotalProductsCount, setTotalProductsCount] = useState(0);
+  const [TotalPostsCount, setTotalPostsCount] = useState(0);
   const [TotalOrdersCount, setTotalOrdersCount] = useState(0);
 
 useEffect(() => {
@@ -22,12 +22,12 @@ useEffect(() => {
       });
       
       // Ambil data dari respons API
-      const { users, categories, products, transactions } = response.data.data;
+      const { users, categories, posts, transactions } = response.data.data;
 
       // Update state dengan data yang diterima dari API
       setTotalUserCount(users);
       setTotalCategoriesCount(categories);
-      setTotalProductsCount(products);
+      setTotalPostsCount(posts);
       setTotalOrdersCount(transactions);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -41,7 +41,7 @@ useEffect(() => {
     
         <>
         {/* <NavbarDb/> */}
-        <Tesnav/>
+        <NavbarDb/>
             <div className="col-lg-9 mt-10 flex items-center justify-center gap-x-6  pt-14">
             <div className="row x-gap-20 y-gap-20 items-center p-3 mb-20 filter-items">
               
@@ -89,7 +89,7 @@ useEffect(() => {
                   />
                   <div className='text-white'>
                     
-                    <p className="text-center">{TotalProductsCount}</p>
+                    <p className="text-center">{TotalPostsCount}</p>
                   <span>Tiket Selesai</span>
                   </div>
                 </a>

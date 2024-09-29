@@ -1,50 +1,75 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NavbarDb from '../../../components/NavbarDb';
 import FormModal from '../../../components/FormModal';
 import PopUp from '../../../components/PopUp';
 
-
-const WorkStaff = () => {
+const ListUser = () => {
   const [isForm1Open, setIsForm1Open] = useState(false);
   const openForm1 = () => setIsForm1Open(true);
   const closeForm1 = () => setIsForm1Open(false);
 
   const [isOpen, setIsOpen] = useState(false);
-const openDetail = () => setIsOpen(true);
-const closeDetail = () => setIsOpen(false);
-
+  const openDetail = () => setIsOpen(true);
+  const closeDetail = () => setIsOpen(false);
 
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1); // Halaman saat ini
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true); // Cek apakah ada lebih banyak data
 
-  const fetchData = async () => {
+  const fetchData = async (pageNum) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/admin/products', {
+      const response = await axios.get(`http://127.0.0.1:8000/api/admin/users?page=${pageNum}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      setData(response.data.data.data);
+
+      const fetchedData = response.data.data.data;
+
+      // Jika data yang diambil kurang dari limit, berarti tidak ada lagi data yang tersedia
+      if (fetchedData.length === 0) {
+        setHasMore(false);
+      } else {
+        setData((prevData) => [...prevData, ...fetchedData]); // Tambahkan data baru ke list
+      }
     } catch (err) {
-      setError(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
+  // Panggil fetchData pada initial render dan saat page berubah
   useEffect(() => {
-    fetchData();
-  }, []);
+    setLoading(true);
+    fetchData(page);
+  }, [page]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  // Scroll event listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight ||
+        loading
+      )
+        return;
+
+      // Tambah page saat mencapai bagian bawah halaman
+      if (hasMore) {
+        setPage((prevPage) => prevPage + 1);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading, hasMore]);
 
   return (
     <>
-      <div className='relative isolate px-4 pt-24 sm:px-6 lg:px-8'>
+      <div className="relative isolate px-4 pt-24 sm:px-6 lg:px-8">
         <NavbarDb />
         <div className='inline-flex items-center'>
         <a href="/Dashboard" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 inline-flex items-center">
@@ -75,7 +100,7 @@ const closeDetail = () => setIsOpen(false);
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
               </div>
-              <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="cari tiket berdasarkan nama" required />
+              <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="cari akun berdasarkan nama" required />
             </div>
             <button type="submit" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
               <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -86,282 +111,45 @@ const closeDetail = () => setIsOpen(false);
           </form>
         </div>
 
-        {/* <div className="overflow-x-auto shadow-md sm:rounded-lg mt-4">
+        <div className="overflow-x-auto shadow-md sm:rounded-lg mt-4">
           <table className="w-full text-sm text-left rtl:text-right">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">No</th>
                 <th scope="col" className="px-6 py-3">Nama Lengkap</th>
-                <th scope="col" className="px-6 py-3">Email</th>
-                <th scope="col" className="px-6 py-3">Aksi</th>
+                <th scope="col" className="px-6 py-3">email</th>
+                <th scope="col" className="px-6 py-3">Peran</th>
+                <th scope="col" className="px-6 py-3 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {data.map(product => (
-                <tr key={product.id} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
+              {data.map((user, index) => (
+                <tr key={user.id} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                    {product.id}
+                    {index + 1}
                   </th>
-                  <td className="px-6 py-4">{product.title}</td>
-                  <td className="px-6 py-4">{product.category_id}</td>
-                  <td className="grid grid-cols-1 gap-2 sm:grid-cols-2 p-4">
-                    <button onClick={openForm1} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
-              
-                    <button onClick={openDetail}  class="font-medium text-blue-600 dark:text-blue-500 hover:underline ">Detail</button>
-
+                  <td className="px-6 py-4">{user.username}</td>
+                  <td className="px-6 py-4">{user.email}</td>
+                  <td className="px-6 py-4">{user.role}</td>
+                  <td className="px-6 py-4 text-center">
+                    <div className="flex justify-center gap-4">
+                      <button onClick={openDetail} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Hapus</button>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div> */}
-        <div className="overflow-x-auto shadow-md sm:rounded-lg mt-4">
-  <table className="w-full text-sm text-left rtl:text-right">
-    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-      <tr>
-        <th scope="col" className="px-6 py-3">No</th>
-        <th scope="col" className="px-6 py-3">Nama Lengkap</th>
-        <th scope="col" className="px-6 py-3">Peran</th>
-        <th scope="col" className="px-6 py-3 text-center">Aksi</th> 
-      </tr>
-    </thead>
-    <tbody>
-      {data.map(product => (
-        <tr key={product.id} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
-          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-            {product.id}
-          </th>
-          <td className="px-6 py-4">{product.title}</td>
-          <td className="px-6 py-4">{product.category_id}</td>
-          <td className="px-6 py-4 text-center"> 
-            <div className="flex justify-center gap-4"> 
-            
-              <button onClick={openDetail} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Hapus</button>
-            </div>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+        </div>
 
+       
+        {loading && <p>Loading more data...</p>}
 
-        <FormModal isOpen={isForm1Open} onClose={closeForm1} title="Ubah Status">
-          <div className="sm:col-span-3">
-            <label htmlFor="position" className="block text-sm font-medium leading-6 text-gray-900">
-              Pilih status
-            </label>
-            <div className="mt-2">
-              <select
-                id="position"
-                name="position"
-                type="position"
-                autoComplete="position"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              >
-                <option>Proses</option>
-                <option>Selesai</option>
-              </select>
-            </div>
-          </div>
-        </FormModal>
-        <PopUp
-        isOpen={isOpen}
-        onClose={closeDetail}
-        title="Detail Tiket Pegawai BNPT"
-        children={  
-          <div className="relative isolate mt-10 lg:px-8">
-          <form>
-            <div className="space-y-12">
-            {/* <h2 className=" text-xl text-center font-semibold leading-7 text-gray-900">Silahkan lengkapi formulir di bawah ini</h2>
-                 */}
-                {/* <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" /> */}
-              <div className="border-b border-gray-900/10 pb-12">
-              
-              {/* grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4 */}
-                <div className="mt-10 grid grid-cols-3  gap-x-6 gap-y-8 sm:grid-cols-9 ">
-        
-                  <div className="sm:col-span-3">
-                    <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
-                    Nama
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        required
-                        autoComplete="name"
-                    
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-      
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-      
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-full">
-              <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-              Deskripsi
-              </label>
-              <div className="mt-2">
-                <textarea
-                  id="description"
-                  name="description"
-                  rows={3}
-                  placeholder='Deskripsi'
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  defaultValue={''}
-                />
-              </div>
-            </div>
-           
-                  {/* <div className="sm:col-span-3">
-                    <label htmlFor="position" className="block text-sm font-medium leading-6 text-gray-900">
-                    Jabatan
-                    </label>
-                    <div className="mt-2">
-                      <select
-                        id="position"
-                        name="position"
-                        type="position"
-                        autoComplete="position"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      >
-                        <option>Public</option>
-                        <option>Kariyawan</option>
-                      </select>
-                    </div>
-                  </div> */}
-      
-     
-                </div>
-              </div>
-      
-            </div>
-      
-          
-          </form>
-          </div>
-          }
-        modalStyle1="border border-blue-500" // Style untuk modal 1
-      />
+    
+        {!hasMore && <p>No more data to load</p>}
       </div>
     </>
   );
 };
 
-export default WorkStaff;
+export default ListUser;

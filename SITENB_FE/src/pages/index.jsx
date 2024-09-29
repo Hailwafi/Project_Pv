@@ -59,8 +59,9 @@ const closeForm1 = () => setIsForm1Open(false);
             </div>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
-                href="#Page2"
-                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                 href="/PANDUANN-PENGGUNAAN-APK-SITENB.pdf"
+                 download
+                className="rounded-md  bg-customRed px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-900  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 "
               >
              Unduh panduan penggunaan SI-TENB -&gt;
               </a>
@@ -169,8 +170,7 @@ const closeForm1 = () => setIsForm1Open(false);
                 <h4>Layanan Pengolah Data</h4>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
-                <button
-        onClick={openForm1}
+                <a
                 
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
@@ -180,7 +180,7 @@ const closeForm1 = () => setIsForm1Open(false);
                     className="w-16 h-16 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Laptop</span>
-                </button>
+                </a>
                 <a
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
@@ -363,19 +363,7 @@ const closeForm1 = () => setIsForm1Open(false);
 
       </div>
       <Footer />
-      <FormModal isOpen={isForm1Open} onClose={closeForm1} title="Ajukan Tiket Berdasarkan akses">
-        <div className='flex flex-col items-center box-border'>
-          <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 block mb-2">
-          Tiket Pegawai BNPT   -&gt;
-         
-          </button>
-          <button className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 block mb-1">
-          Tiket Publik          -&gt;
-          
-          </button>
-         
-        </div>
-      </FormModal> 
+    
     </>
 
   )
