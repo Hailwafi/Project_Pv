@@ -18,6 +18,9 @@ const navigation = [
   {name: 'Tiket', href: '/Leader/Tiket',role: 'kepala_subbag' },
   {name: 'Pantau pekerjaan', href: '/Leader/WorkStaff',role: 'kepala_subbag' },
 
+  {name: 'Dashboard', href: '/Staff',role: 'staff'},
+  {name: 'Tugas Masuk', href: '/Staff/',role: 'staff' },
+
 ]
 
 const NavbarDb =({  })  => {

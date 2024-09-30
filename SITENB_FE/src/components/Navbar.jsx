@@ -6,7 +6,7 @@ const navigation = [
   {name: 'Beranda', href: '/#Page1' },
   {name: 'Tentang', href: '/#Page2' },
   {name: 'Kategory layanan', href: '/#Page3' },
-  {name: 'Buat tiket', href: '/From' },
+  {name: 'Buat tiket', href: '/#Page2' },
 ]
 
 function Navbar(){

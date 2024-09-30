@@ -53,7 +53,7 @@ const Sign = () => {
         setTimeout(() => {
           navigate("/Leader"); // Pastikan rute ini benar sesuai peran kepala_subbag
         }, 3000);
-      } else if (role === 'staf') {
+      } else if (role === 'staff') {
         toast.success('Login berhasil! Mengarahkan ke halaman Staff...');
         setTimeout(() => {
           navigate("/Staff");

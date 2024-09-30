@@ -14,7 +14,7 @@ const withAuthenticationStaff = (WrappedComponent) => {
       return <Navigate to="/login" />;
     }
 
-    if (role !== "Staf") {
+    if (role !== "staff") {
       return <Navigate to="/" />; // Atau rute lain yang sesuai
     }
 

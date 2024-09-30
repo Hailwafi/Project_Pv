@@ -20,7 +20,7 @@ class TicketController extends Controller
     public function index()
     {
         //get ticket
-        $tickets = Ticket::when(request()->search, function($tickets)
+        $tickets = Ticket::when(request()->search, function($tickets) 
         {
         $tickets = $tickets->where('name', 'like', '%'. request()->search . '%');
         })->latest()->paginate(5);
@@ -47,14 +47,14 @@ class TicketController extends Controller
             'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) 
         {
             return response()->json($validator->errors(), 422);
         }
 
         // Simpan unggah file jika ada
         $unggah_file_path = null;
-        if ($request->hasFile('unggah_file'))
+        if ($request->hasFile('unggah_file')) 
         {
             $unggah_file = $request->file('unggah_file');
             $unggah_file_path = $unggah_file->store('ticket_images', 'public');
@@ -77,13 +77,13 @@ class TicketController extends Controller
             'kode_tiket'          => $kode_tiket,
         ]);
 
-        if ($ticket)
+        if ($ticket) 
         {
             // Dapatkan user admin dan kepala subbag
-            $adminAndKepala_SubbagUsers = User::whereIn('role', ['admin', 'kepala_subbag'])->get();
+            $adminAndkepala_subbagUsers = User::whereIn('role', ['admin', 'kepala_subbag'])->get();
 
             // Kirim notifikasi ke admin dan kepala subbag
-            Notification::send($adminAndKepala_SubbagUsers, new NewTicketNotification($ticket));
+            Notification::send($adminAndkepala_subbagUsers, new NewTicketNotification($ticket));
 
             // Kirim email kode tiket ke pengguna
             // Mail::to($ticket->email)->send(new TicketCode($ticket));
@@ -112,9 +112,9 @@ class TicketController extends Controller
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
             'deskripsi'           => 'required|string',
             'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-        ]);
+        ]);        
 
-        if ($validator->fails())
+        if ($validator->fails()) 
         {
             return response()->json($validator->errors(), 422);
         }
@@ -122,7 +122,7 @@ class TicketController extends Controller
         $ticket = Ticket::find($id);
 
         // Jika ada file yang diunggah
-        if ($request->hasFile('unggah_file'))
+        if ($request->hasFile('unggah_file')) 
         {
             $unggah_file = $request->file('unggah_file');
             $unggah_file->storeAs('public/ticket', $unggah_file->hashName());
@@ -161,12 +161,12 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket)
     {
         {
-            if($ticket->delete())
+            if($ticket->delete()) 
             {
                 //return success with Api Resource
                 return new TicketResource(true, 'Ticket Pegawai berhasil dihapus', null);
             }
-
+    
                 //return failed with Api Resource
                 return new TicketResource(false, 'Ticket Pegawai gagal dihapus', null);
         }
@@ -179,7 +179,7 @@ class TicketController extends Controller
             'status' => 'required|in:proses,selesai',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) 
         {
             return response()->json($validator->errors(), 422);
         }
@@ -201,7 +201,7 @@ class TicketController extends Controller
             'assigned_to' => 'required|exists:users,id', // Pastikan assigned_to valid
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) 
         {
             return response()->json($validator->errors(), 422);
         }
@@ -220,7 +220,7 @@ class TicketController extends Controller
         $staf->notify(new TicketAssignedNotification($ticket, 'pegawai'));  // 'pegawai' untuk tipe tiket pegawai
 
         return response()->json([
-            'message'     => 'Tiket berhasil ditugaskan kepada Staf.',
+            'message'     => 'Tiket berhasil ditugaskan kepada Staff.',
             'assigned_to' => $staf->username, // Menyertakan nama staf yang ditugaskan
         ], 200);
     }

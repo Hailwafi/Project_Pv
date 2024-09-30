@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FormModal from '../components/FormModal';
+import { useNavigate } from 'react-router-dom';
 
 // const navigation = [
 //   {name: 'Pemeliharaan Jaringan Internet', href: '' },
@@ -19,6 +20,11 @@ const index = () => {
 const openForm1 = () => setIsForm1Open(true);
 const closeForm1 = () => setIsForm1Open(false);
 
+const navigate = useNavigate();
+
+  const handleButtonClick = (reportName, category) => {
+    navigate('/FromPb', { state: { reportName, category } });
+  };
 
   return (
     <>
@@ -170,8 +176,8 @@ const closeForm1 = () => setIsForm1Open(false);
                 <h4>Layanan Pengolah Data</h4>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
-                <a
-                
+                <button
+                onClick={() => handleButtonClick('Laporan 1', 'Kategori A')}
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
@@ -180,7 +186,7 @@ const closeForm1 = () => setIsForm1Open(false);
                     className="w-16 h-16 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Laptop</span>
-                </a>
+                </button>
                 <a
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >

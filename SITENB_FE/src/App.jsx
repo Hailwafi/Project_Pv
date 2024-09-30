@@ -24,6 +24,11 @@ import Tes from "./pages/Tes"
 import Tes2 from "./pages/tes2"
 import Tes3 from "./pages/tes3"
 
+
+import TesIsi from "./pages/TesIsi"
+import TesIsi2 from "./pages/TesIsi2"
+
+
 import ProductTable from "./pages/Dashboard/Staff/ProductTable"
 
 import Task from "./pages/Dashboard/Staff/Task"
@@ -51,6 +56,7 @@ const App = () => {
       <Router>
         <div>
           <Routes>
+     
   <Route path="/" element={<Index/>}/>
 
   <Route path="/TiketPb" element={<TiketPb/>}/> 
@@ -60,6 +66,8 @@ const App = () => {
   <Route path="/Ft_pass" element={<Ft_pass/>}/>
   <Route path="/Ch_pass" element={<Ch_pass/>}/>
 
+  <Route path="/TesIsi2" element={<TesIsi2/>}/>
+  <Route path="/TesIsi" element={<TesIsi/>}/>
 
 
   <Route path="/Sign" element={<Sign/>}/>
@@ -103,7 +111,9 @@ const LeaderLayout = withAuthenticationLeader(() => (
     <div>
       <Routes>
         <Route path="/" element={<Dashboard/>}/>
-     
+        <Route path="/Tiket" element={<Tiket/>}/> 
+        <Route path="/TiketPegawai" element={<TiketPegawai/>}/> 
+        <Route path="/TiketPublic" element={<TiketPublic/>}/> 
     
       </Routes>
     </div>

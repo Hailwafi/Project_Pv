@@ -18,7 +18,6 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'email',
         'username',
-        'role',
         'password',  // Hapus 'role' dari fillable
     ];
 
@@ -58,6 +57,11 @@ class User extends Authenticatable implements JWTSubject
     // Jika pengguna juga bisa membuat tiket, aktifkan relasi ini
     public function tickets()
     {
-        return $this->hasMany(Ticket::class, 'user_id','id');
+        return $this->hasMany(Ticket::class, 'user_id', 'id');
+    }
+
+    public function publiks()
+    {
+        return $this->hasMany(Publik::class, 'user_id', 'id');
     }
 }

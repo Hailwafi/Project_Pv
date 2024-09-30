@@ -26,6 +26,20 @@ use Illuminate\Support\Facades\Route;
         Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
     });
 
+    // ticket pegawai
+    Route::get('/tickets', [App\Http\Controllers\TicketController::class, 'index']);
+
+    Route::post('/tickets', [App\Http\Controllers\TicketController::class, 'store']);
+
+    Route::get('/tickets/{id}', [App\Http\Controllers\TicketController::class, 'show']);
+
+// ticket publik
+    Route::get('/publiks', [App\Http\Controllers\PublikController::class, 'index']);
+
+    Route::post('/publiks', [App\Http\Controllers\PublikController::class, 'store']);
+
+    Route::get('/publiks/{id}', [App\Http\Controllers\PublikController::class, 'show']);
+
 
 // Admin
     Route::prefix('admin')->group(function () {
@@ -42,6 +56,9 @@ use Illuminate\Support\Facades\Route;
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
             })->middleware('auth');
+
+        // detail staff
+        Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
 
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
@@ -115,6 +132,9 @@ use Illuminate\Support\Facades\Route;
                 return auth()->user()->notifications;
             })->middleware('auth');
 
+        // detail staff
+        Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
+
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
 
@@ -173,7 +193,7 @@ use Illuminate\Support\Facades\Route;
 });
 
 // Staf
-    Route::prefix('staf')->group(function () {
+    Route::prefix('staff')->group(function () {
     //group route with middleware "auth:api"
         Route::group(['middleware' => 'auth:api'], function () {
 
@@ -184,9 +204,8 @@ use Illuminate\Support\Facades\Route;
             Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
         });
 
-   // dashboard
-   Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
-
+        // dashboard
+            Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
 
        // notifikasi
             Route::get('/notifications', function() {

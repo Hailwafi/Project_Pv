@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ProofOfWork;
+use App\Models\Ticket;  
+use App\Models\Publik;
 use App\Http\Resources\ProofOfWorkResource;
 use App\Notifications\NewProofOfWorkNotification;
 use Illuminate\Support\Facades\Notification;
@@ -18,15 +20,41 @@ class ProofOfWorkController extends Controller
         $request->validate([
             'ticket_type'      => 'required|string|in:TicketPegawai,TicketPublik',
             'nama_lengkap'     => 'required|string|max:255',
-            'nip'              => 'required|string',
+            'bukti_pengerjaan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'tanggal'          => 'required|date',
         ]);
+
+        // Cek apakah tiket ada berdasarkan tipe tiket (TicketPegawai atau TicketPublik)
+        if ($request->ticket_type === 'TicketPegawai') 
+        {
+            // Cari tiket pegawai
+            $ticket = Ticket::find($ticketId);
+        } else if ($request->ticket_type === 'TicketPublik') 
+        {
+            // Cari tiket publik
+            $ticket = Publik::find($ticketId);
+        }
+
+        // Jika tiket tidak ditemukan, kembalikan error
+        if (!$ticket) 
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tiket tidak ditemukan atau belum dibuat.'
+            ], 404);
+        }
+
+        // Simpan file bukti pengerjaan
+        $filePath = $request->file('bukti_pengerjaan')->store('proof_of_work', 'public'); 
 
         // Buat bukti pengerjaan
         $proofOfWork = ProofOfWork::create([
             'ticket_id'        => $ticketId,
             'ticket_type'      => $request->ticket_type,
             'nama_lengkap'     => $request->nama_lengkap,
-            'nip'              => $request->nip,
+            'bukti_pengerjaan' => $filePath,
+            'tanggal'          => $request->tanggal, // Simpan tanggal
+            'staff_id'         => $request->user()->id // Menyimpan ID staf yang meng-upload
         ]);
 
         // Ambil user admin dan kepala subbag

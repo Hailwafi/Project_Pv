@@ -77,62 +77,61 @@ class UserTableSeeder extends Seeder
         //assign role with permission to kepala subbag
         $user = User::find(2);
         $user->assignRole($role->name);
+// Staff
+$staffData = [
+    [
+        'email'    => 'yoviroinaldo@gmail.com',
+        'username' => 'yovi roinaldo',
+        'role'     => 'staff',
+        'password' => bcrypt('datacenter'),
+    ],
+    [
+        'email'    => 'dinihariyani@gmail.com',
+        'username' => 'dini hariyani',
+        'role'     => 'staff',
+        'password' => bcrypt('biwara'),
+    ],
+    [
+        'email'    => 'stepanusandy@gmail.com',
+        'username' => 'stepanus andy',
+        'role'     => 'staff',
+        'password' => bcrypt('siber'),
+    ],
+    [
+        'email'    => 'andrerizki@gmail.com',
+        'username' => 'andre rizki',
+        'role'     => 'staff',
+        'password' => bcrypt('biologi'),
+    ],
+    [
+        'email'    => 'rizkypahlawan@gmail.com',
+        'username' => 'rizky pahlawan',
+        'role'     => 'staff',
+        'password' => bcrypt('pildunasik'),
+    ],
+];
 
-    // Staf
-        $stafData = [
-            [
-                'email'    => 'yoviroinaldo@gmail.com',
-                'username' => 'yovi roinaldo',
-                'role'     => 'staf',
-                'password' => bcrypt('datacenter'),
-            ],
-            [
-                'email'    => 'dinihariyani@gmail.com',
-                'username' => 'dini hariyani',
-                'role'     => 'staf',
-                'password' => bcrypt('biwara'),
-            ],
-            [
-                'email'    => 'stepanusandy@gmail.com',
-                'username' => 'stepanus andy',
-                'role'     => 'staf',
-                'password' => bcrypt('siber'),
-            ],
-            [
-                'email'    => 'andrerizki@gmail.com',
-                'username' => 'andre rizki',
-                'role'     => 'staf',
-                'password' => bcrypt('biologi'),
-            ],
-            [
-                'email'    => 'rizkypahlawan@gmail.com',
-                'username' => 'rizky pahlawan',
-                'role'     => 'staf',
-                'password' => bcrypt('pildunasik'),
-            ],
-        ];
+// ambil role staf
+$role = Role::findByName('staff', 'api');
 
-        // ambil role staf
-        $role = Role::findByName('staf', 'api');
+// ambil permissions yang dibutuhkan untuk staf
+$permissions = Permission::whereIn('name', [
+    'users.create',
+    'tickets.update-status',
+    'publiks.update-status',
+    'proof_of_works.create',
+])->get();
 
-        // ambil permissions yang dibutuhkan untuk staf
-        $permissions = Permission::whereIn('name', [
-            'users.create',
-            'tickets.update-status',
-            'publiks.update-status',
-            'proof_of_works.create',
-        ])->get();
+// menugaskan izin ke role
+$role->syncPermissions($permissions);
 
-        // menugaskan izin ke role
-        $role->syncPermissions($permissions);
+// loop melalui data staf dan buat user
+foreach ($staffData as $staff) 
+{
+    $user = User::create($staff);
 
-        // loop melalui data staf dan buat user
-        foreach ($stafData as $staf)
-        {
-            $user = User::create($staf);
-
-            // assign role with permissions to staf
-            $user->assignRole($role->name);
-        }
+    // assign role with permissions to staff
+    $user->assignRole($role->name);
+}
     }
 }

@@ -13,11 +13,18 @@ class ProofOfWork extends Model
         'ticket_id', 
         'ticket_type', 
         'nama_lengkap', 
-        'nip'
+        'bukti_pengerjaan',
+        'tanggal',
+        'staff_id'
     ];
 
     public function ticket()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Ticket::class, 'ticket_id');
+    }
+
+    public function publik()
+    {
+        return $this->belongsTo(Publik::class, 'publik_id');
     }
 }

@@ -21,7 +21,7 @@ class RolesTableSeeder extends Seeder
         ]);
 
         Role::create([
-            'name'       => 'staf',
+            'name'       => 'staff',
             'guard_name' => 'api'
         ]);
     }
