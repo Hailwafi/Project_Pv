@@ -88,7 +88,7 @@ const NavbarDb =({  })  => {
                 )} */}
                 
                 {navigation
-        .filter((item) => item.role === role) // Filter berdasarkan role
+        .filter((item) => item.role === role)
         .map((item) => (
           <a
             key={item.name}
@@ -180,7 +180,7 @@ const NavbarDb =({  })  => {
               <div className="mt-6 flow-root">
                 <div className="-my-6 divide-y divide-gray-700">
                   <div className="space-y-2 py-6">
-                    {navigation.map((item) => (
+                    {/* {navigation.map((item) => (
                       <a
                         key={item.name}
                       
@@ -189,7 +189,18 @@ const NavbarDb =({  })  => {
                       >
                         {item.name}
                       </a>
-                    ))}
+                    ))} */}
+                             {navigation
+        .filter((item) => item.role === role) 
+        .map((item) => (
+          <a
+            key={item.name}
+            href={item.href}
+            className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+          >
+            {item.name}
+          </a>
+        ))}
                   </div>
                   <div className="py-6">
       <button

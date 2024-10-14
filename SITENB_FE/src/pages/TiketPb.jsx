@@ -2,7 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 
+import { useNavigate } from 'react-router-dom';
+
 const TiketPb = () => {
+
+ const navigate = useNavigate();
+
+ const handleButtonClick = (data) => {
+  navigate('/FromPb', { state: { ...data } });
+};
 
   return (
     <>
@@ -28,8 +36,13 @@ const TiketPb = () => {
                 <h4 className=''>Layanan Layanan Aduan Keamanan Siber </h4>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
-                <a
-                   href="/FromPb" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                <button
+                onClick={() => handleButtonClick({
+                  kategori: 'layanan_aduan_keamanan_siber',
+                  jenis_tiket: 'kendala',
+                  sub_kategori: 'Kebocoran Data',
+                })}
+ className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Kebocoran Data.png"
@@ -37,9 +50,14 @@ const TiketPb = () => {
                     className="w-11  h-11   mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Kebocoran Data</span>
-                </a>
-                <a
-                   href="/FromPb" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                </button>
+                <button
+                       onClick={() => handleButtonClick({
+                        kategori: 'layanan aduan keamanan siber',
+                        jenis_tiket: 'kendala',
+                        sub_kategori: 'Web Defacement',
+                      })}
+                  className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Web Defacement.png"
@@ -47,9 +65,14 @@ const TiketPb = () => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Web Defacement</span>
-                </a>
-                <a
-                   href="/FromPb" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                </button>
+                <button
+                       onClick={() => handleButtonClick({
+                        kategori: 'layanan aduan keamanan siber',
+                        jenis_tiket: 'kendala',
+                        sub_kategori: 'Denial Of Service',
+                      })}
+                  className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Denial Of Service.png"
@@ -57,9 +80,14 @@ const TiketPb = () => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Denial Of Service</span>
-                </a>
-                <a
-                   href="/FromPb" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                </button>
+                <button
+                       onClick={() => handleButtonClick({
+                        kategori: 'layanan aduan keamanan siber',
+                        jenis_tiket: 'kendala',
+                        sub_kategori: 'Unauthorized Access',
+                      })}
+                  className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Unauthorized Access.png"
@@ -67,9 +95,14 @@ const TiketPb = () => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Unauthorized Access</span>
-                </a>
-                <a
-                   href="/FromPb" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                </button>
+                <button
+                       onClick={() => handleButtonClick({
+                        kategori: 'layanan aduan keamanan siber',
+                        jenis_tiket: 'kendala',
+                        sub_kategori: 'Malicious Code',
+                      })}
+                  className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Malicious Code.png"
@@ -77,9 +110,14 @@ const TiketPb = () => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Malicious Code</span>
-                </a>
-                <a
-                   href="/FromPb" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                </button>
+                <button
+                       onClick={() => handleButtonClick({
+                        kategori: 'layanan aduan keamanan siber',
+                        jenis_tiket: 'kendala',
+                        sub_kategori: 'Unplanned Downtime',
+                      })}
+                  className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Unplanned Downtime.png"
@@ -87,30 +125,8 @@ const TiketPb = () => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Unplanned Downtime</span>
-                </a>
+                </button>
               </div>
-            
-     
-        {/* <div className="flex justify-between items-center w-full">
-          <p></p>
-          <form className="flex items-center w-full sm:max-w-xs">
-            <label htmlFor="simple-search" className="sr-only">Search</label>
-            <div className="relative w-full">
-              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-              </div>
-              <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="cari tiket berdasarkan nama" required />
-            </div>
-            <button type="submit" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-              <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-              </svg>
-              <span className="sr-only">Search</span>
-            </button>
-          </form>
-        </div> */}
       </div>
     </>
   );

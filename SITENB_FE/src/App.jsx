@@ -13,16 +13,18 @@ import Ck_Tiket from "./pages/Ck_Tiket"
 import Ft_pass from "./pages/Ft_pass"
 
 import From from "./pages/From"
+import FromBGST from "./pages/FromBGST"
 import FromPb from "./pages/FromPb"
+import FromPw from "./pages/FromPw"
 
 import Dashboard from "./pages/Dashboard/Index"
 
 import FormModal from "./components/FormModal"
 import  Notification from "./pages/Notification"
 import NavbarDb from "./components/NavbarDb";
-import Tes from "./pages/Tes"
-import Tes2 from "./pages/tes2"
-import Tes3 from "./pages/tes3"
+import Tes from "./pages/Dashboard/Admin/Tes"
+import Tes2 from "./pages/Dashboard/Admin/Tes2"
+import Tes3 from "./pages/Dashboard/Admin/Tes3"
 
 
 import TesIsi from "./pages/TesIsi"
@@ -43,6 +45,7 @@ import TiketPublic from "./pages/Dashboard/TiketPublic"
 
 
 import WorkStaff from "./pages/Dashboard/Admin/WorkStaff"
+import TesAdmin from "./pages/Dashboard/Admin/TesAdmin"
 import ListUser from "./pages/Dashboard/Admin/ListUser"
 import TambahUser from "./pages/Dashboard/Admin/TambahUser"
 
@@ -62,13 +65,19 @@ const App = () => {
   <Route path="/TiketPb" element={<TiketPb/>}/> 
   <Route path="/TiketPw" element={<TiketPw/>}/> 
   <Route path="/From" element={<From/>}/>
+  <Route path="/FromBGST" element={<FromBGST/>}/>
   <Route path="/FromPb" element={<FromPb/>}/>
+  <Route path="/FromPw" element={<FromPw/>}/>
   <Route path="/Ft_pass" element={<Ft_pass/>}/>
   <Route path="/Ch_pass" element={<Ch_pass/>}/>
+  <Route path="/Ck_Tiket/:kodetiket" element={<Ck_Tiket/>}/>
 
-  <Route path="/TesIsi2" element={<TesIsi2/>}/>
-  <Route path="/TesIsi" element={<TesIsi/>}/>
+  <Route path="/TesIsi2/:kodetiket" element={<TesIsi2/>}/>
+  <Route path="/TesIsi/:id" element={<TesIsi/>}/>
 
+
+ 
+  <Route path="/Tes3" element={<Tes3/>}/>
 
   <Route path="/Sign" element={<Sign/>}/>
 
@@ -90,8 +99,12 @@ const AdminLayout = withAuthenticationAdmin(() => (
     <NavbarDb />
     <div>
       <Routes>
+      <Route path="/Tes" element={<Tes/>}/>
+      <Route path="/Tes2" element={<Tes2/>}/>
+      <Route path="/Tes3" element={<Tes3/>}/>
         <Route path="/" element={<Dashboard/>}/>
         <Route path="/WorkStaff" element={<WorkStaff/>}/> 
+        <Route path="/TesAdmin/:id" element={<TesAdmin/>}/> 
         <Route path="/ListUser" element={<ListUser/>}/>
         <Route path="/TambahUser" element={<TambahUser/>}/>
         <Route path="/Tiket" element={<Tiket/>}/> 

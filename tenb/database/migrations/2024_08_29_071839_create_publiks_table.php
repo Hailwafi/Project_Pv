@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('publiks', function (Blueprint $table) {
             $table->id();
             $table->string('nama_lengkap');
-            $table->enum('kategori', ['layanan aduan keamanan siber']);
+            $table->enum('kategori', ['layanan_aduan_keamanan_siber']);
             $table->string('sub_kategori');
             $table->string('email');
             $table->enum('jenis_tiket', ['kendala']);
@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('status', ['proses', 'selesai'])->default('proses');
             $table->unsignedBigInteger('assigned_to')->nullable(); // Staf yang ditugaskan
             $table->foreign('assigned_to')->references('id')->on('users')->onDelete('set null');
+            $table->string('kode_tiket')->unique();
             $table->timestamps();
         });
     }

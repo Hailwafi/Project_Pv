@@ -1,63 +1,23 @@
 import { useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 function TesIsi2() {
   const location = useLocation();
-  const [formData, setFormData] = useState({
-    reportName: '',
-    category: ''
-  });
+  const ticketData = location.state?.ticketData; // Data tiket dari state navigasi
 
-  useEffect(() => {
-    if (location.state) {
-      setFormData({
-        reportName: location.state.reportName || '',
-        category: location.state.category || ''
-      });
-    }
-  }, [location.state]);
-
-  // Fungsi untuk menangani onClick di form
-  const handleSubmit = () => {
-    // Lakukan sesuatu dengan formData, misalnya kirim ke API atau console log
-    console.log('Data Form:', formData);
-
-    // Contoh pengiriman data ke server
-    // axios.post('/api/saveForm', formData)
-    //   .then(response => {
-    //     console.log('Data tersimpan', response);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error saat menyimpan data', error);
-    //   });
-  };
+  if (!ticketData) {
+    return <p>Data tiket tidak tersedia. Coba ulangi pencarian.</p>;
+  }
 
   return (
-    <form>
-      <div>
-        <label>Report Name:</label>
-        <input
-          type="text"
-          value={formData.reportName}
-          onChange={(e) =>
-            setFormData({ ...formData, reportName: e.target.value })
-          }
-        />
-      </div>
-      <div>
-        <label>Category:</label>
-        <input
-          type="text"
-          value={formData.category}
-          onChange={(e) =>
-            setFormData({ ...formData, category: e.target.value })
-          }
-        />
-      </div>
-      <button type="button" onClick={handleSubmit}>
-        Submit
-      </button>
-    </form>
+    <div>
+      <h1>Detail Tiket</h1>
+      <p><strong>Kode Tiket:</strong> {ticketData.data.kode_tiket}</p>
+      <p><strong>Status:</strong> {ticketData.status}</p>
+      <p><strong>Tipe:</strong> {ticketData.type}</p>
+      {/* Tampilkan informasi lain yang relevan dari ticketData */}
+    </div>
   );
 }
+
+
 export default TesIsi2;

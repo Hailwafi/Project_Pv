@@ -44,14 +44,14 @@ const PopUp = ({
               {showSaveButton && (
                 <button
                   type="button"
-                  onClick={onClose} // Tambahkan aksi berbeda jika diperlukan
+                  onClick={onClose} 
                   className="bg-green-500 text-white px-4 py-2 rounded mt-4"
                 >
                   Save
                 </button>
               )}
 
-              {/* Extra buttons yang ditambahkan untuk modal tertentu */}
+         
               {extraButtons && extraButtons}
             </div>
           </div>
@@ -62,18 +62,17 @@ const PopUp = ({
 
   return (
     <>
-      {/* Modal 1 dengan custom style */}
+  
       {renderTes(isOpen, onClose, title, children, false, modalStyle1)}
 
-      {/* Modal 2 dengan custom style dan tombol Save */}
       {renderTes(isOpen2, onClose2, title2, children2, true, modalStyle2)}
 
-      {/* Modal 3 dengan custom style dan tiga tombol */}
+    
       {renderTes(isOpen3, onClose3, title3, children3, false, modalStyle3, (
         <div className="flex justify-end space-x-4 gap-5">
           <button
             type="button"
-            // onClick={onClose3} // Aksi untuk tombol aksi tambahan
+            // onClick={onClose3} // 
             onClick={logout}
             className="bg-red-500 text-white px-4 py-2 rounded mt-4"
           >

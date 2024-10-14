@@ -99,7 +99,7 @@ const closeDetail = () => setIsOpen(false);
                   <td className="px-6 py-4">{tickets.jabatan}</td>
                   <td className="px-6 py-4">{tickets.kategori}</td>
                   <td className="px-6 py-4">{tickets.jenis_tiket}</td>
-                  <td className="px-6 py-4">cihuy</td>
+                  <td className="px-6 py-4">{tickets.status}</td>
                   <td className="grid grid-cols-1 gap-2 sm:grid-cols-2 p-4">
                     <button onClick={openForm1} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
               

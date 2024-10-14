@@ -35,7 +35,7 @@ const LogOut = () => {
 
             // Arahkan pengguna ke halaman login setelah delay
             setTimeout(() => {
-                navigate('/sign');
+                navigate('/');
             }, 3000);
         } catch (err) {
             // Menangani kesalahan dan menampilkan notifikasi gagal

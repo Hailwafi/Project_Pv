@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_lengkap');
             $table->string('jabatan');
-            $table->enum('kategori', ['layanan pengolahan data', 'layanan jaringan internet', 'layanan aplikasi', 'layanan aduan keamanan siber']);
+            $table->enum('kategori', ['layanan_pengolahan_data', 'layanan_jaringan_internet', 'layanan_aplikasi', 'layanan_aduan_keamanan_siber']);
             $table->string('sub_kategori');
             $table->string('email');
             $table->string('nomor_induk_pegawai');
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('kode_tiket')->unique();
             $table->timestamps();
         });
-        
+
     }
 
     /**

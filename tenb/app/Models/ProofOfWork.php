@@ -10,9 +10,9 @@ class ProofOfWork extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ticket_id', 
-        'ticket_type', 
-        'nama_lengkap', 
+        'ticket_id',
+        'ticket_type',
+        'nama_lengkap',
         'bukti_pengerjaan',
         'tanggal',
         'staff_id'
@@ -25,6 +25,6 @@ class ProofOfWork extends Model
 
     public function publik()
     {
-        return $this->belongsTo(Publik::class, 'publik_id');
+        return $this->belongsTo(Publik::class, 'ticket_id');
     }
 }

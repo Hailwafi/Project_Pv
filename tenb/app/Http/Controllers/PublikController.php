@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\Publik;
 use App\Models\User;
+use App\Mail\TicketCode;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\PublikResource;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\TicketAssignedNotification;
@@ -18,7 +20,7 @@ class PublikController extends Controller
     public function index()
     {
         //get ticket publik
-        $publiks = Publik::when(request()->search, function($publiks) 
+        $publiks = Publik::when(request()->search, function($publiks)
         {
         $publiks = $publiks->where('name', 'like', '%'. request()->search . '%');
         })->latest()->paginate(5);
@@ -43,14 +45,14 @@ class PublikController extends Controller
             'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return response()->json($validator->errors(), 422);
         }
 
         // Simpan unggah file jika ada
         $unggah_file_path = null;
-        if ($request->hasFile('unggah_file')) 
+        if ($request->hasFile('unggah_file'))
         {
             $unggah_file = $request->file('unggah_file');
             $unggah_file_path = $unggah_file->store('ticket_images', 'public');
@@ -71,7 +73,7 @@ class PublikController extends Controller
             'kode_tiket'          => $kode_tiket,
         ]);
 
-        if ($publik) 
+        if ($publik)
         {
             // Dapatkan user admin dan kepala subbag
             $adminAndkepala_subbagUsers = User::whereIn('role', ['admin', 'kepala_subbag'])->get();
@@ -80,14 +82,14 @@ class PublikController extends Controller
             Notification::send($adminAndkepala_subbagUsers, new NewTicketNotification($publik));
 
             // Kirim email kode tiket ke pengguna
-            // Mail::to($ticket->email)->send(new TicketCode($ticket));
+            Mail::to($publik->email)->send(new TicketCode($publik,true));
 
             return new PublikResource(true, 'Berhasil membuat Ticket Publik', $publik);
         }
 
         return new PublikResource(false, 'Gagal membuat Ticket Publik!', null);
     }
-    
+
     public function show(Publik $publik)
     {
         return new PublikResource(true, 'Detail Tiket Publik', $publik);
@@ -104,9 +106,9 @@ class PublikController extends Controller
             'jenis_tiket'  => 'required|string|in:kendala',
             'deskripsi'    => 'required|string',
             'unggah_file'  => 'nullable|file|mimes:jpg,png,pdf|max:2048',
-        ]);        
+        ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return response()->json($validator->errors(), 422);
         }
@@ -114,7 +116,7 @@ class PublikController extends Controller
         $publik = Publik::find($id);
 
         // Jika ada file yang diunggah
-        if ($request->hasFile('unggah_file')) 
+        if ($request->hasFile('unggah_file'))
         {
             $unggah_file = $request->file('unggah_file');
             $unggah_file->storeAs('public/publik', $unggah_file->hashName());
@@ -150,12 +152,12 @@ class PublikController extends Controller
     public function destroy(Publik $publik)
     {
         {
-            if($publik->delete()) 
+            if($publik->delete())
             {
                 //return success with Api Resource
                 return new PublikResource(true, 'Ticket Publik berhasil dihapus', null);
             }
-    
+
                 //return failed with Api Resource
                 return new PublikResource(false, 'Ticket Publik gagal dihapus!', null);
         }
@@ -168,7 +170,7 @@ class PublikController extends Controller
             'status' => 'required|in:proses,selesai',
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return response()->json($validator->errors(), 422);
         }
@@ -190,7 +192,7 @@ class PublikController extends Controller
             'assigned_to' => 'required|exists:users,id', // Pastikan assigned_to valid
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return response()->json($validator->errors(), 422);
         }
@@ -212,5 +214,31 @@ class PublikController extends Controller
             'message'     => 'Tiket berhasil ditugaskan kepada Staf.',
             'assigned_to' => $staf->username, // Menyertakan nama staf yang ditugaskan
         ], 200);
+    }
+
+    public function search(Request $request)
+    {
+        $name = $request->input('name');
+
+        // Validasi input nama
+        if (!$name)
+        {
+            return response()->json(['message' => 'Nama diperlukan untuk pencarian'], 422);
+        }
+
+        // Cari tiket publik berdasarkan nama dan hanya tampilkan kolom tertentu
+        $tickets = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'status')
+            ->where('nama_lengkap', 'LIKE', "%{$name}%")
+            ->get();
+
+            if ($tickets->isEmpty())
+            {
+                return response()->json(['success' => false, 'message' => 'Tiket tidak ditemukan'], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $tickets
+            ], 200);
     }
 }

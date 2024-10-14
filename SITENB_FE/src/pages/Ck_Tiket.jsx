@@ -1,8 +1,21 @@
 import React from 'react'
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import Navbar from '../components/Navbar';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import { format } from 'date-fns';
 
 const Ck_Tiket = () => {
+ const navigate = useNavigate();
+  const location = useLocation();
+  // const ticketData = location.state?.ticketData; 
+  const { ticketData } = location.state || {};
+  if (!ticketData) {
+    return <p>Data tiket tidak tersedia. Coba ulangi pencarian.</p>;
+  }
+
+  const formattedDate = format(new Date(ticketData.data.created_at), 'dd MMMM yyyy');
+
   return (
     <>
     <Navbar/>
@@ -10,7 +23,7 @@ const Ck_Tiket = () => {
     <div className='space-y-12'>
 
     <div className="relative isolate mt-10 lg:px-8">
-          <form>
+          <div>
             <div className="space-y-12">
             {/* <h2 className=" text-xl text-center font-semibold leading-7 text-gray-900">Silahkan lengkapi formulir di bawah ini</h2>
                  */}
@@ -33,14 +46,15 @@ const Ck_Tiket = () => {
                         autoComplete="name"
                     
                         readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                         {formattedDate}
+                      </div>
                     </div>
                   </div>
       
                   <div className="sm:col-span-3">
                     <label htmlFor="account" className="block text-sm font-medium leading-6 text-gray-900">
-        Account
+        Nama
 
                     </label>
                     <div className="relative mt-2">
@@ -50,44 +64,79 @@ const Ck_Tiket = () => {
   <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
 </svg>
   </div>
-  <input
-    id="email"
-    name="email"
+  <div
+    id="name"
+    name="name"
     type="text"
-    autoComplete="email"
+    autoComplete="name"
     className="block w-full pl-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-  />
+  >
+     {ticketData.data.nama_lengkap}
+    </div>
 </div>
 
                   </div>
       
                   <div className="sm:col-span-3">
+  <label htmlFor="nip" className="block text-sm font-medium leading-6 text-gray-900">
+    NIP :
+  </label>
+  <div className="mt-2">
+    {ticketData?.data?.nomor_induk_pegawai ? (
+      <div
+        id="nip"
+        name="nip"
+        type="text"
+        autoComplete="nip"
+        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      >
+        {ticketData.data.nomor_induk_pegawai}
+      </div>
+    ) : (
+      <div
+        id="nip"
+        className="block w-full rounded-md border-0 py-1.5 text-gray-500 bg-gray-100 sm:text-sm sm:leading-6"
+        disabled
+      >
+       Not Available
+      </div>
+    )}
+ </div>
+</div>
+
+                  {/* <div className="sm:col-span-3">
                     <label htmlFor="nip" className="block text-sm font-medium leading-6 text-gray-900">
                     NIP        :
                     </label>
                     <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
+                      <div
+                        id="nip"
+                        name="nip"
                         type="text"
-                        autoComplete="email"
+                        
+                        autoComplete="nip"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
+                      >
+     {ticketData.data.nip}
+
                     </div>
-                  </div>
+                    </div>
+                  </div> */}
 
                   <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                    <label htmlFor="tiket" className="block text-sm font-medium leading-6 text-gray-900">
                     Kode tiket  :
                     </label>
                     <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
+                      <div
+                        id="tiket"
+                        name="tiket"
                         type="text"
-                        autoComplete="email"
+                        autoComplete="tiket"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
+                      >
+ {ticketData.data.kode_tiket}
+                      </div>
                     </div>
                   </div>
                   <div className="sm:col-span-3">
@@ -102,13 +151,14 @@ const Ck_Tiket = () => {
 </svg>
 
   </div>
-  <input
+  <div
     id="email"
     name="email"
     type="text"
     autoComplete="email"
-    className="block w-full pl-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-  />
+    className="block w-full pl-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+       {ticketData.data.email}
+  </div>
 </div>
                   </div>
                   <div className="sm:col-span-3">
@@ -116,13 +166,15 @@ const Ck_Tiket = () => {
                     Status       :
                     </label>
                     <div className="mt-2">
-                      <input
+                      <div
                         id="email"
                         name="email"
                         type="text"
                         autoComplete="email"
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
+                      >
+                        {ticketData.data.status}
+                          </div>
                     </div>
                   </div>
                  
@@ -152,11 +204,11 @@ const Ck_Tiket = () => {
             </div>
       
           
-          </form>
+          </div>
           </div>
 
           <div className="relative isolate mt-10 px-6 pt-14 lg:px-8">
-    <form>
+    <div>
       <div className="space-y-12">
 
         <div className="border-b border-gray-900/10 pb-12">
@@ -166,14 +218,16 @@ const Ck_Tiket = () => {
               Kategori :
               </label>
               <div className="mt-2">
-                <input
+                <div
                   id="name"
                   name="name"
                   type="text"
                   required
                   autoComplete="name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                >
+     {ticketData.data.kategori}
+              </div>
               </div>
             </div>
 
@@ -182,13 +236,15 @@ const Ck_Tiket = () => {
               Sub Kategori :
               </label>
               <div className="mt-2">
-                <input
+                <div
                   id="email"
                   name="email"
                   type="text"
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                >
+                       {ticketData.data.sub_kategori}
+              </div>
               </div>
             </div>
 
@@ -197,42 +253,65 @@ const Ck_Tiket = () => {
               Jenis tiket :
               </label>
               <div className="mt-2">
-                <input
+                <div
                   id="email"
                   name="email"
                   type="text"
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                >
+                       {ticketData.data.jenis_tiket}
+                  
+              </div>
               </div>
             </div>
 
        
+        
             <div className="col-span-full">
-            <label htmlFor="Bukti Jabatan" className="block text-sm font-medium leading-6 text-gray-900">
-            Lampiran dokumen  :
-              </label>
-              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                <div className="text-center">
-                  <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
-                    {/* <span>silahkan upload id card anda sebagai bukti jabatan</span> */}
-                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                    <label
-                      htmlFor="file-upload"
-                      className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                    >
-                     <input type="file" class="form-control" id="customFile" />
-                      {/* <input id="file-upload" name="file-upload" type="file" className="sr-only" /> */}
-                    </label>
-           
-                  </div>
-                  <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-                </div>
-              </div>
-            </div>
-
-     
+  <label htmlFor="Bukti Jabatan" className="block text-sm font-medium leading-6 text-gray-900">
+    Lampiran dokumen:
+  </label>
+  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+    <div className="text-center">
+      {ticketData?.data?.unggah_file ? (
+        <img
+          // src={ticketData.data.unggah_file}
+         src={`http://127.0.0.1:8000/${ticketData.unggah_file}`} alt="Bukti Jabatan"
+          className="mx-auto h-48 w-48 object-cover rounded-lg"
+        />
+      ) : (
+        <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
+      )}
     
+    </div>
+</div>
+</div>
+    
+
+{/* <div>
+      {ticketData ? (
+        <div>
+          <h1>Detail Tiket</h1>
+          <p>Kode Tiket: {ticketData.kode_tiket}</p>
+          <p>Nama Lengkap: {ticketData.nama_lengkap}</p>
+          <p>Deskripsi: {ticketData.deskripsi}</p>
+
+    
+          {ticketData.unggah_file ? (
+            <img
+            src={`http://127.0.0.1:8000/storage/${ticketData.unggah_file}`}
+              className="mx-auto h-48 w-48 object-cover rounded-lg"
+            />
+          ) : (
+            <p>Foto tidak tersedia</p>
+          )}
+        </div>
+      ) : (
+        <p>Data tiket tidak tersedia</p>
+      )}
+    </div> */}
+
             <div className="col-span-full">
               <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
               Deskripsi
@@ -243,6 +322,7 @@ const Ck_Tiket = () => {
                   name="description"
                   rows={3}
                   placeholder='Deskripsi'
+                  value={ticketData?.data?.deskripsi || ''}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   defaultValue={''}
                 />
@@ -264,9 +344,11 @@ const Ck_Tiket = () => {
         </button>
       </div> */}
       
-      <div className="mt-6 flex items-center justify-end gap-x-6">
+    
+    </div> 
+     <div className="mt-6 flex items-center justify-end gap-x-6">
   <button
-    href="/"
+    onClick={() => navigate('/')}
     className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
   >
     Buat tiket baru
@@ -277,8 +359,6 @@ const Ck_Tiket = () => {
 
   </button>
 </div>
-
-    </form>
     </div>
     </div>
    </div>

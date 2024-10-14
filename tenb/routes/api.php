@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Route;
     // login
         Route::post('/login', [App\Http\Controllers\Api\Auth\LoginController::class, 'index']);
 
-    // lupa password
-        Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
-        Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
-
     // notifikasi
         Route::get('/notifications', function() {
             return auth()->user()->notifications;
@@ -22,43 +18,65 @@ use Illuminate\Support\Facades\Route;
     // group route with middleware "auth"
         Route::group(['middleware' => 'auth:api'], function () {
 
-    // logout
-        Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
+        // logout
+            Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
     });
 
+        // lupa password
+            Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
+
     // ticket pegawai
-    Route::get('/tickets', [App\Http\Controllers\TicketController::class, 'index']);
+        Route::get('/tickets', [App\Http\Controllers\TicketController::class, 'index']);
 
-    Route::post('/tickets', [App\Http\Controllers\TicketController::class, 'store']);
+        Route::post('/tickets', [App\Http\Controllers\TicketController::class, 'store']);
 
-    Route::get('/tickets/{id}', [App\Http\Controllers\TicketController::class, 'show']);
+        Route::get('/tickets/{id}', [App\Http\Controllers\TicketController::class, 'show']);
 
-// ticket publik
-    Route::get('/publiks', [App\Http\Controllers\PublikController::class, 'index']);
+    // ticket publik
+        Route::get('/publiks', [App\Http\Controllers\PublikController::class, 'index']);
 
-    Route::post('/publiks', [App\Http\Controllers\PublikController::class, 'store']);
+        Route::post('/publiks', [App\Http\Controllers\PublikController::class, 'store']);
 
-    Route::get('/publiks/{id}', [App\Http\Controllers\PublikController::class, 'show']);
+        Route::get('/publiks/{id}', [App\Http\Controllers\PublikController::class, 'show']);
 
+    // search ticket
+        Route::get('/search-ticket/{kode_tiket}', [App\Http\Controllers\SearchController::class, 'searchTicket']);
+
+    // pesan ticket pegawai
+        Route::get('/tickets/{ticketId}/messages', [App\Http\Controllers\TicketMessageController::class, 'index']);
+        Route::post('/tickets/{ticketId}/messages', [App\Http\Controllers\TicketMessageController::class, 'store']);
+
+    // pesan ticket publik
+    Route::get('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'index']);
+    Route::post('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'store']);
 
 // Admin
     Route::prefix('admin')->group(function () {
     //group route with middleware "auth:api"
         Route::group(['middleware' => 'auth:api'], function () {
 
-        // group route with middleware "auth"
-            Route::group(['middleware' => 'auth:api'], function () {
-            // logout
+        // logout
                 Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
-            });
+
+        // lupa password
+        Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+        Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
         // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
             })->middleware('auth');
 
+        // pantau pekerjaan
+            Route::get('/pantau-pekerjaan', [App\Http\Controllers\MonitoringController::class, 'pantauPekerjaan'])->middleware('auth:api');
+
         // detail staff
-        Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
+            Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
+
+        // search tiket berdasarkan nama
+        Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
+        Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
 
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
@@ -121,19 +139,27 @@ use Illuminate\Support\Facades\Route;
     //group route with middleware "auth:api"
         Route::group(['middleware' => 'auth:api'], function () {
 
-        // group route with middleware "auth"
-            Route::group(['middleware' => 'auth:api'], function () {
-            // logout
+        // logout
                 Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
-            });
+
+        // lupa password
+        Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+        Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
         // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
             })->middleware('auth');
 
+        // pantau pekerjaan
+            Route::get('/pantau-pekerjaan', [App\Http\Controllers\MonitoringController::class, 'pantauPekerjaan'])->middleware('auth:api');
+
         // detail staff
-        Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
+            Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
+
+        // search tiket berdasarkan nama
+        Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
+        Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
 
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
@@ -192,25 +218,25 @@ use Illuminate\Support\Facades\Route;
     });
 });
 
-// Staf
+// Staff
     Route::prefix('staff')->group(function () {
     //group route with middleware "auth:api"
         Route::group(['middleware' => 'auth:api'], function () {
 
-        // group route with middleware "auth"
-            Route::group(['middleware' => 'auth:api'], function () {
-
-            // logout
+        // logout
             Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
-        });
 
-        // dashboard
-            Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
+        // lupa password
+        Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+        Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
-       // notifikasi
+        // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
             })->middleware('auth');
+
+        // dashboard
+                Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
 
         //users
             Route::apiResource('/users', App\Http\Controllers\Api\Admin\UserController::class)
@@ -224,8 +250,16 @@ use Illuminate\Support\Facades\Route;
             Route::put('publiks/{id}/status', [App\Http\Controllers\PublikController::class, 'updateStatus'])
             ->middleware('permission:publiks.update-status');
 
-        // bukti pengerjaan ticket pegawai dan publik
+        // bukti pengerjaan ticket pegawai
             Route::post('/tickets/{ticket}/proof-of-work', [App\Http\Controllers\ProofOfWorkController::class, 'store'])
             ->middleware('permission:proof_of_works.create');
+
+        // bukti pengerjaan ticket publik
+        Route::post('/publiks/{publik}/proof-of-work', [App\Http\Controllers\ProofOfWorkController::class, 'store'])
+        ->middleware('permission:proof_of_works.create');
+
+        // search tiket berdasarkan nama
+        Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
+        Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
     });
 });

@@ -1,6 +1,6 @@
 // src/App.js
 import React from 'react';
-import Tes from './Tes';
+import Tes from './tes2';
 
 function Tes3() {
   return (

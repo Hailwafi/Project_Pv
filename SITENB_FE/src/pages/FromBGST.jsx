@@ -1,41 +1,61 @@
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import Navbar from '../components/Navbar';
-import { useLocation, useNavigate } from 'react-router-dom';
-// import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-
-
 import { useState, useEffect } from 'react';
 
-
-const FromPb = () => {
-  const navigate = useNavigate();
-
+const FromBGST = () => {
   const location = useLocation();
   const [formData, setFormData] = useState({
     nama_lengkap: "",
     email: "",
+    jabatan: "",
+    nomor_induk_pegawai: "",
     kategori: "",
     jenis_tiket: "",
     sub_kategori: "",
     deskripsi: "",
   });
 
-  useEffect(() => {
-    if (location.state) {
-      setFormData({
-        kategori: location.state.kategori || '',
-        jenis_tiket: location.state.jenis_tiket ||'',
-        sub_kategori: location.state.sub_kategori || '',
-      });
-    }
-  }, [location.state]);
-
-
-
   const [unggah_file, setUnggah_file] = useState(null);
+
+  // Data kategori dan jenis tiket
+  const kategoriData = {
+    layanan_pengolahan_data: {
+      options: [
+        { label: 'Laptop', value: 'laptop' },
+        { label: 'Komputer', value: 'komputer' },
+        { label: 'Wifi', value: 'wifi' },
+      ],
+      jenis: [
+        { label: 'Permohonan', value: 'permohonan' },
+        { label: 'Kendala', value: 'kendala' },
+      ],
+    },
+    kebocoran_data: {
+      options: [
+        { label: 'kebocoran Data', value: 'kebocoran_data' },
+        { label: 'Web Defacement', value: 'web_defacement' },
+        { label: 'Denial Of Service', value: 'denial_of_service' },
+        { label: 'Unauthorized Access', value: 'unauthorized_access' },
+        { label: 'Malicious Code', value: 'malicious_code' },
+        { label: 'Unplanned Downtime', value: 'unplanned_downtime' },
+      ],
+      jenis: [
+        { label: 'Permohonan', value: 'permohonan' },
+      ],
+    },
+    printer: {
+      options: [
+        { label: 'Printer', value: 'printer' },
+      ],
+      jenis: [
+        { label: 'Permohonan', value: 'permohonan' },
+      ],
+    },
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,8 +67,6 @@ const FromPb = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validasi email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(formData.email)) {
       toast.error("Email tidak valid!");
@@ -58,6 +76,8 @@ const FromPb = () => {
     const submitData = new FormData();
     submitData.append('nama_lengkap', formData.nama_lengkap);
     submitData.append('email', formData.email);
+    submitData.append('jabatan', formData.jabatan);
+    submitData.append('nomor_induk_pegawai', formData.nomor_induk_pegawai);
     submitData.append('kategori', formData.kategori);
     submitData.append('jenis_tiket', formData.jenis_tiket);
     submitData.append('sub_kategori', formData.sub_kategori);
@@ -67,7 +87,7 @@ const FromPb = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/publiks', submitData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/tickets', submitData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -75,9 +95,6 @@ const FromPb = () => {
 
       if (response.status === 201) {
         toast.success('Pengajuan berhasil!');
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
       } else {
         toast.error(`Error: ${response.data.message || "Terjadi kesalahan."}`);
       }
@@ -89,7 +106,7 @@ const FromPb = () => {
 
   return (
     <>
-    <ToastContainer position="top-center" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
+      <ToastContainer position="top-center" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
       <Navbar />
       <div className="relative isolate mt-10 px-6 pt-14 lg:px-52">
         <form onSubmit={handleSubmit}>
@@ -100,6 +117,7 @@ const FromPb = () => {
             <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
             <div className="border-b border-gray-900/10 pb-12">
               <div className="mt-10 gap-x-6 gap-y-8">
+
                 {/* Input Nama */}
                 <div className="sm:col-span-3">
                   <label htmlFor="nama_lengkap" className="block text-sm font-medium leading-6 text-gray-900">
@@ -136,26 +154,71 @@ const FromPb = () => {
                   </div>
                 </div>
 
+                {/* Input Jabatan */}
+                <div className="sm:col-span-3">
+                  <label htmlFor="jabatan" className="block text-sm font-medium leading-6 text-gray-900">
+                    Jabatan
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="jabatan"
+                      name="jabatan"
+                      type="text"
+                      required
+                      value={formData.jabatan}
+                      onChange={handleChange}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+
+                {/* Input Nomor Induk Pegawai */}
+                <div className="sm:col-span-3">
+                  <label htmlFor="nomor_induk_pegawai" className="block text-sm font-medium leading-6 text-gray-900">
+                    Nomor Induk Pegawai
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="nomor_induk_pegawai"
+                      name="nomor_induk_pegawai"
+                      type="text"
+                      required
+                      value={formData.nomor_induk_pegawai}
+                      onChange={handleChange}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+
                 {/* Input Kategori */}
                 <div className="sm:col-span-3">
                   <label htmlFor="kategori" className="block text-sm font-medium leading-6 text-gray-900">
                     Kategori
                   </label>
                   <div className="mt-2">
-                    <input
+                    <select
                       id="kategori"
                       name="kategori"
-                      type="text"
                       required
                       value={formData.kategori}
-                      // onChange={handleChange}
-
-                      onChange={(e) =>
-                        setFormData({ ...formData, kategori: e.target.value })
-                      }
-
+                      onChange={(e) => {
+                        const selectedCategory = e.target.value;
+                        setFormData({
+                          ...formData,
+                          kategori: selectedCategory,
+                          jenis_tiket: '',
+                          sub_kategori: '',
+                        });
+                      }}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
+                    >
+                      <option value="" disabled>Pilih Kategori</option>
+                      {Object.keys(kategoriData).map((kat) => (
+                        <option key={kat} value={kat}>
+                          {kat.charAt(0).toUpperCase() + kat.slice(1).replace(/_/g, ' ')}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
@@ -165,21 +228,22 @@ const FromPb = () => {
                     Jenis Tiket
                   </label>
                   <div className="mt-2">
-                    <input
+                    <select
                       id="jenis_tiket"
                       name="jenis_tiket"
-                      type="text"
                       required
                       value={formData.jenis_tiket}
-                      // onChange={handleChange}
-
-                      onChange={(e) =>
-                        setFormData({ ...formData, jenis_tiket: e.target.value })
-                      }
-
-
+                      onChange={handleChange}
+                      disabled={!formData.kategori}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
+                    >
+                      <option value="" disabled>Pilih Jenis Tiket</option>
+                      {formData.kategori && kategoriData[formData.kategori].jenis.map((jenis) => (
+                        <option key={jenis.value} value={jenis.value}>
+                          {jenis.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
@@ -192,23 +256,24 @@ const FromPb = () => {
                     <select
                       id="sub_kategori"
                       name="sub_kategori"
-                      type="text"
                       required
                       value={formData.sub_kategori}
                       onChange={handleChange}
-                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                         <option>Kebocoran Data</option>
-                         <option>Web Defacement</option>
-                         <option>Denial Of Service</option>
-                         <option>Unauthorized Access</option>
-                         <option>Malicious Code</option>
-                         <option>Unplanned Downtime</option>
-                      </select>
+                      disabled={!formData.kategori}
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    >
+                      <option value="" disabled>Pilih Sub Kategori</option>
+                      {formData.kategori && kategoriData[formData.kategori].options.map((sub) => (
+                        <option key={sub.value} value={sub.value}>
+                          {sub.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
                 {/* Input Deskripsi */}
-                <div className="col-span-full">
+                <div className="sm:col-span-3">
                   <label htmlFor="deskripsi" className="block text-sm font-medium leading-6 text-gray-900">
                     Deskripsi
                   </label>
@@ -216,52 +281,48 @@ const FromPb = () => {
                     <textarea
                       id="deskripsi"
                       name="deskripsi"
-                      rows={3}
                       required
                       value={formData.deskripsi}
                       onChange={handleChange}
+                      rows="3"
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
 
-                {/* Input File Gambar */}
-                <div className="col-span-full">
+                {/* Input Unggah File */}
+                <div className="sm:col-span-3">
                   <label htmlFor="unggah_file" className="block text-sm font-medium leading-6 text-gray-900">
-                    Upload Gambar
+                    Unggah File
                   </label>
-                  <div className="mt-2 flex items-center gap-x-3">
+                  <div className="mt-2">
                     <input
                       type="file"
-                      id="unggah_file"
                       name="unggah_file"
-                      accept="image/*"
+                      id="unggah_file"
                       onChange={handleImageChange}
-                      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none"
                     />
+                    <p className="mt-1 text-sm text-gray-500" id="file_input_help">PNG, JPG (maksimal 2MB)</p>
                   </div>
                 </div>
 
+                {/* Tombol Kirim */}
+                <div className="sm:col-span-3">
+                  <button
+                    type="submit"
+                    className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Kirim
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-
-          <div className="mt-6 flex items-center justify-end gap-x-6">
-            <button  onClick={() => navigate('/TiketPb')} type="button" className="text-sm font-semibold leading-6 text-gray-900">
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Ajukan
-            </button>
-          </div>
         </form>
-        
       </div>
     </>
   );
 };
 
-export default FromPb;
+export default FromBGST;

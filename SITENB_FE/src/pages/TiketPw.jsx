@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
-import NavbarDb from '../components/NavbarDb';
+import Navbar from '../components/Navbar';
+
+import { useNavigate } from 'react-router-dom';
 
 const TiketPw = () => {
 
+  const navigate = useNavigate();
+
+  const handleButtonClick = (data) => {
+   navigate('/FromPw', { state: { ...data } });
+ };
+ 
   return (
     <>
       <div className='relative isolate px-4 pt-24 sm:px-6 lg:px-8'>
-        <NavbarDb />
+        <Navbar />
 
 
   <div className='flex justify-between items-center'>
@@ -34,8 +42,13 @@ const TiketPw = () => {
                 <h4>Layanan Pengolah Data</h4>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
-                <a
-                   href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                <button 
+                 onClick={() => handleButtonClick({
+                  kategori: 'Layanan Pengolah Data',
+                  jenis_tiket: 'kendala',
+                  sub_kategori: 'Laptop',
+                })}
+                 className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Laptop.png"
@@ -43,9 +56,14 @@ const TiketPw = () => {
                     className="w-16 h-16 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Laptop</span>
-                </a>
-                <a
-                    href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                </button>
+                <button
+                    onClick={() => handleButtonClick({
+                      kategori: 'Layanan Pengolah Data',
+                      jenis_tiket: 'kendala',
+                      sub_kategori: 'Laptop',
+                    })}
+                     className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Computer.png"
@@ -53,7 +71,7 @@ const TiketPw = () => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Komputer</span>
-                </a>
+                </button>
 
                 <a
                   href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"

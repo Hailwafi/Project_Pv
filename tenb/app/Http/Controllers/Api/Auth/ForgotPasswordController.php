@@ -19,31 +19,15 @@ class ForgotPasswordController extends Controller
         // Cari user berdasarkan email
         $user = DB::table('users')->where('email', $request->email)->first();
 
-        if (!$user) 
+        if (!$user)
         {
             return response()->json(['message' => 'Email tidak ditemukan'], 404);
         }
 
-        // Generate token numeric
-        $token = rand(100000, 999999);
+        // Simpan email ke session
+        session(['reset_email' => $request->email]);
 
-        // Simpan token ke tabel password_resets
-        DB::table('password_reset_tokens')->updateOrInsert(
-            ['email' => $request->email],
-            [
-                'email'      => $request->email,
-                'token'      => $token, // Simpan token sebagai angka
-                'created_at' => Carbon::now(),
-            ]
-        );
-
-        // Kirim token ke email user
-        Mail::raw("Kode reset password Anda adalah: $token", function ($message) use ($request) {
-            $message->to($request->email)
-                ->subject('Reset Password Token');
-        });
-
-        return response()->json(['message' => 'Token reset password telah dikirim ke email.']);
+        // Arahkan ke halaman buat password baru
+        return response()->json(['message' => 'Silakan buat password baru.'], 200);
     }
 }
-

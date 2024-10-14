@@ -3,14 +3,9 @@ import { useState } from 'react'
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FormModal from '../components/FormModal';
-import { useNavigate } from 'react-router-dom';
 
-// const navigation = [
-//   {name: 'Pemeliharaan Jaringan Internet', href: '' },
-//   {name: 'Perbaiki Alat Internet', href: '/p' },
-//   {name: 'Hosting APK', href: '#' },
-//   {name: 'Keamanan Sistem', href: '#' },
-// ]
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 const index = () => {
@@ -20,11 +15,30 @@ const index = () => {
 const openForm1 = () => setIsForm1Open(true);
 const closeForm1 = () => setIsForm1Open(false);
 
+const [kodeTiket, setKodeTiket] = useState('');
+const [error, setError] = useState(null);
 const navigate = useNavigate();
 
-  const handleButtonClick = (reportName, category) => {
-    navigate('/FromPb', { state: { reportName, category } });
-  };
+// Fungsi untuk handle pencarian tiket
+const handleSearch = async () => {
+  try {
+   
+    const response = await axios.get(`http://127.0.0.1:8000/api/search-ticket/${kodeTiket}`);
+    console.log(response.data);
+    setError(null);
+
+   
+    navigate(`/Ck_Tiket/${kodeTiket}`, { state: { ticketData: response.data } });
+  } catch (err) {
+
+    if (err.response && err.response.status === 404) {
+      setError('Tiket tidak ditemukan');
+    } else {
+      setError('Terjadi kesalahan pada server');
+    }
+  }
+};
+
 
   return (
     <>
@@ -55,9 +69,15 @@ const navigate = useNavigate();
               Selamat Datang Di SI-TENB
             </h1>
             <div class="relative mt-10 flex items-center justify-center gap-x-6">
-              <input type="text" placeholder="Masukan kode tiket anda" class="w-full box-border rounded-xl outline outline-offset-2 px-3 py-4.2" />
+              <input
+               type="text"
+           
+               value={kodeTiket}
+                 placeholder="Silahkan masukan No. Tiket yang tertera di email Anda" class="w-full box-border rounded-xl outline outline-offset-2 px-3 py-4.2"
+               onChange={(e) => setKodeTiket(e.target.value)}
+ />
 
-              <button class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <button onClick={handleSearch} class="absolute inset-y-0 right-0 flex items-center pr-3">
                 <svg class="text-slate-400 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                 </svg>
@@ -176,8 +196,8 @@ const navigate = useNavigate();
                 <h4>Layanan Pengolah Data</h4>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
-                <button
-                onClick={() => handleButtonClick('Laporan 1', 'Kategori A')}
+                <a
+               
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
@@ -186,7 +206,7 @@ const navigate = useNavigate();
                     className="w-16 h-16 mb-4 md:mb-0 md:mr-4"
                   />
                   <span>Laptop</span>
-                </button>
+                </a>
                 <a
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >

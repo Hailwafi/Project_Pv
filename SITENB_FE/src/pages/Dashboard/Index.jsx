@@ -6,10 +6,13 @@ import Tesnav from '../../components/Tesnav';
 
 const Index = () => {
   
-  const [TotalUserCount, setTotalUserCount] = useState(0);
-  const [TotalCategoriesCount, setTotalCategoriesCount] = useState(0);
-  const [TotalPostsCount, setTotalPostsCount] = useState(0);
-  const [TotalOrdersCount, setTotalOrdersCount] = useState(0);
+  const [Totaltickets_menunggu_pengerjaan, setTotaltickets_menunggu_pengerjaan] = useState(0);
+  const [Totaltickets_proses, setTotaltickets_proses] = useState(0);
+  const [Totaltickets_selesai, setTotaltickets_selesai] = useState(0);
+  const [Totaltickets_pegawai, setTotaltickets_pegawai] = useState(0);
+  const [Totaltickets_publik, setTotaltickets_publik] = useState(0);
+  const [Totaljumlah_kendala, setTotaljumlah_kendala] = useState(0);
+  const [Totaljumlah_permohonan, setTotaljumlah_permohonan] = useState(0);
 
 useEffect(() => {
   const fetchData = async () => {
@@ -21,14 +24,16 @@ useEffect(() => {
         }
       });
       
-      // Ambil data dari respons API
-      const { users, categories, posts, transactions } = response.data.data;
+    
+      const { tickets_menunggu_pengerjaan, tickets_proses, tickets_selesai, tickets_pegawai,tickets_publik ,jumlah_kendala,jumlah_permohonan} = response.data.data;
 
-      // Update state dengan data yang diterima dari API
-      setTotalUserCount(users);
-      setTotalCategoriesCount(categories);
-      setTotalPostsCount(posts);
-      setTotalOrdersCount(transactions);
+      setTotaltickets_menunggu_pengerjaan(tickets_menunggu_pengerjaan);
+      setTotaltickets_proses(tickets_proses);
+      setTotaltickets_selesai(tickets_selesai);
+      setTotaltickets_pegawai(tickets_pegawai);
+      setTotaltickets_publik(tickets_publik);
+      setTotaljumlah_kendala(jumlah_kendala);
+      setTotaljumlah_permohonan(jumlah_permohonan);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -55,7 +60,7 @@ useEffect(() => {
     className="w-16 h-16 mb-4 md:mb-0 md:mr-4"
   />
  <div className='text-white'>
- <p className="text-center">{TotalUserCount}</p>
+ <p className="text-center">{Totaltickets_menunggu_pengerjaan}</p>
    <span>Tiket Menunggu Pengerjaan</span>
  </div>
  <div>
@@ -75,7 +80,7 @@ useEffect(() => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <div className='text-white'>
-                    <p className="text-center">{TotalCategoriesCount}</p>
+                    <p className="text-center">{Totaltickets_proses}</p>
                   <span>Tiket Proses Pengerjaan</span>
                   </div>
                 </a>
@@ -89,7 +94,7 @@ useEffect(() => {
                   />
                   <div className='text-white'>
                     
-                    <p className="text-center">{TotalPostsCount}</p>
+                    <p className="text-center">{Totaltickets_selesai}</p>
                   <span>Tiket Selesai</span>
                   </div>
                 </a>
@@ -108,7 +113,7 @@ useEffect(() => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <div className='text-white'>
-                    <p className="text-center">{TotalOrdersCount}</p>
+                    <p className="text-center">{Totaltickets_pegawai}</p>
                   <span>Tiket Pegawai BNPT</span>
                   </div>
                 </a>
@@ -121,7 +126,7 @@ useEffect(() => {
                     className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
                   />
                   <div className='text-white'>
-                    <p className="text-center">1</p>
+                    <p className="text-center">{Totaltickets_publik}</p>
                   <span>Tiket Public</span>
                   </div>
                 </a>
@@ -147,7 +152,7 @@ useEffect(() => {
   </thead>
   <tbody>
     <tr>
-      <td class="text-center py-14">1</td>
+      <td class="text-center py-14">{Totaljumlah_kendala}</td>
      
     </tr>
   </tbody>
@@ -162,7 +167,7 @@ useEffect(() => {
   <tbody>
     <tr>
      
-      <td class="text-center py-14 ">1</td>
+      <td class="text-center py-14 ">{Totaljumlah_permohonan}</td>
      
     </tr>
   </tbody>

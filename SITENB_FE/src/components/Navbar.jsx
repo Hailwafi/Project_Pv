@@ -18,7 +18,7 @@ function Navbar(){
           <nav aria-label="Global" className=" bg-white flex items-center justify-between p-4 lg:px-8  fixed w-full transition-all">
             <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5 flex items-center">
-  <img alt="BNPT Logo" src="bnpt.png" className="h-16 w-auto" />
+  <img alt="BNPT Logo" src="/bnpt.png" className="h-16 w-auto" />
   <span className="ml-3 text-xl font-bold text-gray-900">SI-TENB</span>
 </a>
             </div>

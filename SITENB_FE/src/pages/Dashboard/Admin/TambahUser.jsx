@@ -25,54 +25,6 @@ const TambahUser = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   if (password !== confirmPassword) {
-  //     toast.error("Password dan konfirmasi password tidak cocok.");
-  //     return;
-  //   }
-  //   try {
-  //     const response = await axios.post('http://127.0.0.1:8000/api/admin/users', {
-  //       email,
-  //       password
-  //     });
-
-  //     console.log('Response:', response.data);
-  //     localStorage.setItem('token', response.data.token);
-
-  //     const token = response.data.token; // Simpan token di sini
-  //     // Anda bisa menyimpannya ke localStorage atau state untuk digunakan nanti
-  //     localStorage.setItem('authToken', token);
-  //     const { permissions } = response.data;
-
-  //     if (permissions && permissions['roles.index']) {
-  //       localStorage.setItem('role', "admin");
-  //       toast.success('Login berhasil! Mengarahkan ke halaman admin...');
-  //       setTimeout(() => {
-  //         navigate("/Dashboard");
-  //       }, 3000);
-
-  //     } else {
-  //       localStorage.setItem('role', "user");
-  //       toast.success('Login berhasil!');
-  //       setTimeout(() => {
-  //         navigate("/tes");
-  //       }, 3000);
-
-  //     }
-  //   } catch (error) {
-  //     const errorMessage = error.response?.data?.message || 'Terjadi kesalahan. Silakan coba lagi.';
-  //     toast.error(errorMessage)
-  //   }
-
-
-  // };
-  // const togglePasswordVisibility = () => {
-  //   setShowPassword((prevShowPassword) => !prevShowPassword);
-  // }
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
@@ -81,7 +33,7 @@ const TambahUser = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token for admin authentication
+          Authorization: `Bearer ${localStorage.getItem("token")}`, 
         },
         body: JSON.stringify(formData),
       });
