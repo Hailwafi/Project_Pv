@@ -39,8 +39,13 @@ class PublikController extends Controller
             'nama_lengkap'        => 'required|string|max:255',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
-            'email'               => 'required|email',
-            'jenis_tiket'         => 'required|string|in:permohonan,kendala',
+            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+                                        {
+                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        {
+                                            $fail('Email harus menggunakan domain @gmail.com.');
+                                        }
+                                        }],            'jenis_tiket'         => 'required|string|in:permohonan,kendala',
             'deskripsi'           => 'required|string',
             'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);
@@ -102,7 +107,13 @@ class PublikController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'kategori'     => 'required|string',
             'sub_kategori' => 'required|string',
-            'email'        => 'required|email',
+            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+                                        {
+                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        {
+                                            $fail('Email harus menggunakan domain @gmail.com.');
+                                        }
+                                        }],            
             'jenis_tiket'  => 'required|string|in:kendala',
             'deskripsi'    => 'required|string',
             'unggah_file'  => 'nullable|file|mimes:jpg,png,pdf|max:2048',

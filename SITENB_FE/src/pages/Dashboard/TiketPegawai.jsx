@@ -1,24 +1,24 @@
+
 import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
-import NavbarDb from '../../components/NavbarDb';
 import FormModal from '../../components/FormModal';
-import PopUp from '../../components/PopUp';
+import Detail from '../../components/Detail';
+
 
 
 const TiketPegawai = () => {
+  const [selectedTickets, setSelectedTickets] = useState(null); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [isForm1Open, setIsForm1Open] = useState(false);
-  const openForm1 = () => setIsForm1Open(true);
-  const closeForm1 = () => setIsForm1Open(false);
-
-  const [isOpen, setIsOpen] = useState(false);
-const openDetail = () => setIsOpen(true);
-const closeDetail = () => setIsOpen(false);
-
-
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [newStatus, setNewStatus] = useState('');
 
+  const openForm1 = () => setIsForm1Open(true);
+  const closeForm1 = () => setIsForm1Open(false);
+
+  useEffect(() => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -35,17 +35,50 @@ const closeDetail = () => setIsOpen(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  fetchData();
+}, []);
+
+const handleDetailClick = (tickets) => {
+  setSelectedTickets(tickets); 
+  setIsModalOpen(true); 
+};
+
+const handleCloseModal = () => {
+  setSelectedTickets(null);
+  setIsModalOpen(false); 
+};
+
+const handleStatusChange = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    await axios.put(`http://localhost:8000/api/admin/tickets/${selectedTickets.id}/status`, {
+      status: newStatus,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const updatedData = await axios.get('http://localhost:8000/api/admin/tickets', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    setData(updatedData.data.data.data);
+    closeForm1(); 
+  } catch (error) {
+    console.error('Error updating status:', error.response.data); 
+  }
+};
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
     <>
-      <div className='relative isolate px-4 pt-24 sm:px-6 lg:px-8'>
-        <NavbarDb />
+    {/* isolate */}
+      <div className='relative  px-4 pt-24 sm:px-6 lg:px-8'>
+        
         <a href="/Dashboard/Tiket" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-1 focus:outline-none focus:ring-blue-300 inline-flex items-center">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
             <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-4.28 9.22a.75.75 0 0 0 0 1.06l3 3a.75.75 0 1 0 1.06-1.06l-1.72-1.72h5.69a.75.75 0 0 0 0-1.5h-5.69l1.72-1.72a.75.75 0 0 0-1.06-1.06l-3 3Z" clipRule="evenodd" />
@@ -100,231 +133,62 @@ const closeDetail = () => setIsOpen(false);
                   <td className="px-6 py-4">{tickets.kategori}</td>
                   <td className="px-6 py-4">{tickets.jenis_tiket}</td>
                   <td className="px-6 py-4">{tickets.status}</td>
+                  
                   <td className="grid grid-cols-1 gap-2 sm:grid-cols-2 p-4">
-                    <button onClick={openForm1} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                    {/* <button onClick={openForm1} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button> */}
+                    
+                    <button onClick={() => { openForm1(); setSelectedTickets(tickets); }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
               
-                    <button onClick={openDetail}  class="font-medium text-blue-600 dark:text-blue-500 hover:underline ">Detail</button>
-
+                    <button  onClick={() => handleDetailClick(tickets)} class="font-medium text-blue-600 dark:text-blue-500 hover:underline ">Detail</button>
+  
                   </td>
                 </tr>
               ))}
+                {isModalOpen && (
+        <Detail tickets={selectedTickets} onClose={handleCloseModal}   title="Detail Tiket Pegawai BNPT" />
+      )}
             </tbody>
           </table>
         </div>
 
-        <FormModal isOpen={isForm1Open} onClose={closeForm1} title="Ubah Status">
+        {/* <FormModal isOpen={isForm1Open} onClose={closeForm1} title="Ubah Status">
           <div className="sm:col-span-3">
-            <label htmlFor="position" className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">
               Pilih status
             </label>
             <div className="mt-2">
               <select
-                id="position"
-                name="position"
-                type="position"
-                autoComplete="position"
+                id="status"
+                name="status"
+                type="status"
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value)}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               >
-                <option>Proses</option>
-                <option>Selesai</option>
+   <option value="">Pilih Status</option>
+              <option value="Proses">Proses</option>
+              <option value="Selesai">Selesai</option>
               </select>
+              <button onClick={handleStatusChange} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg">Simpan</button>
             </div>
           </div>
-        </FormModal>
-        <PopUp
-        isOpen={isOpen}
-        onClose={closeDetail}
-        title="Detail Tiket Pegawai BNPT"
-        children={  
-          <div className="relative isolate mt-10 lg:px-8">
-          <form>
-            <div className="space-y-12">
-            {/* <h2 className=" text-xl text-center font-semibold leading-7 text-gray-900">Silahkan lengkapi formulir di bawah ini</h2>
-                 */}
-                {/* <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" /> */}
-              <div className="border-b border-gray-900/10 pb-12">
-              
-              {/* grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4 */}
-                <div className="mt-10 grid grid-cols-3  gap-x-6 gap-y-8 sm:grid-cols-9 ">
-        
-                  <div className="sm:col-span-3">
-                    <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
-                    Nama
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        required
-                        autoComplete="name"
-                    
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-      
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-      
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
+        </FormModal> */}
+   <FormModal isOpen={isForm1Open} onClose={closeForm1} onSave={handleStatusChange} title="Ubah Status">
+  <div className="sm:col-span-3">
+    <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">Status Baru</label>
+    <select
+      id="status"
+      value={newStatus}
+      onChange={(e) => setNewStatus(e.target.value)}
+      className="block w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+    >
+      <option value="">Pilih Status</option>
+      <option value="proses">Proses</option>
+      <option value="selesai">Selesai</option>
+    </select>
+  </div>
+</FormModal>
 
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                     Email
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="email"
-                        name="email"
-                        type="text"
-                        autoComplete="email"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-span-full">
-              <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-              Deskripsi
-              </label>
-              <div className="mt-2">
-                <textarea
-                  id="description"
-                  name="description"
-                  rows={3}
-                  placeholder='Deskripsi'
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  defaultValue={''}
-                />
-              </div>
-            </div>
-           
-                  {/* <div className="sm:col-span-3">
-                    <label htmlFor="position" className="block text-sm font-medium leading-6 text-gray-900">
-                    Jabatan
-                    </label>
-                    <div className="mt-2">
-                      <select
-                        id="position"
-                        name="position"
-                        type="position"
-                        autoComplete="position"
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      >
-                        <option>Public</option>
-                        <option>Kariyawan</option>
-                      </select>
-                    </div>
-                  </div> */}
-      
-     
-                </div>
-              </div>
-      
-            </div>
-      
-          
-          </form>
-          </div>
-          }
-        modalStyle1="border border-blue-500" // Style untuk modal 1
-      />
       </div>
     </>
   );

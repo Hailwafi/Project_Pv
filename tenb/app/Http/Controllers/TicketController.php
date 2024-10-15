@@ -40,7 +40,13 @@ class TicketController extends Controller
             'jabatan'             => 'required|string|max:255',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
-            'email'               => 'required|email',
+            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+                                        {
+                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        {
+                                            $fail('Email harus menggunakan domain @gmail.com.');
+                                        }
+                                        }],            
             'nomor_induk_pegawai' => 'required|string',
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
             'deskripsi'           => 'required|string',
@@ -107,7 +113,13 @@ class TicketController extends Controller
             'jabatan'             => 'required|string|max:255',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
-            'email'               => 'required|email',
+            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+                                        {
+                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        {
+                                            $fail('Email harus menggunakan domain @gmail.com.');
+                                        }
+                                        }],            
             'nomor_induk_pegawai' => 'required|string',
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
             'deskripsi'           => 'required|string',

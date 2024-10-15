@@ -8,7 +8,6 @@ import { format } from 'date-fns';
 const Ck_Tiket = () => {
  const navigate = useNavigate();
   const location = useLocation();
-  // const ticketData = location.state?.ticketData; 
   const { ticketData } = location.state || {};
   if (!ticketData) {
     return <p>Data tiket tidak tersedia. Coba ulangi pencarian.</p>;

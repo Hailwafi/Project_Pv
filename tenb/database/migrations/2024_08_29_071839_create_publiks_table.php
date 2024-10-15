@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('jenis_tiket', ['kendala']);
             $table->text('deskripsi');
             $table->string('unggah_file')->nullable();
-            $table->enum('status', ['proses', 'selesai'])->default('proses');
+            $table->enum('status', ['open', 'proses', 'selesai'])->default('open');
             $table->unsignedBigInteger('assigned_to')->nullable(); // Staf yang ditugaskan
             $table->foreign('assigned_to')->references('id')->on('users')->onDelete('set null');
             $table->string('kode_tiket')->unique();

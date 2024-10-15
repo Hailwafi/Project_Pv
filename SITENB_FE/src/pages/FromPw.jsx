@@ -189,7 +189,7 @@ const FromPw = () => {
       }
     } catch (error) {
       console.error("Error :", error.response ? error.response.data : error);
-      toast.error("Terjadi kesalahan: " + (error.response ? error.response.data.message : "Kesalahan tidak terduga."));
+      toast.error("Email harus menggunakan domain @gmail.com.: " + (error.response ? error.response.data.message : "Kesalahan tidak terduga."));
     }
   };
 

@@ -180,7 +180,7 @@ const handleSearch = async () => {
       key={item.name}
       href={item.href}
       className="flex flex-col justify-center items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
-    >
+    >p
       {item.name}
     </a>
   ))}
