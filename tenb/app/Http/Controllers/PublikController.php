@@ -39,9 +39,9 @@ class PublikController extends Controller
             'nama_lengkap'        => 'required|string|max:255',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
-            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+            'email'               => ['required', 'email', function ($attribute, $value, $fail)
                                         {
-                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        if (!str_ends_with($value, '@gmail.com'))
                                         {
                                             $fail('Email harus menggunakan domain @gmail.com.');
                                         }
@@ -107,13 +107,13 @@ class PublikController extends Controller
             'nama_lengkap' => 'required|string|max:255',
             'kategori'     => 'required|string',
             'sub_kategori' => 'required|string',
-            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+            'email'               => ['required', 'email', function ($attribute, $value, $fail)
                                         {
-                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        if (!str_ends_with($value, '@gmail.com'))
                                         {
                                             $fail('Email harus menggunakan domain @gmail.com.');
                                         }
-                                        }],            
+                                        }],
             'jenis_tiket'  => 'required|string|in:kendala',
             'deskripsi'    => 'required|string',
             'unggah_file'  => 'nullable|file|mimes:jpg,png,pdf|max:2048',
@@ -213,6 +213,9 @@ class PublikController extends Controller
 
         // Update tiket dengan staf yang ditugaskan
         $publik->assigned_to = $request->assigned_to;
+
+        // Ubah status tiket menjadi 'proses'
+        $publik->status = 'proses'; // Mengubah status menjadi 'proses' saat ditugaskan ke staf
         $publik->save();
 
         // Cari staf yang ditugaskan
@@ -229,27 +232,43 @@ class PublikController extends Controller
 
     public function search(Request $request)
     {
+        // Ambil inputan nama dan status
         $name = $request->input('name');
+        $status = $request->input('status');
 
-        // Validasi input nama
-        if (!$name)
+        // Validasi input nama atau status, setidaknya salah satu harus diisi
+        if (!$name && !$status)
         {
-            return response()->json(['message' => 'Nama diperlukan untuk pencarian'], 422);
+            return response()->json(['message' => 'Nama atau status diperlukan untuk pencarian'], 422);
         }
 
-        // Cari tiket publik berdasarkan nama dan hanya tampilkan kolom tertentu
-        $tickets = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'status')
-            ->where('nama_lengkap', 'LIKE', "%{$name}%")
-            ->get();
+        // Inisialisasi query untuk mencari tiket pegawai atau publik
+        $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'status');
 
-            if ($tickets->isEmpty())
-            {
-                return response()->json(['success' => false, 'message' => 'Tiket tidak ditemukan'], 404);
-            }
+        // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
+        if ($name)
+        {
+            $query->where('nama_lengkap', 'LIKE', "%{$name}%");
+        }
 
-            return response()->json([
-                'success' => true,
-                'data' => $tickets
-            ], 200);
+        // Jika ada input status, tambahkan kondisi pencarian berdasarkan status
+        if ($status)
+        {
+            $query->where('status', 'LIKE', "%{$status}%");
+        }
+
+        // Dapatkan hasil query
+        $publiks = $query->get();
+
+        // Cek apakah tiket ditemukan
+        if ($publiks->isEmpty())
+        {
+            return response()->json(['success' => false, 'message' => 'Tiket publik tidak ditemukan'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $publiks
+        ], 200);
     }
 }

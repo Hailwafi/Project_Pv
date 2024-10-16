@@ -397,13 +397,23 @@ const FromPw = () => {
                 </div>
 
                 {/* Tombol Submit */}
-                <div className="mt-6">
+                {/* <div className="mt-6">
                   <button
                     type="submit"
                     className="block w-full rounded-md bg-indigo-600 py-1.5 text-white font-semibold shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
                   >
                     Kirim
-                  </button>
+                  </button> */}
+                        <div className="mt-6 flex items-center justify-end gap-x-6">
+            <button  onClick={() => navigate('/TiketPw')} type="button" className="text-sm font-semibold leading-6 text-gray-900">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Ajukan
+            </button>
                 </div>
               </div>
             </div>

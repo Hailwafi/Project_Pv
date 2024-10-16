@@ -46,6 +46,7 @@ import TiketPublic from "./pages/Dashboard/TiketPublic"
 
 import WorkStaff from "./pages/Dashboard/Admin/WorkStaff"
 import TesAdmin from "./pages/Dashboard/Admin/TesAdmin"
+import StaffDetail from "./pages/Dashboard/Admin/StaffDetail"
 import ListUser from "./pages/Dashboard/Admin/ListUser"
 import TambahUser from "./pages/Dashboard/Admin/TambahUser"
 
@@ -104,7 +105,8 @@ const AdminLayout = withAuthenticationAdmin(() => (
       <Route path="/Tes3" element={<Tes3/>}/>
         <Route path="/" element={<Dashboard/>}/>
         <Route path="/WorkStaff" element={<WorkStaff/>}/> 
-        <Route path="/TesAdmin/:id" element={<TesAdmin/>}/> 
+        <Route path="/Dashboard/:id" element={<StaffDetail />} />
+
         <Route path="/ListUser" element={<ListUser/>}/>
         <Route path="/TambahUser" element={<TambahUser/>}/>
         <Route path="/Tiket" element={<Tiket/>}/> 
@@ -139,6 +141,7 @@ const StaffLayout = withAuthenticationStaff(() => (
     <div>
       <Routes>
         <Route path="/" element={<Dashboard/>}/>
+        <Route path="/Task" element={<Task/>}/>
       
     
       </Routes>

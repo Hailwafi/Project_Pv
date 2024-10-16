@@ -74,7 +74,7 @@ const TiketPw = () => {
                 </button>
 
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Printer.png"
@@ -92,7 +92,7 @@ const TiketPw = () => {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Internet.png"
@@ -102,7 +102,7 @@ const TiketPw = () => {
                   <span>Internet</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Cctv.png"
@@ -119,7 +119,7 @@ const TiketPw = () => {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Installation.png"
@@ -129,7 +129,7 @@ const TiketPw = () => {
                   <span>Pemasangan</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Consultation.png"
@@ -139,7 +139,7 @@ const TiketPw = () => {
                   <span>Konsultasi</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Unplanned Downtime.png"
@@ -149,7 +149,7 @@ const TiketPw = () => {
                   <span>Unplanned Downtime</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Email.png"
@@ -159,7 +159,7 @@ const TiketPw = () => {
                   <span>Email</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Peneration Test.png"
@@ -177,7 +177,7 @@ const TiketPw = () => {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Kebocoran Data.png"
@@ -187,7 +187,7 @@ const TiketPw = () => {
                   <span>Kebocoran Data</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Web Defacement.png"
@@ -197,7 +197,7 @@ const TiketPw = () => {
                   <span>Web Defacement</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Denial Of Service.png"
@@ -207,7 +207,7 @@ const TiketPw = () => {
                   <span>Denial Of Service</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Unauthorized Access.png"
@@ -217,7 +217,7 @@ const TiketPw = () => {
                   <span>Unauthorized Access</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Malicious Code.png"
@@ -227,7 +227,7 @@ const TiketPw = () => {
                   <span>Malicious Code</span>
                 </a>
                 <a
-                  href="/From" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
+                  href="/FromPw" className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border border-gray-300 rounded-md bg-white hover:bg-blue-100 transition-colors"
                 >
                   <img
                     src="src/img/Unplanned Downtime.png"

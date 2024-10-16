@@ -50,7 +50,7 @@ const WorkStaff = () => {
               <td>{pekerjaan.nama}</td>
               <td>{pekerjaan.jabatan}</td>
               <td>
-                <button
+                {/* <button
                   onClick={() => {
                     console.log('Navigating to staff with ID:', pekerjaan.staff); // Debug log
                     navigate(`/TesAdmin/${pekerjaan.staff}`); // gunakan pekerjaan.staff untuk navigasi
@@ -58,7 +58,16 @@ const WorkStaff = () => {
                   className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
                   Detail
-                </button>
+                </button> */}
+             <button
+        onClick={() => {
+            console.log('Navigating to staff with ID:', pekerjaan.staff);
+            navigate(`/Dashboard/${pekerjaan.staff}`); // Ubah di sini
+        }}
+        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+    >
+        Detail
+    </button>
               </td>
             </tr>
           ))}

@@ -74,9 +74,15 @@ use Illuminate\Support\Facades\Route;
         // detail staff
             Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
 
+        // daftar staff
+            Route::get('/staff-list', [App\Http\Controllers\Api\Admin\UserController::class, 'getStaffList']);
+
+        // search users
+            Route::get('/users/search', [App\Http\Controllers\Api\Admin\UserController::class, 'search']);
+
         // search tiket berdasarkan nama
-        Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
-        Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
+            Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
+            Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
 
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
@@ -157,9 +163,12 @@ use Illuminate\Support\Facades\Route;
         // detail staff
             Route::get('/staff-tasks/{staffId}', [App\Http\Controllers\StaffController::class, 'getStaffTasks']);
 
+        // daftar staff
+            Route::get('/staff-list', [App\Http\Controllers\Api\Admin\UserController::class, 'getStaffList']);
+
         // search tiket berdasarkan nama
-        Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
-        Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
+            Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
+            Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
 
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
@@ -227,8 +236,8 @@ use Illuminate\Support\Facades\Route;
             Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
 
         // lupa password
-        Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
-        Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
+            Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
         // notifikasi
             Route::get('/notifications', function() {

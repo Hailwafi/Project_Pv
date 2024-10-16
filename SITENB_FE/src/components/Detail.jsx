@@ -1,14 +1,21 @@
-// src/ticketsModal.js
-import React from 'react';
 import { format } from 'date-fns';
+import AssignTaskForm from './AssignTaskForm';
+import React, { useState } from 'react';
 
-const Detail = ({ tickets, onClose }) => {
+const Detail = ({ tickets, onClose, staffList, onAssignTask }) => {
+  const [assignData, setAssignData] = useState(null);
+
   if (!tickets) return null;
 
-  // Format tanggal created_at
-  const formattedDate = tickets?.created_at 
-    ? format(new Date(tickets.created_at), 'dd MMMM yyyy') 
+  const formattedDate = tickets?.created_at
+    ? format(new Date(tickets.created_at), 'dd MMMM yyyy')
     : 'Tanggal tidak tersedia';
+
+  const handleAssignTask = (taskData) => {
+    const taskWithTicketInfo = { ...taskData, ticketId: tickets.id }; 
+    onAssignTask(taskWithTicketInfo);
+    setAssignData(taskWithTicketInfo); 
+  };
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
@@ -18,7 +25,7 @@ const Detail = ({ tickets, onClose }) => {
             <div className="space-y-12">
               <div className="border-b border-gray-900/10 pb-12">
                 <div className="mt-10 grid grid-cols-3 gap-x-6 gap-y-8 sm:grid-cols-9">
-                  
+                  {/* Tanggal Field */}
                   <div className="sm:col-span-3">
                     <label htmlFor="date" className="block text-sm font-medium leading-6 text-gray-900">
                       Tanggal:
@@ -32,6 +39,7 @@ const Detail = ({ tickets, onClose }) => {
                     </div>
                   </div>
 
+                  {/* Kode Tiket */}
                   <div className="sm:col-span-3">
                     <label htmlFor="kode_tiket" className="block text-sm font-medium leading-6 text-gray-900">
                       Kode Tiket
@@ -48,6 +56,7 @@ const Detail = ({ tickets, onClose }) => {
                     </div>
                   </div>
 
+                  {/* Nama Lengkap */}
                   <div className="sm:col-span-3">
                     <label htmlFor="nama_lengkap" className="block text-sm font-medium leading-6 text-gray-900">
                       Nama Lengkap
@@ -64,6 +73,7 @@ const Detail = ({ tickets, onClose }) => {
                     </div>
                   </div>
 
+                  {/* Email */}
                   <div className="sm:col-span-3">
                     <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                       Email
@@ -80,158 +90,64 @@ const Detail = ({ tickets, onClose }) => {
                     </div>
                   </div>
 
+                  {/* Jabatan */}
                   <div className="sm:col-span-3">
                     <label htmlFor="jabatan" className="block text-sm font-medium leading-6 text-gray-900">
-                    Jabatan
+                      Jabatan
                     </label>
                     <div className="mt-2">
-                    {tickets.Jabatan ? (
-                      <div
-                        id="jabatan"
-                        name="jabatan"
-                        type="text"
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                      >
-                         {ticketData.data.Jabatan}
+                      {tickets.Jabatan ? (
+                        <div
+                          id="jabatan"
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
+                        >
+                          {tickets.Jabatan}
                         </div>
-                    ) : (
-      <div
-        id="jabatan"
-        className="block w-full rounded-md border-0 py-1.5 text-gray-500 bg-gray-100 sm:text-sm sm:leading-6"
-        disabled
-      >
-       Not Available
-      </div>
-    )}
+                      ) : (
+                        <div
+                          id="jabatan"
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-500 bg-gray-100"
+                        >
+                          Not Available
+                        </div>
+                      )}
                     </div>
                   </div>
 
+                  {/* Nomor Induk Pegawai */}
                   <div className="sm:col-span-3">
                     <label htmlFor="nomor_induk_pegawai" className="block text-sm font-medium leading-6 text-gray-900">
                       Nomor Induk Pegawai
                     </label>
                     <div className="mt-2">
-                    {tickets.nomor_induk_pegawai ? (
-                      <div
-                        id="nomor_induk_pegawai"
-                        name="nomor_induk_pegawai"
-                        type="text"
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                      >
-                         {ticketData.data.nomor_induk_pegawai}
+                      {tickets.nomor_induk_pegawai ? (
+                        <div
+                          id="nomor_induk_pegawai"
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
+                        >
+                          {tickets.nomor_induk_pegawai}
                         </div>
-                    ) : (
-      <div
-        id="nip"
-        className="block w-full rounded-md border-0 py-1.5 text-gray-500 bg-gray-100 sm:text-sm sm:leading-6"
-        disabled
-      >
-       Not Available
-      </div>
-    )}
+                      ) : (
+                        <div
+                          id="nomor_induk_pegawai"
+                          className="block w-full rounded-md border-0 py-1.5 text-gray-500 bg-gray-100"
+                        >
+                          Not Available
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  <div className="sm:col-span-3">
-                    <label htmlFor="kategori" className="block text-sm font-medium leading-6 text-gray-900">
-                      Kategori
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="kategori"
-                        name="kategori"
-                        type="text"
-                        value={tickets.kategori}
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="sm:col-span-3">
-                    <label htmlFor="sub_kategori" className="block text-sm font-medium leading-6 text-gray-900">
-                      Sub Kategori
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="sub_kategori"
-                        name="sub_kategori"
-                        type="text"
-                        value={tickets.sub_kategori}
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="sm:col-span-3">
-                    <label htmlFor="jenis_tiket" className="block text-sm font-medium leading-6 text-gray-900">
-                      Jenis Tiket
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="jenis_tiket"
-                        name="jenis_tiket"
-                        type="text"
-                        value={tickets.jenis_tiket}
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="sm:col-span-3">
-                    <label htmlFor="status" className="block text-sm font-medium leading-6 text-gray-900">
-                      Status
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="status"
-                        name="status"
-                        type="text"
-                        value={tickets.status}
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-span-full">
-                    <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
-                      Deskripsi
-                    </label>
-                    <div className="mt-2">
-                      <textarea
-                        id="description"
-                        name="description"
-                        rows={3}
-                        value={tickets.deskripsi}
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-
-                  {/* <div className="sm:col-span-3">
-                    <label htmlFor="unggah_file" className="block text-sm font-medium leading-6 text-gray-900">
-                      Unggah File
-                    </label>
-                    <div className="mt-2">
-                      <a href={tickets.unggah_file} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
-                        Lihat File
-                      </a>
-                    </div>
-                  </div> */}
-
                 </div>
               </div>
             </div>
           </form>
-        </div>
-        <div className="flex justify-end space-x-4 gap-5">
-          <button onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded mt-4">
+          <AssignTaskForm
+            ticketId={tickets.id} 
+            onAssignTask={handleAssignTask} 
+          />
+          <button
+            onClick={onClose}
+            className="mt-4 inline-flex justify-center rounded-md border border-transparent bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
             Tutup
           </button>
         </div>

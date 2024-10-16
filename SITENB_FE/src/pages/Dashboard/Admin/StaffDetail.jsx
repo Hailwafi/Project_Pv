@@ -19,9 +19,9 @@ const StaffDetail = () => {
           },
         });
         console.log('Staff Detail:', response.data); // Debug log
-
         setStaffDetail(response.data);
       } catch (err) {
+        console.error('Error fetching staff detail:', err); // Tambahkan log ini untuk debugging
         setError(err);
       } finally {
         setLoading(false);
@@ -39,21 +39,8 @@ const StaffDetail = () => {
       <h1>Detail Staff</h1>
       {staffDetail && (
         <div>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
-          <h1>Nama: {staffDetail.kategori}</h1>
+          <p>Nama: {staffDetail.name  }</p>
+          <p>Jabatan: {staffDetail.jabatan}</p>
           {/* Tambahkan informasi lainnya sesuai kebutuhan */}
         </div>
       )}

@@ -1,7 +1,32 @@
 import React from 'react'
 import NavbarDb from '../../components/NavbarDb';
+import { useState, useEffect } from 'react';
 
-const Tiket = () => {
+
+const navigation = [
+  {name: 'Tiket Pegawai BNPT', href: '/Dashboard/TiketPegawai',role: 'admin'},
+  {name: 'Tiket Public BNPT', href: '/Dashboard/TiketPublic',role: 'admin' },
+ 
+  {name: 'Tiket Pegawai BNPT', href: '/Leader/TiketPegawai',role: 'kepala_subbag'},
+  {name: 'Tiket Public BNPT', href: '/Leader/TiketPublic',role: 'kepala_subbag' },
+
+
+ 
+
+]
+
+
+const Tiket = ({  }) => {
+
+  
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+
+    const userRole = localStorage.getItem('role'); 
+    setRole(userRole); 
+  }, []);
+
   return (
     <div className='relative isolate px-6 pt-14 lg:px-8'>
     <NavbarDb/>
@@ -13,8 +38,20 @@ const Tiket = () => {
     </div> */}
  <div className="flex flex-col lg:flex-row items-center space-y-31 lg:space-y-0 lg:space-x-31">
   <div className="flex flex-col space-y-2">
-    <a href="/Dashboard/TiketPegawai">&gt;Tiket Pegawai BNPT</a>
-    <a href="/Dashboard/TiketPublic">&gt;Tiket Public</a>
+    {/* <a href="/Dashboard/TiketPegawai">&gt;Tiket Pegawai BNPT</a> */}
+    {/* <a href="/Dashboard/TiketPublic">&gt;Tiket Public</a> */}
+
+    {navigation
+        .filter((item) => item.role === role)
+        .map((item) => (
+          <a
+            key={item.name}
+            href={item.href}
+            className="text-sm font-semibold leading-6 text-gray-900"
+          >
+           &gt; {item.name}
+          </a>
+        ))}
   </div>
 
 

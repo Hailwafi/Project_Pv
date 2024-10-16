@@ -40,13 +40,13 @@ class TicketController extends Controller
             'jabatan'             => 'required|string|max:255',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
-            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+            'email'               => ['required', 'email', function ($attribute, $value, $fail)
                                         {
-                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        if (!str_ends_with($value, '@gmail.com'))
                                         {
                                             $fail('Email harus menggunakan domain @gmail.com.');
                                         }
-                                        }],            
+                                        }],
             'nomor_induk_pegawai' => 'required|string',
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
             'deskripsi'           => 'required|string',
@@ -113,13 +113,13 @@ class TicketController extends Controller
             'jabatan'             => 'required|string|max:255',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
-            'email'               => ['required', 'email', function ($attribute, $value, $fail) 
+            'email'               => ['required', 'email', function ($attribute, $value, $fail)
                                         {
-                                        if (!str_ends_with($value, '@gmail.com')) 
+                                        if (!str_ends_with($value, '@gmail.com'))
                                         {
                                             $fail('Email harus menggunakan domain @gmail.com.');
                                         }
-                                        }],            
+                                        }],
             'nomor_induk_pegawai' => 'required|string',
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
             'deskripsi'           => 'required|string',
@@ -223,6 +223,9 @@ class TicketController extends Controller
 
         // Update tiket dengan staf yang ditugaskan
         $ticket->assigned_to = $request->assigned_to;
+
+        // Ubah status tiket menjadi 'proses'
+        $ticket->status = 'proses'; // Mengubah status menjadi 'proses' saat ditugaskan ke staf
         $ticket->save();
 
         // Cari staf yang ditugaskan
@@ -239,27 +242,43 @@ class TicketController extends Controller
 
     public function search(Request $request)
     {
+        // Ambil inputan nama dan status
         $name = $request->input('name');
+        $status = $request->input('status');
 
-        // Validasi input nama
-        if (!$name)
+        // Validasi input nama atau status, setidaknya salah satu harus diisi
+        if (!$name && !$status)
         {
-            return response()->json(['message' => 'Nama diperlukan untuk pencarian'], 422);
+            return response()->json(['message' => 'Nama atau status diperlukan untuk pencarian'], 422);
         }
 
-        // Cari tiket pegawai berdasarkan nama dan hanya tampilkan kolom tertentu
-        $tickets = Ticket::select('nama_lengkap', 'email', 'jabatan', 'kategori', 'jenis_tiket', 'status')
-            ->where('nama_lengkap', 'LIKE', "%{$name}%")
-            ->get();
+        // Inisialisasi query untuk mencari tiket pegawai atau publik
+        $query = Ticket::select('nama_lengkap', 'email', 'jabatan', 'kategori', 'jenis_tiket', 'status');
 
-            if ($tickets->isEmpty())
-            {
-                return response()->json(['success' => false, 'message' => 'Tiket tidak ditemukan'], 404);
-            }
+        // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
+        if ($name)
+        {
+            $query->where('nama_lengkap', 'LIKE', "%{$name}%");
+        }
 
-            return response()->json([
-                'success' => true,
-                'data' => $tickets
-            ], 200);
+        // Jika ada input status, tambahkan kondisi pencarian berdasarkan status
+        if ($status)
+        {
+            $query->where('status', 'LIKE', "%{$status}%");
+        }
+
+        // Dapatkan hasil query
+        $tickets = $query->get();
+
+        // Cek apakah tiket ditemukan
+        if ($tickets->isEmpty())
+        {
+            return response()->json(['success' => false, 'message' => 'Tiket pegawai tidak ditemukan'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $tickets
+        ], 200);
     }
 }
