@@ -23,9 +23,11 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->string('unggah_file')->nullable();
             $table->enum('status', ['open', 'proses', 'selesai'])->default('open');
+            $table->string('prioritas')->nullable();
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->foreign('assigned_to')->references('id')->on('users')->onDelete('set null');
             $table->string('kode_tiket')->unique();
+            $table->string('token_tiket')->unique();
             $table->timestamps();
         });
 

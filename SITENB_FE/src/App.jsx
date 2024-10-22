@@ -42,11 +42,13 @@ import TiketPw from "./pages/TiketPw"
 import Tiket from "./pages/Dashboard/Tiket"
 import TiketPegawai from "./pages/Dashboard/TiketPegawai"
 import TiketPublic from "./pages/Dashboard/TiketPublic"
+import StaffList from "./pages/Dashboard/StaffList"
+import StaffDetail from "./pages/Dashboard/StaffDetail"
 
 
 import WorkStaff from "./pages/Dashboard/Admin/WorkStaff"
 import TesAdmin from "./pages/Dashboard/Admin/TesAdmin"
-import StaffDetail from "./pages/Dashboard/Admin/StaffDetail"
+// import StaffDetail from "./pages/Dashboard/Admin/StaffDetail"
 import ListUser from "./pages/Dashboard/Admin/ListUser"
 import TambahUser from "./pages/Dashboard/Admin/TambahUser"
 
@@ -105,13 +107,16 @@ const AdminLayout = withAuthenticationAdmin(() => (
       <Route path="/Tes3" element={<Tes3/>}/>
         <Route path="/" element={<Dashboard/>}/>
         <Route path="/WorkStaff" element={<WorkStaff/>}/> 
-        <Route path="/Dashboard/:id" element={<StaffDetail />} />
+        {/* <Route path="/Dashboard/:id" element={<StaffDetail />} /> */}
 
         <Route path="/ListUser" element={<ListUser/>}/>
         <Route path="/TambahUser" element={<TambahUser/>}/>
         <Route path="/Tiket" element={<Tiket/>}/> 
         <Route path="/TiketPegawai" element={<TiketPegawai/>}/> 
         <Route path="/TiketPublic" element={<TiketPublic/>}/> 
+
+        <Route path="/StaffList" element={<StaffList/>}/> 
+        <Route path="/StaffDetail/:id" element={<StaffDetail/>}/> 
 
 
     
@@ -130,6 +135,9 @@ const LeaderLayout = withAuthenticationLeader(() => (
         <Route path="/TiketPegawai" element={<TiketPegawai/>}/> 
         <Route path="/TiketPublic" element={<TiketPublic/>}/> 
     
+        <Route path="/StaffList" element={<StaffList/>}/> 
+        <Route path="/StaffDetail/:id" element={<StaffDetail/>}/> 
+
       </Routes>
     </div>
   </>

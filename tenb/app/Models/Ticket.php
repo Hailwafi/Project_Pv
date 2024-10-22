@@ -22,8 +22,10 @@ class Ticket extends Model
         'deskripsi',
         'unggah_file',
         'status',
+        'prioritas',
         'assigned_to',
-        'kode_tiket'
+        'kode_tiket',
+        'token_tiket'
     ];
 
     // Relasi ke model User untuk assigned staff

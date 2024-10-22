@@ -8,6 +8,7 @@
     <p>Terima kasih telah membuat tiket. Berikut adalah detail tiket Anda:</p>
     <ul>
         <li>Kode Tiket: <strong>{{ $ticket->kode_tiket }}</strong></li>
+        <li>Token Tiket: <strong>{{ $ticket->token_tiket }}</strong></li>
         <li>Kategori: {{ $ticket->kategori }}</li>
         <li>Sub Kategori: {{ $ticket->sub_kategori }}</li>
         <li>Jenis Tiket: {{ $ticket->jenis_tiket }}</li>

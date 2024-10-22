@@ -11,12 +11,12 @@ import PopUp from './PopUp';
 const navigation = [
   {name: 'Dashboard', href: '/Dashboard',role: 'admin'},
   {name: 'Tiket', href: '/Dashboard/Tiket',role: 'admin' },
-  {name: 'Pantau pekerjaan', href: '/Dashboard/WorkStaff',role: 'admin' },
+  {name: 'Pantau pekerjaan', href: '/Dashboard/StaffList',role: 'admin' },
   {name: 'Users', href: '/Dashboard/ListUser',role: 'admin' },
 
   {name: 'Dashboard', href: '/Leader',role: 'kepala_subbag'},
   {name: 'Tiket', href: '/Leader/Tiket',role: 'kepala_subbag' },
-  {name: 'Pantau pekerjaan', href: '/Leader/WorkStaff',role: 'kepala_subbag' },
+  {name: 'Pantau pekerjaan', href: '/Leader/StaffList',role: 'kepala_subbag' },
 
   {name: 'Dashboard', href: '/Staff',role: 'staff'},
   {name: 'Tugas Masuk', href: '/Staff/Task',role: 'staff' },

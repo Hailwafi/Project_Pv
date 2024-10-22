@@ -16,10 +16,8 @@ class MonitoringController extends Controller
         $formattedStaffs = $staffs->map(function ($staff)
         {
             return [
-                'no'   => $staff->id - 2, // Menghitung dari 1 (3-2=1)
                 'nama'  => $staff->username,
-                'staff' => $staff->id - 2, // Staff berapa (1 sampai 5)
-                'aksi'  => 'Detail' // Aksi yang diinginkan
+                'staff' => $staff->id
             ];
         });
 

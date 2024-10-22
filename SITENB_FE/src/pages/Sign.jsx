@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Sign = () => {
-  const [email, setEmail] = useState('');
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [recaptchaToken, setRecaptchaToken] = useState(null);
@@ -24,10 +24,9 @@ const Sign = () => {
     try {
       // Mengirim data login ke server
       const response = await axios.post('http://127.0.0.1:8000/api/login', {
-        email,
         username,
         password,
-        'g-recaptcha-response': recaptchaToken // Opsional jika reCAPTCHA diaktifkan
+        'g-recaptcha-response': recaptchaToken 
       });
 
       // // Jika login berhasil, menyimpan token dan role ke localStorage
@@ -84,7 +83,7 @@ const Sign = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleLogin} className="space-y-6">
-            <div>
+            {/* <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                 Email
               </label>
@@ -101,7 +100,7 @@ const Sign = () => {
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
                 />
               </div>
-            </div>
+            </div> */}
 
             <div>
               <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">

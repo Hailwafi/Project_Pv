@@ -36,7 +36,7 @@ class PublikController extends Controller
     {
         // Validasi request
         $validator = Validator::make($request->all(), [
-            'nama_lengkap'        => 'required|string|max:255',
+            'nama_lengkap'        => 'required|string|max:25',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
             'email'               => ['required', 'email', function ($attribute, $value, $fail)
@@ -45,9 +45,10 @@ class PublikController extends Controller
                                         {
                                             $fail('Email harus menggunakan domain @gmail.com.');
                                         }
-                                        }],            'jenis_tiket'         => 'required|string|in:permohonan,kendala',
-            'deskripsi'           => 'required|string',
-            'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+                                        }],
+            'jenis_tiket'         => 'required|string|in:kendala',
+            'deskripsi'           => 'required|string|max:255',
+            'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:5242880',
         ]);
 
         if ($validator->fails())
@@ -57,14 +58,19 @@ class PublikController extends Controller
 
         // Simpan unggah file jika ada
         $unggah_file_path = null;
+        $unggah_file_url = null;
         if ($request->hasFile('unggah_file'))
         {
             $unggah_file = $request->file('unggah_file');
             $unggah_file_path = $unggah_file->store('ticket_images', 'public');
+
+        // Dapatkan URL publik dari file yang disimpan
+            $unggah_file_url = Storage::url($unggah_file_path);
         }
 
         // Generate kode tiket unik (contoh: 6 digit angka)
         $kode_tiket = mt_rand(100000, 999999);
+        $token_tiket = mt_rand(10000000, 99999999);
 
         // Buat tiket pegawai
         $publik = Publik::create([
@@ -75,7 +81,9 @@ class PublikController extends Controller
             'jenis_tiket'         => $request->jenis_tiket,
             'deskripsi'           => $request->deskripsi,
             'unggah_file'         => $unggah_file_path,
+            'status'                =>'open',
             'kode_tiket'          => $kode_tiket,
+            'token_tiket'         => $token_tiket,
         ]);
 
         if ($publik)
@@ -89,8 +97,11 @@ class PublikController extends Controller
             // Kirim email kode tiket ke pengguna
             Mail::to($publik->email)->send(new TicketCode($publik,true));
 
-            return new PublikResource(true, 'Berhasil membuat Ticket Publik', $publik);
-        }
+            return new PublikResource(true, 'Berhasil membuat Ticket Publik',
+            [
+                'publik'          => $publik,
+                'unggah_file_url' => $unggah_file_url,
+        ]);}
 
         return new PublikResource(false, 'Gagal membuat Ticket Publik!', null);
     }
@@ -104,7 +115,7 @@ class PublikController extends Controller
     {
         // Validasi request
         $validator = Validator::make($request->all(), [
-            'nama_lengkap' => 'required|string|max:255',
+            'nama_lengkap' => 'required|string|max:25',
             'kategori'     => 'required|string',
             'sub_kategori' => 'required|string',
             'email'               => ['required', 'email', function ($attribute, $value, $fail)
@@ -115,7 +126,7 @@ class PublikController extends Controller
                                         }
                                         }],
             'jenis_tiket'  => 'required|string|in:kendala',
-            'deskripsi'    => 'required|string',
+            'deskripsi'    => 'required|string|max:255',
             'unggah_file'  => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
@@ -201,6 +212,7 @@ class PublikController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'assigned_to' => 'required|exists:users,id', // Pastikan assigned_to valid
+            'prioritas'   => 'required|in:rendah,sedang,tinggi', // Validasi prioritas
         ]);
 
         if ($validator->fails())
@@ -213,6 +225,7 @@ class PublikController extends Controller
 
         // Update tiket dengan staf yang ditugaskan
         $publik->assigned_to = $request->assigned_to;
+        $publik->prioritas = $request->prioritas; // Menambahkan prioritas tiket
 
         // Ubah status tiket menjadi 'proses'
         $publik->status = 'proses'; // Mengubah status menjadi 'proses' saat ditugaskan ke staf
@@ -225,9 +238,31 @@ class PublikController extends Controller
         $staf->notify(new TicketAssignedNotification($publik, 'pegawai'));  // 'pegawai' untuk tipe tiket pegawai
 
         return response()->json([
-            'message'     => 'Tiket berhasil ditugaskan kepada Staf.',
+            'message'     => 'Tiket berhasil ditugaskan kepada Staff dengan prioritas ' . $request->prioritas . '.',
             'assigned_to' => $staf->username, // Menyertakan nama staf yang ditugaskan
+            'prioritas'   => $publik->prioritas, // Menyertakan prioritas tiket
         ], 200);
+    }
+
+    public function getNewPublikPubliks(Request $request)
+    {
+        // Ambil semua tiket publik tanpa filter status, lalu pilih kolom yang dibutuhkan
+        $publikTickets = Publik::all()->map(function ($ticket)
+        {
+            return [
+                'nama_lengkap' => $ticket->nama_lengkap,
+                'email'        => $ticket->email,
+                'kategori'     => $ticket->kategori,
+                'jenis_tiket'  => $ticket->jenis_tiket,
+                'status'       => $ticket->status,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Semua tiket publik berhasil ditemukan.',
+            'data'    => $publikTickets
+        ]);
     }
 
     public function search(Request $request)
@@ -243,7 +278,7 @@ class PublikController extends Controller
         }
 
         // Inisialisasi query untuk mencari tiket pegawai atau publik
-        $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'status');
+        $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'status', 'prioritas');
 
         // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
         if ($name)
@@ -272,3 +307,4 @@ class PublikController extends Controller
         ], 200);
     }
 }
+

@@ -36,20 +36,20 @@ class TicketController extends Controller
     {
         // Validasi request
         $validator = Validator::make($request->all(), [
-            'nama_lengkap'        => 'required|string|max:255',
-            'jabatan'             => 'required|string|max:255',
+            'nama_lengkap'        => 'required|string|max:25',
+            'jabatan'             => 'required|string|max:15',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
             'email'               => ['required', 'email', function ($attribute, $value, $fail)
                                         {
-                                        if (!str_ends_with($value, '@gmail.com'))
-                                        {
-                                            $fail('Email harus menggunakan domain @gmail.com.');
-                                        }
+                                            if (!str_ends_with($value, '@bnpt.go.id'))
+                                            {
+                                                $fail('Email harus menggunakan domain @bnpt.go.id.');
+                                            }
                                         }],
-            'nomor_induk_pegawai' => 'required|string',
+            'nomor_induk_pegawai' => 'required|string:18',
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
-            'deskripsi'           => 'required|string',
+            'deskripsi'           => 'required|string|max:255',
             'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
@@ -59,15 +59,20 @@ class TicketController extends Controller
         }
 
         // Simpan unggah file jika ada
-        $unggah_file_path = null;
+            $unggah_file_path = null;
+            $unggah_file_url = null;
         if ($request->hasFile('unggah_file'))
         {
             $unggah_file = $request->file('unggah_file');
             $unggah_file_path = $unggah_file->store('ticket_images', 'public');
+
+        // Dapatkan URL publik dari file yang disimpan
+            $unggah_file_url = Storage::url($unggah_file_path);
         }
 
         // Generate kode tiket unik (contoh: 6 digit angka)
-        $kode_tiket = mt_rand(100000, 999999);
+            $kode_tiket = mt_rand(100000, 999999);
+            $token_tiket = mt_rand(10000000, 99999999);
 
         // Buat tiket pegawai
         $ticket = Ticket::create([
@@ -80,7 +85,9 @@ class TicketController extends Controller
             'jenis_tiket'         => $request->jenis_tiket,
             'deskripsi'           => $request->deskripsi,
             'unggah_file'         => $unggah_file_path,
+            'status'                =>'open',
             'kode_tiket'          => $kode_tiket,
+            'token_tiket'         => $token_tiket,
         ]);
 
         if ($ticket)
@@ -94,8 +101,11 @@ class TicketController extends Controller
             // Kirim email kode tiket ke pengguna
             Mail::to($ticket->email)->send(new TicketCode($ticket));
 
-            return new TicketResource(true, 'Berhasil membuat Ticket Pegawai', $ticket);
-        }
+            return new TicketResource(true, 'Berhasil membuat Ticket Pegawai',
+            [
+                'ticket'          => $ticket,
+                'unggah_file_url' => $unggah_file_url,
+            ]);}
 
         return new TicketResource(false, 'Gagal membuat Pegawai!', null);
     }
@@ -109,20 +119,20 @@ class TicketController extends Controller
     {
         // Validasi request
         $validator = Validator::make($request->all(), [
-            'nama_lengkap'        => 'required|string|max:255',
-            'jabatan'             => 'required|string|max:255',
+            'nama_lengkap'        => 'required|string|max:25',
+            'jabatan'             => 'required|string|max:15',
             'kategori'            => 'required|string',
             'sub_kategori'        => 'required|string',
             'email'               => ['required', 'email', function ($attribute, $value, $fail)
                                         {
-                                        if (!str_ends_with($value, '@gmail.com'))
-                                        {
-                                            $fail('Email harus menggunakan domain @gmail.com.');
-                                        }
+                                            if (!str_ends_with($value, '@bnpt.go.id'))
+                                            {
+                                                $fail('Email harus menggunakan domain @bnpt.go.id.');
+                                            }
                                         }],
-            'nomor_induk_pegawai' => 'required|string',
+            'nomor_induk_pegawai' => 'required|string:18',
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
-            'deskripsi'           => 'required|string',
+            'deskripsi'           => 'required|string|max:255',
             'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
         ]);
 
@@ -211,6 +221,7 @@ class TicketController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'assigned_to' => 'required|exists:users,id', // Pastikan assigned_to valid
+            'prioritas'   => 'required|in:rendah,sedang,tinggi', // Validasi prioritas
         ]);
 
         if ($validator->fails())
@@ -221,8 +232,9 @@ class TicketController extends Controller
         // Cari tiket berdasarkan ID
         $ticket = Ticket::findOrFail($id);
 
-        // Update tiket dengan staf yang ditugaskan
+        // Update tiket dengan staf yang ditugaskan dan prioritas
         $ticket->assigned_to = $request->assigned_to;
+        $ticket->prioritas = $request->prioritas; // Menambahkan prioritas tiket
 
         // Ubah status tiket menjadi 'proses'
         $ticket->status = 'proses'; // Mengubah status menjadi 'proses' saat ditugaskan ke staf
@@ -235,9 +247,32 @@ class TicketController extends Controller
         $staf->notify(new TicketAssignedNotification($ticket, 'pegawai'));  // 'pegawai' untuk tipe tiket pegawai
 
         return response()->json([
-            'message'     => 'Tiket berhasil ditugaskan kepada Staff.',
+            'message'     => 'Tiket berhasil ditugaskan kepada Staff dengan prioritas ' . $request->prioritas . '.',
             'assigned_to' => $staf->username, // Menyertakan nama staf yang ditugaskan
+            'prioritas'   => $ticket->prioritas, // Menyertakan prioritas tiket
         ], 200);
+    }
+
+    public function getNewPegawaiTickets(Request $request)
+    {
+        // Ambil semua tiket pegawai tanpa filter status, lalu pilih kolom yang dibutuhkan
+        $tickets = Ticket::all()->map(function ($ticket)
+        {
+            return [
+                'nama_lengkap' => $ticket->nama_lengkap,
+                'email'        => $ticket->email,
+                'jabatan'      => $ticket->jabatan,
+                'kategori'     => $ticket->kategori,
+                'jenis_tiket'  => $ticket->jenis_tiket,
+                'status'       => $ticket->status,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Semua tiket pegawai BNPT berhasil ditemukan.',
+            'data'    => $tickets
+        ]);
     }
 
     public function search(Request $request)

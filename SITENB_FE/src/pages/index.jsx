@@ -16,29 +16,69 @@ const openForm1 = () => setIsForm1Open(true);
 const closeForm1 = () => setIsForm1Open(false);
 
 const [kodeTiket, setKodeTiket] = useState('');
+const [tokenTiket, setToken] = useState('');
 const [error, setError] = useState(null);
 const navigate = useNavigate();
 
-// Fungsi untuk handle pencarian tiket
+
 const handleSearch = async () => {
-  try {
+//   try {
    
-    const response = await axios.get(`http://127.0.0.1:8000/api/search-ticket/${kodeTiket}`);
-    console.log(response.data);
-    setError(null);
+//     const response = await axios.get(`http://127.0.0.1:8000/api/search-ticket/${kodeTiket}`);
+//     console.log(response.data);
+//     setError(null);
 
    
-    navigate(`/Ck_Tiket/${kodeTiket}`, { state: { ticketData: response.data } });
-  } catch (err) {
+//     navigate(`/Ck_Tiket/${kodeTiket}`, { state: { ticketData: response.data } });
+//   } catch (err) {
 
-    if (err.response && err.response.status === 404) {
-      setError('Tiket tidak ditemukan');
-    } else {
-      setError('Terjadi kesalahan pada server');
-    }
+//     if (err.response && err.response.status === 404) {
+//       setError('Tiket tidak ditemukan');
+//     } else {
+//       setError('Terjadi kesalahan pada server');
+//     }
+//   }
+// };
+
+// try {
+//   // Request ke backend untuk mencari tiket berdasarkan kode tiket dan token
+//   const response = await axios.get(`http://localhost:8000/api/tickets/${kodeTiket}/${tokenTiket}`, {
+//     params: {
+//       token_tiket: tokenTiket,
+//     }
+//   });
+
+  
+//   console.log(response.data);
+//   setError(null);
+//   navigate(`/Ck_Tiket/${kodeTiket}`, { state: { ticketData: response.data } });
+// } catch (err) {
+//   if (err.response && err.response.status === 404) {
+//     setError('Tiket tidak ditemukan atau token salah');
+//   } else {
+//     setError('Terjadi kesalahan pada server');
+//   }
+// }
+// };
+try {
+  // Send a POST request to the search-ticket API
+  const response = await axios.post('http://localhost:8000/api/search-ticket', {
+    kode_tiket: kodeTiket,
+    token_tiket: tokenTiket,
+  });
+
+  console.log(response.data);
+  setError(null);
+  
+  navigate(`/Ck_Tiket/${kodeTiket}`, { state: { ticketData: response.data } });
+} catch (err) {
+  if (err.response && err.response.status === 404) {
+    setError('Tiket tidak ditemukan atau token salah');
+  } else {
+    setError('Terjadi kesalahan pada server');
   }
+}
 };
-
 
   return (
     <>
@@ -68,21 +108,53 @@ const handleSearch = async () => {
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-7xl">
               Selamat Datang Di SI-TENB
             </h1>
-            <div class="relative mt-10 flex items-center justify-center gap-x-6">
+            <div class="relative mt-10  items-center justify-center gap-x-6">
               <input
                type="text"
            
                value={kodeTiket}
-                 placeholder="Silahkan masukan No. Tiket yang tertera di email Anda" class="w-full box-border rounded-xl outline outline-offset-2 px-3 py-4.2"
+                 placeholder="Masukan Nomor Tiket Anda" class="w-full box-border rounded-xl  px-3 py-4.2"
                onChange={(e) => setKodeTiket(e.target.value)}
  />
+              <input
+               type="text"
+           
+               value={tokenTiket}
+                 placeholder="Masukan Token Anda" class="mt-8 w-full box-border rounded-xl  px-3 py-4.2"
+               onChange={(e) => setToken(e.target.value)}
+ />
+ <div className="flex justify-center">
+  <button
+    onClick={handleSearch}
+    className="mt-4 flex items-center rounded-md bg-customRed px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+  >
+    <span className="text-sm font-medium">Cari Tiket Anda</span>
+    <svg
+      className="text-white h-5 w-5 ml-1" 
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fillRule="evenodd"
+        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+        clipRule="evenodd"
+      />
+    </svg>
+  </button>
+</div>
 
-              <button onClick={handleSearch} class="absolute inset-y-0 right-0 flex items-center pr-3">
+
+{/* 
+              <button onClick={handleSearch} class="rounded-md mt-4 bg-customRed px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-900  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ">
                 <svg class="text-slate-400 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                 </svg>
-              </button>
+              </button> */}
             </div>
+
+
+
+            
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
                  href="/PANDUANN-PENGGUNAAN-APK-SITENB.pdf"

@@ -133,6 +133,7 @@ const ListUser = () => {
                   <td className="px-6 py-4">{user.role}</td>
                   <td className="px-6 py-4 text-center">
                     <div className="flex justify-center gap-4">
+                      <button onClick={openDetail} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
                       <button onClick={openDetail} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Hapus</button>
                     </div>
                   </td>

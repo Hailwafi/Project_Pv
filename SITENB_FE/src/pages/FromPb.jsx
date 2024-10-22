@@ -1,19 +1,15 @@
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import Navbar from '../components/Navbar';
 import { useLocation, useNavigate } from 'react-router-dom';
-// import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-
-
 import { useState, useEffect } from 'react';
 
-
-const FromPb = () => {
+const FormPb = () => {
   const navigate = useNavigate();
-
   const location = useLocation();
+
   const [formData, setFormData] = useState({
     nama_lengkap: "",
     email: "",
@@ -22,27 +18,32 @@ const FromPb = () => {
     sub_kategori: "",
     deskripsi: "",
   });
+  const maxCharacters = 255;
+
+  const [unggah_file, setUnggah_file] = useState(null);
 
   useEffect(() => {
     if (location.state) {
       setFormData({
         kategori: location.state.kategori || '',
-        jenis_tiket: location.state.jenis_tiket ||'',
+        jenis_tiket: location.state.jenis_tiket || '',
         sub_kategori: location.state.sub_kategori || '',
+        deskripsi: '', // Ensure deskripsi is always initialized
       });
     }
   }, [location.state]);
-
-
-
-  const [unggah_file, setUnggah_file] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleImageChange = (e) => {
-    setUnggah_file(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file && file.size > 5242880) { // Batasi ukuran file maksimal 1MB
+      toast.error("Ukuran file terlalu besar. Maksimal 1MB.");
+      return;
+    }
+    setUnggah_file(file);
   };
 
   const handleSubmit = async (e) => {
@@ -73,7 +74,7 @@ const FromPb = () => {
         },
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success('Pengajuan berhasil!');
         setTimeout(() => {
           navigate("/");
@@ -89,7 +90,7 @@ const FromPb = () => {
 
   return (
     <>
-    <ToastContainer position="top-center" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
+      <ToastContainer position="top-center" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
       <Navbar />
       <div className="relative isolate mt-10 px-6 pt-14 lg:px-52">
         <form onSubmit={handleSubmit}>
@@ -111,6 +112,7 @@ const FromPb = () => {
                       name="nama_lengkap"
                       type="text"
                       required
+                      placeholder='Masukan Nama Lengkap Anda'
                       value={formData.nama_lengkap}
                       onChange={handleChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -129,6 +131,7 @@ const FromPb = () => {
                       name="email"
                       type="email"
                       required
+                      placeholder='Masukan Email Anda'
                       value={formData.email}
                       onChange={handleChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -147,13 +150,9 @@ const FromPb = () => {
                       name="kategori"
                       type="text"
                       required
-                      value={formData.kategori}
-                      // onChange={handleChange}
-
-                      onChange={(e) =>
-                        setFormData({ ...formData, kategori: e.target.value })
-                      }
-
+                      readOnly
+                      value={formData.kategori.replace(/_/g, ' ')}  
+                      onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -170,14 +169,9 @@ const FromPb = () => {
                       name="jenis_tiket"
                       type="text"
                       required
+                      readOnly
                       value={formData.jenis_tiket}
-                      // onChange={handleChange}
-
-                      onChange={(e) =>
-                        setFormData({ ...formData, jenis_tiket: e.target.value })
-                      }
-
-
+                      onChange={(e) => setFormData({ ...formData, jenis_tiket: e.target.value })}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
@@ -192,7 +186,6 @@ const FromPb = () => {
                     <select
                       id="sub_kategori"
                       name="sub_kategori"
-                      type="text"
                       required
                       value={formData.sub_kategori}
                       onChange={handleChange}
@@ -208,7 +201,7 @@ const FromPb = () => {
                 </div>
 
                 {/* Input Deskripsi */}
-                <div className="col-span-full">
+                <div className="sm:col-span-3">
                   <label htmlFor="deskripsi" className="block text-sm font-medium leading-6 text-gray-900">
                     Deskripsi
                   </label>
@@ -216,52 +209,76 @@ const FromPb = () => {
                     <textarea
                       id="deskripsi"
                       name="deskripsi"
-                      rows={3}
                       required
-                      value={formData.deskripsi}
+                      value={formData.deskripsi || ""} // Pastikan deskripsi selalu memiliki nilai string
                       onChange={handleChange}
+                      maxLength={255} 
+                      placeholder='Silahkan Isi Deskripsi'
+                      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    <p className="mt-2 text-sm text-gray-500">
+                      {(formData.deskripsi || "").length}/{maxCharacters} Karakter
+                    </p>
+                  </div>
+                </div>
+
+                {/* Upload File */}
+                {/* <div className="sm:col-span-3">
+                  <label htmlFor="unggah_file" className="block text-sm font-medium leading-6 text-gray-900">
+                    Unggah File
+                  </label>
+                  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                    <div className="text-center">
+                      <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                      <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                        <label htmlFor="unggah_file" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                          <span>Upload a file</span>
+                          <input
+                            id="unggah_file"
+                            name="unggah_file"
+                            type="file"
+                            className="sr-only"
+                            onChange={handleImageChange}
+                          />
+                        </label>
+                        <p className="pl-1">or drag and drop</p>
+                      </div>
+                      <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 1MB</p>
+                    </div>
+                  </div>
+                </div> */}
+ <div className="sm:col-span-3">
+                  <label htmlFor="unggah_file" className="block text-sm font-medium leading-6 text-gray-900">
+                    Unggah File
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="file"
+                      id="unggah_file"
+                      required
+                      onChange={handleImageChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                   </div>
                 </div>
-
-                {/* Input File Gambar */}
-                <div className="col-span-full">
-                  <label htmlFor="unggah_file" className="block text-sm font-medium leading-6 text-gray-900">
-                    Upload Gambar
-                  </label>
-                  <div className="mt-2 flex items-center gap-x-3">
-                    <input
-                      type="file"
-                      id="unggah_file"
-                      name="unggah_file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                    />
-                  </div>
-                </div>
-
               </div>
             </div>
           </div>
 
           <div className="mt-6 flex items-center justify-end gap-x-6">
-            <button  onClick={() => navigate('/TiketPb')} type="button" className="text-sm font-semibold leading-6 text-gray-900">
-              Cancel
+            <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
+              Batal
             </button>
             <button
               type="submit"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               Ajukan
             </button>
           </div>
         </form>
-        
       </div>
     </>
   );
 };
 
-export default FromPb;
+export default FormPb;

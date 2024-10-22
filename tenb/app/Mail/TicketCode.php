@@ -38,6 +38,7 @@ class TicketCode extends Mailable
                     ->subject($subject)
                     ->with([
                         'kode_tiket'   => $this->ticket->kode_tiket,
+                        'token_tiket'  => $this->ticket->token_tiket,
                         'nama_lengkap' => $this->ticket->nama_lengkap,
                         'tanggal'      => $this->ticket->created_at->format('d M Y'),
                     ]);

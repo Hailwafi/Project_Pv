@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ProofOfWork;
-use App\Models\Ticket;  
+use App\Models\Ticket;
 use App\Models\Publik;
 use App\Http\Resources\ProofOfWorkResource;
 use App\Notifications\NewProofOfWorkNotification;
@@ -19,24 +19,24 @@ class ProofOfWorkController extends Controller
         // Validasi input
         $request->validate([
             'ticket_type'      => 'required|string|in:TicketPegawai,TicketPublik',
-            'nama_lengkap'     => 'required|string|max:255',
+            'nama_lengkap'     => 'required|string|max:20',
             'bukti_pengerjaan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'tanggal'          => 'required|date',
         ]);
 
         // Cek apakah tiket ada berdasarkan tipe tiket (TicketPegawai atau TicketPublik)
-        if ($request->ticket_type === 'TicketPegawai') 
+        if ($request->ticket_type === 'TicketPegawai')
         {
             // Cari tiket pegawai
             $ticket = Ticket::find($ticketId);
-        } else if ($request->ticket_type === 'TicketPublik') 
+        } else if ($request->ticket_type === 'TicketPublik')
         {
             // Cari tiket publik
             $ticket = Publik::find($ticketId);
         }
 
         // Jika tiket tidak ditemukan, kembalikan error
-        if (!$ticket) 
+        if (!$ticket)
         {
             return response()->json([
                 'success' => false,
@@ -45,7 +45,7 @@ class ProofOfWorkController extends Controller
         }
 
         // Simpan file bukti pengerjaan
-        $filePath = $request->file('bukti_pengerjaan')->store('proof_of_work', 'public'); 
+        $filePath = $request->file('bukti_pengerjaan')->store('proof_of_work', 'public');
 
         // Buat bukti pengerjaan
         $proofOfWork = ProofOfWork::create([
@@ -62,7 +62,7 @@ class ProofOfWorkController extends Controller
 
         // Kirim notifikasi ke kepala subbag dan admin
         Notification::send($admin_kepala_subbag, new NewProofOfWorkNotification($proofOfWork));
-        
+
         // Log untuk debugging (opsional)
         Log::info('Bukti pengerjaan berhasil dikirim', ['proof_of_work' => $proofOfWork]);
 

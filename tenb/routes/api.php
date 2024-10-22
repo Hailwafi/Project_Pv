@@ -41,15 +41,15 @@ use Illuminate\Support\Facades\Route;
         Route::get('/publiks/{id}', [App\Http\Controllers\PublikController::class, 'show']);
 
     // search ticket
-        Route::get('/search-ticket/{kode_tiket}', [App\Http\Controllers\SearchController::class, 'searchTicket']);
+        Route::post('/search-ticket', [App\Http\Controllers\SearchController::class, 'searchTicket']);
 
     // pesan ticket pegawai
         Route::get('/tickets/{ticketId}/messages', [App\Http\Controllers\TicketMessageController::class, 'index']);
         Route::post('/tickets/{ticketId}/messages', [App\Http\Controllers\TicketMessageController::class, 'store']);
 
     // pesan ticket publik
-    Route::get('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'index']);
-    Route::post('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'store']);
+        Route::get('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'index']);
+        Route::post('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'store']);
 
 // Admin
     Route::prefix('admin')->group(function () {
@@ -79,6 +79,10 @@ use Illuminate\Support\Facades\Route;
 
         // search users
             Route::get('/users/search', [App\Http\Controllers\Api\Admin\UserController::class, 'search']);
+
+        // memunculkan semua tiket pegawai & publik
+            Route::get('/tickets/pegawai/new', [App\Http\Controllers\TicketController::class, 'getNewPegawaiTickets']);
+            Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks']);
 
         // search tiket berdasarkan nama
             Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
@@ -166,6 +170,10 @@ use Illuminate\Support\Facades\Route;
         // daftar staff
             Route::get('/staff-list', [App\Http\Controllers\Api\Admin\UserController::class, 'getStaffList']);
 
+        // memunculkan semua tiket pegawai & publik
+            Route::get('/tickets/pegawai/new', [App\Http\Controllers\TicketController::class, 'getNewPegawaiTickets']);
+            Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks']);
+
         // search tiket berdasarkan nama
             Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
             Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
@@ -246,6 +254,9 @@ use Illuminate\Support\Facades\Route;
 
         // dashboard
                 Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
+
+        // tiket staff berdasarkan ditugaskan
+                Route::get('/staff-tickets', [App\Http\Controllers\StaffTicketController::class, 'index']);
 
         //users
             Route::apiResource('/users', App\Http\Controllers\Api\Admin\UserController::class)

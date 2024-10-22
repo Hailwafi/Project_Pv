@@ -20,7 +20,7 @@ const FromPw = () => {
     jenis_tiket: "",
     deskripsi: "",
   });
-
+  const maxCharacters = 255;
   const [unggah_file, setUnggah_file] = useState(null);
 
   // Data kategori, subkategori, dan jenis tiket
@@ -29,7 +29,6 @@ const FromPw = () => {
       options: [
         { label: 'Laptop', value: 'laptop' },
         { label: 'Komputer', value: 'komputer' },
-        // { label: 'Wifi', value: 'wifi' },
         { label: 'Printer', value: 'printer' },
       ],
       jenis: {
@@ -65,9 +64,9 @@ const FromPw = () => {
       options: [
         { label: 'Pemasangan', value: 'pemasangan' },
         { label: 'Konsultasi', value: 'konsultasi' },
-        { label: 'Unplanned downtime', value: 'unplanned_downtime' },
+        { label: 'Unplanned Downtime', value: 'unplanned_downtime' },
         { label: 'Email', value: 'email' },
-        { label: 'Penetration test', value: 'penetration_test' },
+        { label: 'Penetration Test', value: 'penetration_test' },
       ],
       jenis: {
         pemasangan: [
@@ -94,12 +93,12 @@ const FromPw = () => {
 
     layanan_aduan_keamanan_siber: {
       options: [
-        { label: 'Kebocoran data', value: 'kebocoran_data' },
-        { label: 'Web defacement', value: 'web_defacement' },
-        { label: 'Denial of service', value: 'denial_of_service' },
-        { label: 'Unauthorized access', value: 'unauthorized_access' },
-        { label: 'Malicious code', value: 'malicious_code' },
-        { label: 'Unplanned downtime', value: 'unplanned_downtime' },
+        { label: 'Kebocoran Data', value: 'kebocoran_data' },
+        { label: 'Web Defacement', value: 'web_defacement' },
+        { label: 'Denial Of Service', value: 'denial_of_service' },
+        { label: 'Unauthorized Access', value: 'unauthorized_access' },
+        { label: 'Malicious Code', value: 'malicious_code' },
+        { label: 'Unplanned Downtime', value: 'unplanned_downtime' },
       ],
       jenis: {
         kebocoran_data: [
@@ -127,22 +126,22 @@ const FromPw = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    // Reset jenis tiket dan sub kategori saat kategori berubah
+    
     if (e.target.name === 'kategori') {
       setFormData({
         ...formData,
         kategori: e.target.value,
-        sub_kategori: '', // Reset sub_kategori
-        jenis_tiket: '', // Reset jenis_tiket
+        sub_kategori: '', 
+        jenis_tiket: '', 
       });
     }
 
-    // Reset jenis tiket saat sub kategori berubah
+   
     if (e.target.name === 'sub_kategori') {
       setFormData({
         ...formData,
         sub_kategori: e.target.value,
-        jenis_tiket: '', // Reset jenis_tiket
+        jenis_tiket: '', 
       });
     }
   };
@@ -179,7 +178,7 @@ const FromPw = () => {
         },
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success('Pengajuan berhasil!');
         setTimeout(() => {
           navigate("/");
@@ -219,6 +218,7 @@ const FromPw = () => {
                       type="text"
                       required
                       value={formData.nama_lengkap}
+                      placeholder='Masukan Nama Lengkap Anda'
                       onChange={handleChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
@@ -236,6 +236,7 @@ const FromPw = () => {
                       name="email"
                       type="email"
                       required
+                      placeholder='Masukan Email Anda'
                       value={formData.email}
                       onChange={handleChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -254,6 +255,7 @@ const FromPw = () => {
                       name="jabatan"
                       type="text"
                       required
+                      placeholder='Masukan Jabatan Anda'
                       value={formData.jabatan}
                       onChange={handleChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -272,6 +274,7 @@ const FromPw = () => {
                       name="nomor_induk_pegawai"
                       type="text"
                       required
+                      placeholder='Masukan NIP Anda'
                       value={formData.nomor_induk_pegawai}
                       onChange={handleChange}
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -364,7 +367,7 @@ const FromPw = () => {
 
               
                 {/* Input Deskripsi */}
-                <div className="sm:col-span-3">
+                {/* <div className="sm:col-span-3">
                   <label htmlFor="deskripsi" className="block text-sm font-medium leading-6 text-gray-900">
                     Deskripsi
                   </label>
@@ -379,7 +382,29 @@ const FromPw = () => {
                       rows={4}
                     />
                   </div>
-                </div>
+                </div> */}
+                <div className="sm:col-span-3">
+  <label htmlFor="deskripsi" className="block text-sm font-medium leading-6 text-gray-900">
+    Deskripsi
+  </label>
+  <div className="mt-2">
+    <textarea
+      id="deskripsi"
+      name="deskripsi"
+      required
+      value={formData.deskripsi}
+      onChange={handleChange}
+      maxLength={255} 
+      placeholder='Silahkan Isi Deskripsi'
+      className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      rows={4}
+    />
+  </div>
+  <p className="text-sm text-gray-500 mt-1">
+        {formData.deskripsi.length}/{maxCharacters} Karakter
+        </p>
+</div>
+
 
                 {/* Input Unggah File */}
                 <div className="sm:col-span-3">

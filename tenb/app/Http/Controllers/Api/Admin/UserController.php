@@ -18,7 +18,8 @@ class UserController extends Controller
     public function index()
     {
         //get users
-        $users = User::when(request()->search, function($users) {
+        $users = User::when(request()->search, function($users)
+        {
             $users = $users->where('name', 'like', '%'. request()->search . '%');
         })->with('roles')->latest()->paginate(5);
 
@@ -38,34 +39,32 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email'     => 'required|unique:users',
-            'username'  => 'required',
-            'role'      => 'required',
-            'password'  => 'required|confirmed'
+            'email'     => 'required|email|unique:users,email|regex:/@bnpt\.go\.id$/',            'username'  => 'required|string|unique:users,username',
+            'role'      => 'required|string', // Pastikan role adalah string
+            'password'  => 'required|string|confirmed|min:6', // Tambahkan validasi untuk keamanan
         ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails())
+        {
             return response()->json($validator->errors(), 422);
         }
 
-        //create user
+        // Buat pengguna baru
         $user = User::create([
             'email'     => $request->email,
             'username'  => $request->username,
-            'role'      => $request->role,
-            'password'  => bcrypt($request->password)
+            'password'  => bcrypt($request->password), // Enkripsi password
         ]);
 
-        //assign roles to user
-        $user->assignRole($request->roles);
+        // Tetapkan role untuk pengguna
+        $user->assignRole($request->role); // Gunakan $request->role
 
-        if($user) {
-            //return success with Api Resource
-            return new UserResource(true, 'Data User Berhasil Disimpan!', $user);
-        }
+        // Setelah menyimpan role, simpan juga role ke database jika perlu
+        $user->role = $request->role; // Simpan role di field role jika diperlukan
+        $user->save();
 
-        //return failed with Api Resource
-        return new UserResource(false, 'Data User Gagal Disimpan!', null);
+        // Kembalikan respons sukses
+        return new UserResource(true, 'Data User Berhasil Disimpan!', $user);
     }
 
     /**
@@ -78,7 +77,8 @@ class UserController extends Controller
     {
         $user = User::with('roles')->whereId($id)->first();
 
-        if($user) {
+        if($user)
+        {
             //return success with Api Resource
             return new UserResource(true, 'Detail Data User!', $user);
         }
@@ -96,47 +96,32 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'email'     => 'required|unique:users,email,'.$user->id,
+            'email'     => 'required|unique:users,email,' . $user->id,
             'username'  => 'required',
             'role'      => 'required',
-            'password'  => 'confirmed'
+            'password'  => 'nullable|confirmed' // Password bersifat opsional
         ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails())
+        {
             return response()->json($validator->errors(), 422);
         }
 
-        if($request->password == "") {
+        // Update data pengguna
+        $user->update([
+            'email'     => $request->email,
+            'username'  => $request->username,
+            'role'      => $request->role,
+            'password'  => $request->filled('password') ? bcrypt($request->password) : $user->password, // Hanya update password jika terisi
+        ]);
 
-            //update user without password
-            $user->update([
-                'email'     => $request->email,
-                'username'  => $request->username,
-            ]);
+        // Sinkronisasi role pengguna
+        $user->syncRoles($request->role); // Pastikan hanya satu role yang disinkronkan
 
-        } else {
-
-            //update user with new password
-            $user->update([
-                'email'     => $request->email,
-                'username'  => $request->username,
-                'role'      => $request->role,
-                'password'  => bcrypt($request->password)
-            ]);
-
-        }
-
-        //assign roles to user
-        $user->syncRoles($request->roles);
-
-        if($user) {
-            //return success with Api Resource
-            return new UserResource(true, 'Data User Berhasil Diupdate!', $user);
-        }
-
-        //return failed with Api Resource
-        return new UserResource(false, 'Data User Gagal Diupdate!', null);
+        // Mengembalikan respons
+        return new UserResource(true, 'Data User Berhasil Diupdate!', $user);
     }
 
     /**
@@ -147,7 +132,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if($user->delete()) {
+        if($user->delete())
+        {
             //return success with Api Resource
             return new UserResource(true, 'Data User Berhasil Dihapus', null);
         }
@@ -187,8 +173,8 @@ class UserController extends Controller
         {
             return [
                 'no'       => $index + 1, // Nomor urut berdasarkan kapan akun dibuat
-                'username' => $user->username, // Nama user
-                'role'     => $user->role,     // Peran (role)
+                'username' => $user->username,
+                'role'     => $user->role,
                 'aksi'     => '<button>Hapus</button>', // Tombol hapus (simulasi)
             ];
         });

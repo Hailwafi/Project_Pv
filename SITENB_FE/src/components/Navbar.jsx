@@ -5,8 +5,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 const navigation = [
   {name: 'Beranda', href: '/#Page1' },
   {name: 'Tentang', href: '/#Page2' },
-  {name: 'Kategory layanan', href: '/#Page3' },
-  {name: 'Buat tiket', href: '/#Page2' },
+  {name: 'Kategori Layanan ', href: '/#Page3' },
+  {name: 'Buat Tiket', href: '/#Page2' },
 ]
 
 function Navbar(){
@@ -42,7 +42,7 @@ function Navbar(){
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
               <a href="/Sign" className="text-sm font-semibold leading-6 text-gray-900">
-                Log in <span aria-hidden="true">&rarr;</span>
+              Masuk<span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </nav>
@@ -82,7 +82,7 @@ function Navbar(){
                       href="/Sign"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
-                      Log in
+Masuk
                     </a>
                   </div>
                 </div>

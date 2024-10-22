@@ -27,4 +27,9 @@ class ProofOfWork extends Model
     {
         return $this->belongsTo(Publik::class, 'ticket_id');
     }
+
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_id'); // Pastikan relasi staff_id benar
+    }
 }

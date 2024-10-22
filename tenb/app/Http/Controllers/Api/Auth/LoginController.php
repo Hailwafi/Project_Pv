@@ -14,30 +14,34 @@ class LoginController extends Controller
     {
         // Validasi data, sesuaikan apakah ingin login menggunakan email atau username
         $validator = Validator::make($request->all(), [
-            'email'    => 'required|string',
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
         // Tambahkan validasi reCAPTCHA jika diaktifkan di .env
-        if (config('app.recaptcha_enabled')) {
-            $validator->after(function ($validator) use ($request) {
+        if (config('app.recaptcha_enabled'))
+        {
+            $validator->after(function ($validator) use ($request)
+            {
                 $recaptchaResponse = $request->input('g-recaptcha-response');
 
-                if (!$recaptchaResponse || !NoCaptcha::verifyResponse($recaptchaResponse)) {
+                if (!$recaptchaResponse || !NoCaptcha::verifyResponse($recaptchaResponse))
+                {
                     $validator->errors()->add('g-recaptcha-response', 'ReCAPTCHA validation failed.');
                 }
             });
         }
 
-        if ($validator->fails()) {
+        if ($validator->fails())
+        {
             return response()->json($validator->errors(), 422);
         }
 
         // Cek apakah login menggunakan email atau username
-        $credentials = $request->only('email', 'username', 'password');
+        $credentials = $request->only( 'username', 'password');
 
-        if (!$token = auth()->guard('api')->attempt($credentials)) {
+        if (!$token = auth()->guard('api')->attempt($credentials))
+        {
             return response()->json([
                 'success' => false,
                 'message' => 'Username atau Password salah',
@@ -54,11 +58,11 @@ class LoginController extends Controller
         $token = auth()->guard('api')->claims($customClaims)->refresh(); // Menggunakan fromUser dengan custom claims
 
         return response()->json([
-            'success' => true,
-            'user' => $user->only(['email', 'username']),
-            'role' => $role,
+            'success'     => true,
+            'user'        => $user->only(['username']),
+            'role'        => $role,
             'permissions' => $user->getAllPermissions()->pluck('name'),
-            'token' => $token,
+            'token'       => $token,
         ], 200);
     }
 
