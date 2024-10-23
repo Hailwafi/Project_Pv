@@ -34,6 +34,7 @@ import TesIsi2 from "./pages/TesIsi2"
 import ProductTable from "./pages/Dashboard/Staff/ProductTable"
 
 import Task from "./pages/Dashboard/Staff/Task"
+import TaskList from "./pages/Dashboard/Staff/TaskList"
 
 import TiketPb from "./pages/TiketPb"
 import TiketPw from "./pages/TiketPw"
@@ -145,11 +146,12 @@ const LeaderLayout = withAuthenticationLeader(() => (
 
 const StaffLayout = withAuthenticationStaff(() => (
   <>
-    <NavbarDb />
+    {/* <NavbarDb /> */}
     <div>
       <Routes>
         <Route path="/" element={<Dashboard/>}/>
         <Route path="/Task" element={<Task/>}/>
+        <Route path="/TaskList" element={<TaskList/>}/>
       
     
       </Routes>

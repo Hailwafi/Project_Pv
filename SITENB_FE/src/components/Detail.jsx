@@ -3,6 +3,11 @@ import AssignTaskForm from './AssignTaskForm';
 import React, { useState } from 'react';
 
 const Detail = ({ tickets, onClose, staffList, onAssignTask }) => {
+
+  const formatString = (str) => {
+    return str.replace(/_/g, ' ');
+  };
+
   const [assignData, setAssignData] = useState(null);
 
   if (!tickets) return null;
@@ -36,23 +41,6 @@ const Detail = ({ tickets, onClose, staffList, onAssignTask }) => {
                         className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300">
                         {formattedDate}
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Kode Tiket */}
-                  <div className="sm:col-span-3">
-                    <label htmlFor="kode_tiket" className="block text-sm font-medium leading-6 text-gray-900">
-                      Kode Tiket
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        id="kode_tiket"
-                        name="kode_tiket"
-                        type="text"
-                        value={tickets.kode_tiket}
-                        readOnly
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                      />
                     </div>
                   </div>
 
@@ -137,6 +125,45 @@ const Detail = ({ tickets, onClose, staffList, onAssignTask }) => {
                       )}
                     </div>
                   </div>
+
+    {/* kategori */}
+    <div className="sm:col-span-3">
+                    <label htmlFor="kategori" className="block text-sm font-medium leading-6 text-gray-900">
+                      Kategori
+                    </label>
+                    <div className="mt-2">
+                      <div
+                        id="kategori"
+                        name="kategori"
+                        type="text"
+                        readOnly
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
+                      >
+      {formatString(tickets.kategori)}
+
+                      </div>
+                    </div>
+                  </div>
+
+     {/* Jenis Tiket */}
+     <div className="sm:col-span-3">
+                    <label htmlFor="tiket" className="block text-sm font-medium leading-6 text-gray-900">
+                    Jenis Tiket
+                    </label>
+                    <div className="mt-2">
+                      <input
+                        id="tiket"
+                        name="tiket"
+                        type="text"
+                        value={tickets.jenis_tiket}
+                        readOnly
+                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
+                      />
+                    </div>
+                  </div>
+
+
+
                 </div>
               </div>
             </div>

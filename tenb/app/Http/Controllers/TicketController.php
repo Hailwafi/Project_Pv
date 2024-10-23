@@ -50,7 +50,7 @@ class TicketController extends Controller
             'nomor_induk_pegawai' => 'required|string:18',
             'jenis_tiket'         => 'required|string|in:permohonan,kendala',
             'deskripsi'           => 'required|string|max:255',
-            'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:2048',
+            'unggah_file'         => 'nullable|file|mimes:jpg,png,pdf|max:5242880',
         ]);
 
         if ($validator->fails())

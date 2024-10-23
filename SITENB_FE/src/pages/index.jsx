@@ -102,12 +102,12 @@ try {
 
           <div className="text-center">
 
-            <p className="mt-6 text-xl leading-8 text-gray-600">
-              Memudahkan pelaporan permohonan dan kendala
-            </p>
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-7xl">
-              Selamat Datang Di SI-TENB
+            TICKETING BNPT
             </h1>
+            <p className="mt-6 text-xl leading-8 text-gray-600">
+            Selamat Datang di Pusat Bantuan Badan Nasional Penanggulangan Terorisme. 
+            </p>
             <div class="relative mt-10  items-center justify-center gap-x-6">
               <input
                type="text"
@@ -161,7 +161,8 @@ try {
                  download
                 className="rounded-md  bg-customRed px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-900  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 "
               >
-             Unduh panduan penggunaan SI-TENB -&gt;
+                Unduh Panduan Penggunaan
+                SI-TENB&rarr;
               </a>
             </div>
           </div>

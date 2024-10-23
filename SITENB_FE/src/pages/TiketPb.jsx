@@ -31,9 +31,9 @@ const TiketPb = () => {
 
 
   <div className="col-lg-9 text-lg font-bold pt-24 ">
-                <h4 className='text-justify'>Sebelum melanjutkan ke form pengisian tiket, mohon pilih layanan yang akan Anda ajukan terlebih dahulu. Pastikan Anda memilih kategori yang sesuai agar laporan dapatdiproses dengan tepat.</h4>
+                <h4 className='text-justify'>Sebelum melanjutkan ke form pengisian tiket, mohon pilih layanan yang akan Anda ajukan terlebih dahulu. Pastikan Anda memilih kategori yang sesuai agar laporan dapat diproses dengan tepat.</h4>
                 <br/>
-                <h4 className=''>Layanan Layanan Aduan Keamanan Siber </h4>
+                <h4 className=''>Layanan aduan keamanan siber</h4>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4">
                 <button

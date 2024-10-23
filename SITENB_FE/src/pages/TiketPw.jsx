@@ -31,7 +31,7 @@ const TiketPw = () => {
 
 
   <div className="col-lg-9 text-lg font-bold pt-24 ">
-                <h4 className='text-justify'>Sebelum melanjutkan ke form pengisian tiket, mohon pilih layanan yang akan Anda ajukan terlebih dahulu. Pastikan Anda memilih kategori yang sesuai agar laporan dapatdiproses dengan tepat.</h4>
+                <h4 className='text-justify'>Sebelum melanjutkan ke form pengisian tiket, mohon pilih layanan yang akan Anda ajukan terlebih dahulu. Pastikan Anda memilih kategori yang sesuai agar laporan dapat diproses dengan tepat.</h4>
                 
               </div>
        
