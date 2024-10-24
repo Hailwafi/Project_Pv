@@ -8,18 +8,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Ticket extends Model
 {
     use HasFactory;
-
     protected $table = 'tickets';
 
     protected $fillable = [
-        'nama_lengkap',
-        'jabatan',
-        'kategori',
-        'sub_kategori',
-        'email',
+        'nama_lengkap', 
+        'jabatan', 
+        'kategori', 
+        'sub_kategori', 
+        'email', 
         'nomor_induk_pegawai',
-        'jenis_tiket',
-        'deskripsi',
+        'jenis_tiket', 
+        'deskripsi', 
         'unggah_file',
         'status',
         'prioritas',
@@ -28,7 +27,12 @@ class Ticket extends Model
         'token_tiket'
     ];
 
-    // Relasi ke model User untuk assigned staff
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_id');
+    }
+
+// Relasi ke model User untuk assigned staff
     public function assignedStaff()
     {
         return $this->belongsTo(User::class, 'assigned_to');
@@ -37,5 +41,10 @@ class Ticket extends Model
     public function proofOfWorks()
     {
         return $this->hasMany(ProofOfWork::class);
+    }
+
+    public function ticketmessages() 
+    {
+        return $this->hasMany(TicketMessage::class);
     }
 }

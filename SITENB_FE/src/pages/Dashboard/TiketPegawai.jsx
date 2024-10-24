@@ -87,7 +87,7 @@ const handleStatusChange = async () => {
         </a>
 
         <div className="flex justify-between items-center w-full">
-          <p>v Tiket Pegawai </p>
+          <p>Tiket Pegawai </p>
           <form className="flex items-center w-full sm:max-w-xs">
             <label htmlFor="simple-search" className="sr-only">Search</label>
             <div className="relative w-full">
@@ -185,6 +185,7 @@ const handleStatusChange = async () => {
       <option value="">Pilih Status</option>
       <option value="proses">Proses</option>
       <option value="selesai">Selesai</option>
+      <option value="close">Close</option>
     </select>
   </div>
 </FormModal>

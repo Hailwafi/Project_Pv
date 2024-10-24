@@ -189,7 +189,7 @@ class PublikController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:proses,selesai',
+            'status' => 'required|in:proses,selesai,close',
         ]);
 
         if ($validator->fails())
@@ -278,7 +278,7 @@ class PublikController extends Controller
         }
 
         // Inisialisasi query untuk mencari tiket pegawai atau publik
-        $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'status', 'prioritas');
+        $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'prioritas', 'status',);
 
         // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
         if ($name)

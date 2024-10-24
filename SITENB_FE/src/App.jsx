@@ -19,6 +19,8 @@ import FromPw from "./pages/FromPw"
 
 import Dashboard from "./pages/Dashboard/Index"
 
+import Staff from "./pages/Dashboard/Staff/Index"
+
 import FormModal from "./components/FormModal"
 import  Notification from "./pages/Notification"
 import NavbarDb from "./components/NavbarDb";
@@ -31,9 +33,9 @@ import TesIsi from "./pages/TesIsi"
 import TesIsi2 from "./pages/TesIsi2"
 
 
-import ProductTable from "./pages/Dashboard/Staff/ProductTable"
+// import ProductTable from "./pages/Dashboard/Staff/ProductTable"
 
-import Task from "./pages/Dashboard/Staff/Task"
+import TaskPw from "./pages/Dashboard/Staff/TaskPw"
 import TaskList from "./pages/Dashboard/Staff/TaskList"
 
 import TiketPb from "./pages/TiketPb"
@@ -146,11 +148,11 @@ const LeaderLayout = withAuthenticationLeader(() => (
 
 const StaffLayout = withAuthenticationStaff(() => (
   <>
-    {/* <NavbarDb /> */}
+    <NavbarDb />
     <div>
       <Routes>
-        <Route path="/" element={<Dashboard/>}/>
-        <Route path="/Task" element={<Task/>}/>
+        <Route path="/" element={<Staff/>}/>
+        <Route path="/TaskPw" element={<TaskPw/>}/>
         <Route path="/TaskList" element={<TaskList/>}/>
       
     

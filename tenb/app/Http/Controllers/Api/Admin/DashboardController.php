@@ -35,9 +35,9 @@ class DashboardController extends Controller
             ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->get();
 
-            if(count($post_views))
+            if(count($post_views)) 
             {
-                foreach ($post_views as $result)
+                foreach ($post_views as $result) 
                 {
                     $count[] = (int) $result->count;
                     $day[] = $result->day;
@@ -68,10 +68,15 @@ class DashboardController extends Controller
             $publiksProses = Publik::where('status', 'proses')->count();
             $totalProses   = $ticketsProses + $publiksProses;
 
-            // count tickets in 'selesai' status
+            // count tickets pegawai & publik in 'selesai' status
             $ticketsSelesai = Ticket::where('status', 'selesai')->count();
             $publiksSelesai = Publik::where('status', 'selesai')->count();
             $totalSelesai   = $ticketsSelesai + $publiksSelesai;
+
+            // count tickets pegawai & publik in 'close' status
+            $ticketsClose   = Ticket::where('status', 'close')->count();
+            $publiksClose   = Publik::where('status', 'close')->count();
+            $totalClose     = $ticketsClose + $publiksClose;
 
             // count tickets by jenis tiket (kendala & permohonan)
             $ticketsKendala = Ticket::where('jenis_tiket', 'kendala')->count();
@@ -99,30 +104,31 @@ class DashboardController extends Controller
                 'tickets_menunggu_pengerjaan'       => $totalMenunggu,
                 'tickets_proses'                    => $totalProses,
                 'tickets_selesai'                   => $totalSelesai,
+                'tickets_close'                     => $totalClose,
                 'jumlah_kendala'                    => $totalKendala,
                 'jumlah_permohonan'                 => $totalPermohonan,
             ]
         ]);
     }
 
-    public function trackWork()
-    {
-        // Ambil semua tiket pegawai yang sudah ditugaskan
-        $pegawaiTickets = Ticket::whereNotNull('assigned_to')
-            ->with('assignedStaff')
-            ->get();
+    // public function trackWork()
+    // {
+    //     // Ambil semua tiket pegawai yang sudah ditugaskan
+    //     $pegawaiTickets = Ticket::whereNotNull('assigned_to')
+    //         ->with('assignedStaff')
+    //         ->get();
 
-        // Ambil semua tiket publik yang sudah ditugaskan
-        $publikTickets = Publik::whereNotNull('assigned_to')
-            ->with('assignedStaff')
-            ->get();
+    //     // Ambil semua tiket publik yang sudah ditugaskan
+    //     $publikTickets = Publik::whereNotNull('assigned_to')
+    //         ->with('assignedStaff')
+    //         ->get();
 
-        // Gabungkan kedua koleksi tiket pegawai dan publik
-        $allTickets = $pegawaiTickets->concat($publikTickets);
+    //     // Gabungkan kedua koleksi tiket pegawai dan publik
+    //     $allTickets = $pegawaiTickets->concat($publikTickets);
 
-        return response()->json([
-            'success' => true,
-            'tickets' => $allTickets,
-        ]);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'tickets' => $allTickets,
+    //     ]);
+    // }
 }

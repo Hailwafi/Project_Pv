@@ -12,12 +12,12 @@ class Publik extends Model
     protected $table = 'publiks';
 
     protected $fillable = [
-        'nama_lengkap',
-        'kategori',
-        'sub_kategori',
-        'email',
-        'jenis_tiket',
-        'deskripsi',
+        'nama_lengkap', 
+        'kategori', 
+        'sub_kategori', 
+        'email', 
+        'jenis_tiket', 
+        'deskripsi', 
         'unggah_file',
         'status',
         'prioritas',
@@ -25,6 +25,11 @@ class Publik extends Model
         'kode_tiket',
         'token_tiket'
     ];
+
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_id');
+    }
 
     // Relasi ke model User untuk assigned staff
     public function assignedStaff()
@@ -35,5 +40,10 @@ class Publik extends Model
     public function proofOfWorks()
     {
         return $this->hasMany(ProofOfWork::class);
+    }
+
+    public function publikmessages() 
+    {
+        return $this->hasMany(PublikMessage::class);
     }
 }

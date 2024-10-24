@@ -95,7 +95,7 @@ const AssignTaskForm = ({ ticketId, onAssignTask }) => {
         </select>
       </div>
 
-      <button className='mt-4 inline-flex justify-center rounded-md border border-transparent bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-customGreen focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600' onClick={handleAssignTask}>Tugaskan Tugas</button>
+      <button className='mt-4 inline-flex justify-center rounded-md border border-transparent bg-red-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-customGreen focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600' onClick={handleAssignTask}>Tugaskan Kepada Staff Subbag TI</button>
     </div>
   );
 };

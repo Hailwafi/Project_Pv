@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('jenis_tiket', ['permohonan', 'kendala']);
             $table->text('deskripsi');
             $table->string('unggah_file')->nullable();
-            $table->enum('status', ['open', 'proses', 'selesai'])->default('open');
+            $table->enum('status', ['open', 'proses', 'selesai', 'close'])->default('open');
             $table->string('prioritas')->nullable();
             $table->unsignedBigInteger('assigned_to')->nullable();
             $table->foreign('assigned_to')->references('id')->on('users')->onDelete('set null');

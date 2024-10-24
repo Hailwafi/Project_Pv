@@ -87,7 +87,7 @@ const handleStatusChange = async () => {
         </a>
 
         <div className="flex justify-between items-center w-full">
-          <p>v TiketPublic </p>
+          <p>TiketPublic </p>
           <form className="flex items-center w-full sm:max-w-xs">
             <label htmlFor="simple-search" className="sr-only">Search</label>
             <div className="relative w-full">

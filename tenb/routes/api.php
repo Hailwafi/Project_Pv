@@ -252,8 +252,8 @@ use Illuminate\Support\Facades\Route;
                 return auth()->user()->notifications;
             })->middleware('auth');
 
-        // dashboard
-                Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
+        // dashboard staff
+            Route::get('/staff-dashboard', [App\Http\Controllers\Api\Staff\DashboardStaffController::class, 'getStaffDashboard']);
 
         // tiket staff berdasarkan ditugaskan
                 Route::get('/staff-tickets', [App\Http\Controllers\StaffTicketController::class, 'index']);

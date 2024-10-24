@@ -198,7 +198,7 @@ class TicketController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:proses,selesai',
+            'status' => 'required|in:proses,selesai,close',
         ]);
 
         if ($validator->fails())
@@ -288,7 +288,7 @@ class TicketController extends Controller
         }
 
         // Inisialisasi query untuk mencari tiket pegawai atau publik
-        $query = Ticket::select('nama_lengkap', 'email', 'jabatan', 'kategori', 'jenis_tiket', 'status');
+        $query = Ticket::select('nama_lengkap', 'email', 'jabatan', 'kategori', 'jenis_tiket', 'prioritas', 'status');
 
         // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
         if ($name)
