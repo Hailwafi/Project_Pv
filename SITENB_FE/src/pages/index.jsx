@@ -7,6 +7,10 @@ import FormModal from '../components/FormModal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 
 const index = () => {
   const [isForm1Open, setIsForm1Open] = useState(false);
@@ -19,6 +23,7 @@ const [kodeTiket, setKodeTiket] = useState('');
 const [tokenTiket, setToken] = useState('');
 const [error, setError] = useState(null);
 const navigate = useNavigate();
+
 
 
 const handleSearch = async () => {
@@ -71,18 +76,31 @@ try {
   setError(null);
   
   navigate(`/Ck_Tiket/${kodeTiket}`, { state: { ticketData: response.data } });
+
 } catch (err) {
   if (err.response && err.response.status === 404) {
-    setError('Tiket tidak ditemukan atau token salah');
+    toast.error('Tiket tidak ditemukan atau token salah');
+  } else if (err.request) {
+    toast.error('Tidak ada respons dari server');
   } else {
-    setError('Terjadi kesalahan pada server');
+    toast.error('Terjadi kesalahan pada permintaan');
   }
 }
 };
 
   return (
     <>
-
+<ToastContainer
+  position="top-right"
+  autoClose={5000} // 5 detik
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+/>
       <div className="relative isolate px-6  lg:px-8">
         <Navbar />
         <div
