@@ -43,14 +43,6 @@ use Illuminate\Support\Facades\Route;
     // search ticket
         Route::post('/search-ticket', [App\Http\Controllers\SearchController::class, 'searchTicket']);
 
-    // pesan ticket pegawai
-        Route::get('/tickets/{ticketId}/messages', [App\Http\Controllers\TicketMessageController::class, 'index']);
-        Route::post('/tickets/{ticketId}/messages', [App\Http\Controllers\TicketMessageController::class, 'store']);
-
-    // pesan ticket publik
-        Route::get('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'index']);
-        Route::post('/publiks/{publikId}/messages', [App\Http\Controllers\PublikMessageController::class, 'store']);
-
 // Admin
     Route::prefix('admin')->group(function () {
     //group route with middleware "auth:api"

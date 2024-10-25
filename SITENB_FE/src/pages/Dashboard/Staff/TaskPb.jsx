@@ -3,7 +3,7 @@ import axios from 'axios';
 import FormModal from '../../../components/FormModal';
 import Detail from '../../../components/Detail';
 
-const TaskPw = () => {
+const TaskPb = () => {
     const [selectedTicket, setSelectedTicket] = useState(null); 
     const [isModalOpen, setIsModalOpen] = useState(false); 
     const [isForm1Open, setIsForm1Open] = useState(false);
@@ -94,7 +94,7 @@ const TaskPw = () => {
                 </a>
 
                 <div className="flex justify-between items-center w-full">
-                    <p>v Tiket Pegawai </p>
+                    <p>v Tiket Public </p>
                     <form className="flex items-center w-full sm:max-w-xs">
                         <label htmlFor="simple-search" className="sr-only">Search</label>
                         <div className="relative w-full">
@@ -151,7 +151,7 @@ const TaskPw = () => {
                             ) : (
                                 <tr>
                                     <td colSpan="7" className="px-6 py-4 text-center">
-                                    Tidak ada tiket pegawai yang ditugaskan.
+                                    Tidak ada tiket publik yang ditugaskan
                                     </td>
                                 </tr>
                             )}
@@ -183,4 +183,4 @@ const TaskPw = () => {
     );
 };
 
-export default TaskPw;
+export default TaskPb;

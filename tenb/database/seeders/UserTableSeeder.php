@@ -36,8 +36,8 @@ class UserTableSeeder extends Seeder
         User::create([
             'email'         => 'haha@bnpt.go.id',
             'username'      => 'gemilang_parhadiyan',
-            'role'          => 'kepala subbag',
-            'password'      => bcrypt('123'),
+            'role'          => 'kepala_subbag',
+            'password'      => bcrypt('psikolog5tu'),
         ]);
 
         $role = Role::find(2);

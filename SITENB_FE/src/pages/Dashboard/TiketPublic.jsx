@@ -7,6 +7,9 @@ import Detail from '../../components/Detail';
 
 
 const TiketPublic = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+
   const [selectedTickets, setSelectedTickets] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [isForm1Open, setIsForm1Open] = useState(false);
@@ -71,9 +74,15 @@ const handleStatusChange = async () => {
   }
 };
 
+const handleSearch = (e) => {
+  setSearchTerm(e.target.value);
+};
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+  const filteredData = data.filter(ticket =>
+    ticket.nama_lengkap.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <>
     {/* isolate */}
@@ -88,23 +97,33 @@ const handleStatusChange = async () => {
 
         <div className="flex justify-between items-center w-full">
           <p>TiketPublic </p>
-          <form className="flex items-center w-full sm:max-w-xs">
-            <label htmlFor="simple-search" className="sr-only">Search</label>
-            <div className="relative w-full">
-              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-              </div>
-              <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="cari tiket berdasarkan nama" required />
-            </div>
-            <button type="submit" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-              <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+       <form className="flex items-center w-full sm:max-w-xs">
+          <label htmlFor="simple-search" className="sr-only">
+            Search
+          </label>
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
-              <span className="sr-only">Search</span>
-            </button>
-          </form>
+            </div>
+            <input
+              type="text"
+              id="simple-search"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 py-2.5"
+              placeholder="Cari tiket berdasarkan nama"
+              value={searchTerm}
+              onChange={handleSearch}
+              required
+            />
+          </div>
+          <button type="submit" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+            <span className="sr-only">Search</span>
+          </button>
+        </form>
         </div>
 
         <div className="overflow-x-auto shadow-md sm:rounded-lg mt-4">
@@ -114,7 +133,6 @@ const handleStatusChange = async () => {
                 <th scope="col" className="px-6 py-3">No</th>
                 <th scope="col" className="px-6 py-3">Nama Lengkap</th>
                 <th scope="col" className="px-6 py-3">Email</th>
-                <th scope="col" className="px-6 py-3">Jabatan</th>
                 <th scope="col" className="px-6 py-3">Kategori</th>
                 <th scope="col" className="px-6 py-3">Jenis Tiket</th>
                 <th scope="col" className="px-6 py-3">Status</th>
@@ -122,14 +140,13 @@ const handleStatusChange = async () => {
               </tr>
             </thead>
             <tbody>
-              {data.map(tickets => (
+              {filteredData.map(tickets => (
                 <tr key={tickets.id} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                     {tickets.id}
                   </th>
                   <td className="px-6 py-4">{tickets.nama_lengkap}</td>
                   <td className="px-6 py-4">{tickets.email}</td>
-                  <td className="px-6 py-4">{tickets.jabatan}</td>
                   <td className="px-6 py-4">{tickets.kategori}</td>
                   <td className="px-6 py-4">{tickets.jenis_tiket}</td>
                   <td className="px-6 py-4">{tickets.status}</td>

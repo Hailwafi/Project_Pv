@@ -41,9 +41,4 @@ class Publik extends Model
     {
         return $this->hasMany(ProofOfWork::class);
     }
-
-    public function publikmessages() 
-    {
-        return $this->hasMany(PublikMessage::class);
-    }
 }

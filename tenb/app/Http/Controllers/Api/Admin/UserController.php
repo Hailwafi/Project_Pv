@@ -17,17 +17,24 @@ class UserController extends Controller
      */
     public function index()
     {
-        //get users
-        $users = User::when(request()->search, function($users)
-        {
-            $users = $users->where('name', 'like', '%'. request()->search . '%');
-        })->with('roles')->latest()->paginate(5);
+        // Ambil semua pengguna
+            $users = User::with('roles') // Memuat relasi roles
+                ->when(request()->search, function($query) 
+                {
+                    $query->where('username', 'like', '%' . request()->search . '%')
+                        ->orWhere('email', 'like', '%' . request()->search . '%'); // Pencarian berdasarkan username atau email
+                })
+                ->whereDoesntHave('roles', function($query) {
+                    $query->where('name', 'admin'); // Tambahkan kondisi where untuk mengecualikan role 'admin'
+                })
+                ->orderBy('id', 'asc') // Mengurutkan berdasarkan ID secara ascending
+                ->paginate(); // Menggunakan pagination
 
-        //append query string to pagination links
-        $users->appends(['search' => request()->search]);
+        // Tambahkan query string ke tautan pagination
+            $users->appends(['search' => request()->search]);
 
-        //return with Api Resource
-        return new UserResource(true, 'List Data Users', $users);
+        // Kembalikan dengan Api Resource
+            return new UserResource(true, 'List Data Users', $users);
     }
 
     /**

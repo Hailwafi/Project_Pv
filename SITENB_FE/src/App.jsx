@@ -36,6 +36,7 @@ import TesIsi2 from "./pages/TesIsi2"
 // import ProductTable from "./pages/Dashboard/Staff/ProductTable"
 
 import TaskPw from "./pages/Dashboard/Staff/TaskPw"
+import TaskPb from "./pages/Dashboard/Staff/TaskPb"
 import TaskList from "./pages/Dashboard/Staff/TaskList"
 
 import TiketPb from "./pages/TiketPb"
@@ -102,7 +103,7 @@ const App = () => {
 
 const AdminLayout = withAuthenticationAdmin(() => (
   <>
-    <NavbarDb />
+    {/* <NavbarDb /> */}
     <div>
       <Routes>
       <Route path="/Tes" element={<Tes/>}/>
@@ -153,6 +154,7 @@ const StaffLayout = withAuthenticationStaff(() => (
       <Routes>
         <Route path="/" element={<Staff/>}/>
         <Route path="/TaskPw" element={<TaskPw/>}/>
+        <Route path="/TaskPb" element={<TaskPb/>}/>
         <Route path="/TaskList" element={<TaskList/>}/>
       
     

@@ -215,7 +215,7 @@ class PublikController extends Controller
             'prioritas'   => 'required|in:rendah,sedang,tinggi', // Validasi prioritas
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) 
         {
             return response()->json($validator->errors(), 422);
         }

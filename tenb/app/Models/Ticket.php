@@ -42,9 +42,4 @@ class Ticket extends Model
     {
         return $this->hasMany(ProofOfWork::class);
     }
-
-    public function ticketmessages() 
-    {
-        return $this->hasMany(TicketMessage::class);
-    }
 }
