@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FormModal from '../../../components/FormModal';
 import Detail from '../../../components/Detail';
 
-const TaskPb = () => {
+const TaskPw = () => {
     const [selectedTicket, setSelectedTicket] = useState(null); 
     const [isModalOpen, setIsModalOpen] = useState(false); 
     const [isForm1Open, setIsForm1Open] = useState(false);
+    const [isProofFormOpen, setIsProofFormOpen] = useState(false);
     const [newStatus, setNewStatus] = useState('');
     const [isUpdating, setIsUpdating] = useState(false); 
 
     const openForm1 = () => setIsForm1Open(true);
     const closeForm1 = () => setIsForm1Open(false);
-  
+    const openProofForm = () => setIsProofFormOpen(true);
+    const closeProofForm = () => setIsProofFormOpen(false);
+
     const [tickets, setTickets] = useState({
-        tiket_pegawai: [],
+    
         tiket_publik: []
     });
     const [loading, setLoading] = useState(true);
@@ -83,6 +86,287 @@ const TaskPb = () => {
         return <p>{error}</p>;
     }
 
+    
+
+// const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
+//     const [nama_lengkap, setName] = useState(''); 
+//     const [tanggal, setDate] = useState(''); 
+//     const [bukti_pengerjaan, setProofFile] = useState(null); 
+
+//     const handleFileChange = (e) => {
+//         setProofFile(e.target.files[0]);
+//     };
+
+//     const handleSubmit = async (e) => {
+//         e.preventDefault();
+//         const token = localStorage.getItem('token');
+
+//         // Cek apakah selectedTicket terdefinisi
+//         if (!selectedTicket) {
+//             alert("Ticket tidak terpilih.");
+//             return;
+//         }
+
+//         const formData = new FormData();
+//         formData.append('nama_lengkap', nama_lengkap);
+//         formData.append('tanggal', tanggal);
+//         formData.append('proof', bukti_pengerjaan); 
+//         formData.append('ticket_type', ticketType); 
+
+//         try {
+//             await axios.post(`http://127.0.0.1:8000/api/staff/tickets/${selectedTicket.id}/proof-of-work`, formData, {
+//                 headers: {
+//                     Authorization: `Bearer ${token}`,
+//                     'Content-Type': 'multipart/form-data'
+//                 }
+//             });
+//             alert("Bukti pengerjaan berhasil dikirim");
+//             onClose();
+//         } catch (error) {
+//             console.error("Gagal mengirim bukti pengerjaan:", error.response ? error.response.data : error.message);
+//             alert("Gagal mengirim bukti pengerjaan. Silakan coba lagi.");
+//         }
+//     };
+
+//     return (
+//         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+//             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+//                 <button className="float-right text-gray-500" onClick={onClose}>&times;</button>
+//                 <h2 className="text-xl font-semibold mb-4">Kirim Bukti Pengerjaan</h2>
+//                 <form onSubmit={handleSubmit}>
+//                     {/* Input Nama */}
+//                     <label htmlFor="name" className="block mb-2">Nama</label>
+//                     <input
+//                         id="name"
+//                         type="text"
+//                         value={nama_lengkap}
+//                         onChange={(e) => setName(e.target.value)}
+//                         className="w-full p-2 border rounded mb-4"
+//                         required
+//                     />
+
+//                     {/* Input Tanggal */}
+//                     <label htmlFor="date" className="block mb-2">Tanggal</label>
+//                     <input
+//                         id="date"
+//                         type="date"
+//                         value={tanggal}
+//                         onChange={(e) => setDate(e.target.value)}
+//                         className="w-full p-2 border rounded mb-4"
+//                         required
+//                     />
+
+//                     {/* Input Bukti Pengerjaan (Foto) */}
+//                     <label htmlFor="proof" className="block mb-2">Bukti Pengerjaan (Foto)</label>
+//                     <input
+//                         id="proof"
+//                         type="file"
+//                         onChange={handleFileChange}
+//                         className="w-full p-2 border rounded mb-4"
+//                         accept="image/*"
+//                         required
+//                     />
+
+//                     <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Kirim</button>
+//                 </form>
+//             </div>
+//         </div>
+//     );
+// };
+
+
+// const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
+//     const [nama_lengkap, setName] = useState(''); 
+//     const [tanggal, setDate] = useState(''); 
+//     const [bukti_pengerjaan, setProofFile] = useState(null); 
+//     const [ticketType, setTicketType] = useState(selectedTicket?.type || ''); // Menyimpan tipe tiket
+
+//     const handleFileChange = (e) => {
+//         setProofFile(e.target.files[0]);
+//     };
+
+//     const handleSubmit = async (e) => {
+//         e.preventDefault();
+//         const token = localStorage.getItem('token');
+
+//         // Cek apakah selectedTicket terdefinisi
+//         if (!selectedTicket) {
+//             alert("Ticket tidak terpilih.");
+//             return;
+//         }
+
+//         const formData = new FormData();
+//         formData.append('nama_lengkap', nama_lengkap);
+//         formData.append('tanggal', tanggal);
+//         formData.append('bukti_pengerjaan', bukti_pengerjaan); // Pastikan ini sesuai dengan backend
+//         formData.append('ticket_type', ticketType); // Tipe tiket
+
+//         try {
+//             await axios.post(`http://127.0.0.1:8000/api/staff/tickets/${selectedTicket.id}/proof-of-work`, formData, {
+//                 headers: {
+//                     Authorization: `Bearer ${token}`,
+//                     'Content-Type': 'multipart/form-data'
+//                 }
+//             });
+//             alert("Bukti pengerjaan berhasil dikirim");
+//             onClose();
+//         } catch (error) {
+//             console.error("Gagal mengirim bukti pengerjaan:", error.response ? error.response.data : error.message);
+//             alert("Gagal mengirim bukti pengerjaan. Silakan coba lagi.");
+//         }
+//     };
+
+//     return (
+//         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+//             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+//                 <button className="float-right text-gray-500" onClick={onClose}>&times;</button>
+//                 <h2 className="text-xl font-semibold mb-4">Kirim Bukti Pengerjaan</h2>
+//                 <form onSubmit={handleSubmit}>
+//                     {/* Input Nama */}
+//                     <label htmlFor="name" className="block mb-2">Nama</label>
+//                     <input
+//                         id="name"
+//                         type="text"
+//                         value={nama_lengkap}
+//                         onChange={(e) => setName(e.target.value)}
+//                         className="w-full p-2 border rounded mb-4"
+//                         required
+//                     />
+
+//                     {/* Input Tanggal */}
+//                     <label htmlFor="date" className="block mb-2">Tanggal</label>
+//                     <input
+//                         id="date"
+//                         type="date"
+//                         value={tanggal}
+//                         onChange={(e) => setDate(e.target.value)}
+//                         className="w-full p-2 border rounded mb-4"
+//                         required
+//                     />
+
+//                     {/* Input Bukti Pengerjaan (Foto) */}
+//                     <label htmlFor="proof" className="block mb-2">Bukti Pengerjaan (Foto)</label>
+//                     <input
+//                         id="proof"
+//                         type="file"
+//                         onChange={handleFileChange}
+//                         className="w-full p-2 border rounded mb-4"
+//                         accept="image/*,application/pdf" // Mengizinkan file gambar dan PDF
+//                         required
+//                     />
+
+//                     <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Kirim</button>
+//                 </form>
+//             </div>
+//         </div>
+//     );
+// };
+
+
+const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
+    const [nama_lengkap, setName] = useState(''); 
+    const [tanggal, setDate] = useState(''); 
+    const [bukti_pengerjaan, setProofFile] = useState(null); 
+    const [ticketType, setTicketType] = useState(selectedTicket?.type || ''); // Mengatur default dari selectedTicket
+
+    const handleFileChange = (e) => {
+        setProofFile(e.target.files[0]);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+
+        if (!selectedTicket) {
+            alert("Ticket tidak terpilih.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('nama_lengkap', nama_lengkap);
+        formData.append('tanggal', tanggal);
+        formData.append('bukti_pengerjaan', bukti_pengerjaan);
+        formData.append('ticket_type', ticketType); // Mengirimkan ticket_type dari dropdown
+
+        try {
+            await axios.post(`http://127.0.0.1:8000/api/staff/tickets/${selectedTicket.id}/proof-of-work`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            alert("Bukti pengerjaan berhasil dikirim");
+            onClose();
+        } catch (error) {
+            console.error("Gagal mengirim bukti pengerjaan:", error.response ? error.response.data : error.message);
+            alert("Gagal mengirim bukti pengerjaan. Silakan coba lagi.");
+        }
+
+       
+    };
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                <button className="float-right text-gray-500" onClick={onClose}>&times;</button>
+                <h2 className="text-xl font-semibold mb-4">Kirim Bukti Pengerjaan</h2>
+                <form onSubmit={handleSubmit}>
+                    {/* Input Nama */}
+                    <label htmlFor="name" className="block mb-2">Nama</label>
+                    <input
+                        id="name"
+                        type="text"
+                        value={nama_lengkap}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full p-2 border rounded mb-4"
+                        required
+                    />
+
+                    {/* Input Tanggal */}
+                    <label htmlFor="date" className="block mb-2">Tanggal</label>
+                    <input
+                        id="date"
+                        type="date"
+                        value={tanggal}
+                        onChange={(e) => setDate(e.target.value)}
+                        className="w-full p-2 border rounded mb-4"
+                        required
+                    />
+
+                    {/* Input Tipe Tiket */}
+                    <label htmlFor="ticket_type" className="block mb-2">Tipe Tiket</label>
+                    <select
+                        id="ticket_type"
+                        value={ticketType}
+                        onChange={(e) => setTicketType(e.target.value)}
+                        className="w-full p-2 border rounded mb-4"
+                        required
+                    >
+                        <option value="">Pilih Tipe Tiket</option>
+                        <option value="TicketPegawai">Ticket Pegawai</option>
+                        <option value="TicketPublik">Ticket Publik</option>
+                    </select>
+
+                    {/* Input Bukti Pengerjaan (Foto) */}
+                    <label htmlFor="proof" className="block mb-2">Bukti Pengerjaan (Foto)</label>
+                    <input
+                        id="proof"
+                        type="file"
+                        onChange={handleFileChange}
+                        className="w-full p-2 border rounded mb-4"
+                        accept="image/*,application/pdf"
+                        required
+                    />
+
+                    <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">Kirim</button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+
+
     return (
         <>
             <div className='relative px-4 pt-24 sm:px-6 lg:px-8'>
@@ -118,41 +402,37 @@ const TaskPb = () => {
                     <table className="w-full text-sm text-left rtl:text-right">
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" className="px-6 py-3">No</th>
-                                <th scope="col" className="px-6 py-3">Nama Lengkap</th>
+                                <th scope="col" className="px-6 py-3">No.</th>
+                                <th scope="col" className="px-6 py-3">Nama</th>
                                 <th scope="col" className="px-6 py-3">Email</th>
                                 <th scope="col" className="px-6 py-3">Jabatan</th>
                                 <th scope="col" className="px-6 py-3">Kategori</th>
                                 <th scope="col" className="px-6 py-3">Jenis Tiket</th>
                                 <th scope="col" className="px-6 py-3">Status</th>
-                                <th scope="col" className="px-6 py-3">Aksi</th>
+                                <th scope="col" className="px-6 py-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {tickets.tiket_pegawai.length > 0 ? (
-                                tickets.tiket_pegawai.map((ticket) => (
-                                    <tr key={`pegawai-${ticket.id}`} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
-                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                            {ticket.id}
-                                        </th>
+                            {tickets.tiket_publik.length > 0 ? (
+                                tickets.tiket_publik.map((ticket, index) => (
+                                    <tr key={ticket.id} className="bg-white border-b">
+                                        <td className="px-6 py-4">{index + 1}</td>
                                         <td className="px-6 py-4">{ticket.nama_lengkap}</td>
                                         <td className="px-6 py-4">{ticket.email}</td>
                                         <td className="px-6 py-4">{ticket.jabatan}</td>
                                         <td className="px-6 py-4">{ticket.kategori}</td>
                                         <td className="px-6 py-4">{ticket.jenis_tiket}</td>
                                         <td className="px-6 py-4">{ticket.status}</td>
-                                        
-                                        <td className="grid grid-cols-1 gap-2 sm:grid-cols-2 p-4">
-                                            <button onClick={() => { openForm1(); setSelectedTicket(ticket); }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Ganti Status</button>
-                                            <button onClick={() => handleDetailClick(ticket)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail</button>
+                                        <td className="grid grid-cols-1 gap-2 sm:grid-cols-3 p-4">
+                                        <button onClick={() => { openForm1(); setSelectedTicket(ticket); }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Ganti Status</button>
+                                        <button onClick={() => handleDetailClick(ticket)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Detail</button>
+                                        <button onClick={() => { setSelectedTicket(ticket); openProofForm(); }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Kirim Bukti</button>
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="7" className="px-6 py-4 text-center">
-                                    Tidak ada tiket publik yang ditugaskan
-                                    </td>
+                                    <td colSpan="8" className="text-center py-4">Tidak ada tiket yang tersedia.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -160,6 +440,7 @@ const TaskPb = () => {
                 </div>
             </div>
 
+            {isModalOpen && <Detail ticket={selectedTicket} onClose={handleCloseModal} />}
             {selectedTicket && (
                 <FormModal isOpen={isForm1Open} onClose={closeForm1} onSave={handleStatusChange} title="Ubah Status">
                     <div className="sm:col-span-3">
@@ -177,10 +458,11 @@ const TaskPb = () => {
                     </div>
                 </FormModal>
             )}
-
-       
+        {isProofFormOpen && (
+    <FormBuktiPengerjaan selectedTicket={selectedTicket} onClose={closeProofForm} />
+)}
         </>
     );
 };
 
-export default TaskPb;
+export default TaskPw;

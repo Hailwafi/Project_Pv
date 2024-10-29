@@ -16,7 +16,9 @@ const Ck_Tiket = () => {
     return <p>Data tiket tidak tersedia. Coba ulangi pencarian.</p>;
   }
 
-  const formattedDate = format(new Date(ticketData.data.created_at), 'dd MMMM yyyy');
+  const formattedDate = ticketData?.data?.created_at 
+  ? format(new Date(ticketData.data.created_at), 'dd MMMM yyyy') 
+  : 'Tanggal tidak tersedia';
 
   return (
     <>
@@ -270,8 +272,8 @@ const Ck_Tiket = () => {
 
        
         
-            <div className="col-span-full">
-  <label htmlFor="Bukti Jabatan" className="block text-sm font-medium leading-6 text-gray-900">
+            {/* <div className="col-span-full">
+  <label htmlFor="Lampiran dokumen" className="block text-sm font-medium leading-6 text-gray-900">
     Lampiran dokumen:
   </label>
   <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
@@ -279,7 +281,7 @@ const Ck_Tiket = () => {
       {ticketData?.data?.unggah_file ? (
         <img
           // src={ticketData.data.unggah_file}
-         src={`http://127.0.0.1:8000/${ticketData.unggah_file}`} alt="Bukti Jabatan"
+         src={`http://127.0.0.1:8000/${ticketData.unggah_file}`} alt="Lampiran dokumen"
           className="mx-auto h-48 w-48 object-cover rounded-lg"
         />
       ) : (
@@ -289,9 +291,29 @@ const Ck_Tiket = () => {
     </div>
 </div>
 </div>
-    
-
+     */}
+{/* <div className="col-span-full">
+  <label htmlFor="Lampiran dokumen" className="block text-sm font-medium leading-6 text-gray-900">
+    Lampiran dokumen:
+  </label>
+  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+    <div className="text-center">
+      {ticketData?.data?.unggah_file ? (
+        <img
+          src={`http://127.0.0.1:8000/${ticketData.data.unggah_file}`} 
+          alt="Lampiran dokumen"
+          className="mx-auto h-48 w-48 object-cover rounded-lg"
+        />
+      ) : (
+        <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
+      )}
+    </div>
+  </div>
+</div> */}
 {/* <div>
+
+
+
       {ticketData ? (
         <div>
           <h1>Detail Tiket</h1>
@@ -313,6 +335,58 @@ const Ck_Tiket = () => {
         <p>Data tiket tidak tersedia</p>
       )}
     </div> */}
+{/* 
+<div className="col-span-full">
+  <label htmlFor="Lampiran dokumen" className="block text-sm font-medium leading-6 text-gray-900">
+    Lampiran dokumen:
+  </label>
+  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+    <div className="text-center">
+      {ticketData?.data?.unggah_file ? (
+        <a 
+          href={`http://127.0.0.1:8000/${ticketData.data.unggah_file}`} 
+          target="_blank" // Membuka di tab baru
+          rel="noopener noreferrer" // Keamanan tambahan
+        >
+          <img
+            src={`http://127.0.0.1:8000/${ticketData.data.unggah_file}`} 
+            alt="Lampiran dokumen"
+            className="mx-auto h-48 w-48 object-cover rounded-lg"
+          />
+        </a>
+      ) : (
+        <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
+      )}
+    </div>
+  </div>
+</div> */}
+
+
+<div className="col-span-full">
+  <label htmlFor="Lampiran dokumen" className="block text-sm font-medium leading-6 text-gray-900">
+    Lampiran dokumen:
+  </label>
+  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+    <div className="text-center">
+      {ticketData?.data?.unggah_file ? (
+        <a 
+          href={`http://127.0.0.1:8000/storage/${ticketData.data.unggah_file}`} 
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src={`http://127.0.0.1:8000/storage/${ticketData.data.unggah_file}`} 
+            alt="Lampiran dokumen"
+            className="mx-auto h-48 w-48 object-cover rounded-lg"
+          />
+        </a>
+      ) : (
+        <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
+      )}
+    </div>
+  </div>
+</div>
+
 
             <div className="col-span-full">
               <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
@@ -327,6 +401,7 @@ const Ck_Tiket = () => {
                   value={ticketData?.data?.deskripsi || ''}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   defaultValue={''}
+                  readOnly 
                 />
               </div>
             </div>

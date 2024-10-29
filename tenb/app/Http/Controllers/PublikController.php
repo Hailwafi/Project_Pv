@@ -215,7 +215,7 @@ class PublikController extends Controller
             'prioritas'   => 'required|in:rendah,sedang,tinggi', // Validasi prioritas
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return response()->json($validator->errors(), 422);
         }
@@ -265,6 +265,48 @@ class PublikController extends Controller
         ]);
     }
 
+    // public function search(Request $request)
+    // {
+    //     // Ambil inputan nama dan status
+    //     $name = $request->input('name');
+    //     $status = $request->input('status');
+
+    //     // Validasi input nama atau status, setidaknya salah satu harus diisi
+    //     if (!$name && !$status)
+    //     {
+    //         return response()->json(['message' => 'Nama atau status diperlukan untuk pencarian'], 422);
+    //     }
+
+    //     // Inisialisasi query untuk mencari tiket pegawai atau publik
+    //     $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'prioritas', 'status',);
+
+    //     // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
+    //     if ($name)
+    //     {
+    //         $query->where('nama_lengkap', 'LIKE', "%{$name}%");
+    //     }
+
+    //     // Jika ada input status, tambahkan kondisi pencarian berdasarkan status
+    //     if ($status)
+    //     {
+    //         $query->where('status', 'LIKE', "%{$status}%");
+    //     }
+
+    //     // Dapatkan hasil query
+    //     $publiks = $query->get();
+
+    //     // Cek apakah tiket ditemukan
+    //     if ($publiks->isEmpty())
+    //     {
+    //         return response()->json(['success' => false, 'message' => 'Tiket publik tidak ditemukan'], 404);
+    //     }
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'data' => $publiks
+    //     ], 200);
+    // }
+
     public function search(Request $request)
     {
         // Ambil inputan nama dan status
@@ -278,7 +320,7 @@ class PublikController extends Controller
         }
 
         // Inisialisasi query untuk mencari tiket pegawai atau publik
-        $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'prioritas', 'status',);
+        $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'prioritas', 'status', 'prioritas');
 
         // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
         if ($name)
@@ -298,13 +340,13 @@ class PublikController extends Controller
         // Cek apakah tiket ditemukan
         if ($publiks->isEmpty())
         {
-            return response()->json(['success' => false, 'message' => 'Tiket publik tidak ditemukan'], 404);
+            return response()->json(['success' => false, 'message' => 'Tiket tidak ditemukan'], 404);
         }
 
         return response()->json([
             'success' => true,
             'data' => $publiks
-        ], 200);
-    }
+     ], 200);
+ }
 }
 

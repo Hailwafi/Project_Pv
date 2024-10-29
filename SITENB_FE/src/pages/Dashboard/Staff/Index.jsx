@@ -82,7 +82,7 @@ useEffect(() => {
 <table class="items-center border-spacing-none border border-slate-500">
   <thead>
     <tr>
-      <th class="border bg-customAbu py-4 text-white">Jumlah tiket Kendala</th>
+      <th class="border bg-customAbu py-4 text-white">Jumlah Tugas</th>
     
     </tr>
   </thead>
@@ -96,7 +96,7 @@ useEffect(() => {
 <table class="border-spacing-none border border-slate-500 ">
   <thead>
     <tr>
-      <th class="border bg-customAbu py-4 text-white">Jumlah tiket Permohonan</th>
+      <th class="border bg-customAbu py-4 text-white">Jumlah Tugas Selesai</th>
     
     </tr>
   </thead>

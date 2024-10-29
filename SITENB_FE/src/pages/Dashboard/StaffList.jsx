@@ -32,9 +32,25 @@ const StaffList = () => {
       setSearchTerm(e.target.value);
     };
   
+    // const handleDetailClick = (id) => {
+    //   navigate(`/Dashboard/StaffDetail/${id}`);
+    // };
+
+    const getUserRole = () => {
+      return localStorage.getItem('role'); 
+  };
+
     const handleDetailClick = (id) => {
-      navigate(`/Dashboard/StaffDetail/${id}`);
+      const userRole = getUserRole();                                                                      
+      if (userRole === 'admin') {
+        navigate(`/Dashboard/StaffDetail/${id}`);
+      } else if (userRole === 'kepala_subbag') {
+        navigate(`/Leader/StaffDetail/${id}`);
+      } else {
+        alert("You do not have permission to view this page.");
+      }                                                                                                                   
     };
+    
   
   
     const filteredStaff = staffData.filter((staff) =>
@@ -62,7 +78,7 @@ const StaffList = () => {
               <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
+                </svg> 
               </div>
               <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5" placeholder="Cari Staff Berdasarkan Nama"  value={searchTerm}
         onChange={handleSearch} required />

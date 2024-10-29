@@ -31,7 +31,7 @@ class UserTableSeeder extends Seeder
         $user = User::find(1);
         $user->assignRole($role->name);
 
-    // Kepala Subbag
+    // Kepala Sub  bag
         //create data kepala subbag
         User::create([
             'email'         => 'haha@bnpt.go.id',

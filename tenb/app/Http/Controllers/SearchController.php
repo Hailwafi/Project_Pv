@@ -27,23 +27,30 @@ class SearchController extends Controller
         if ($ticketPegawai)
         {
             // Dapatkan URL file jika ada
-            if ($ticketPegawai->unggah_file) {
+            if ($ticketPegawai->unggah_file)
+            {
                 $ticketPegawai->unggah_file_url = Storage::url($ticketPegawai->unggah_file);
             }
 
             return response()->json([
-                'status' => 'success',
+                'status' => 'success true',
                 'data'   => $ticketPegawai,
                 'type'   => 'pegawai',
             ]);
 
         } elseif ($ticketPublik)
         {
+            // Dapatkan URL file jika ada
+                if ($ticketPublik->unggah_file)
+                    {
+                        $ticketPublik->unggah_file_url = Storage::url($ticketPublik->unggah_file);
+                    }
+
             // Ambil data tiket publik tanpa unggah_file dan unggah_file_url
-            $ticketPublikData = $ticketPublik->only(['id', 'nama_lengkap', 'kategori', 'sub_kategori', 'email', 'jenis_tiket', 'deskripsi', 'status', 'prioritas', 'assigned_to', 'kode_tiket', 'token_tiket']);
+            $ticketPublikData = $ticketPublik->only(['id', 'nama_lengkap', 'kategori', 'sub_kategori', 'email', 'jenis_tiket', 'deskripsi',  'unggah_file_url', 'status', 'prioritas', 'assigned_to', 'kode_tiket', 'token_tiket', 'created_at']);
 
             return response()->json([
-                'status' => 'success',
+                'status' => 'success true',
                 'data'   => $ticketPublikData,
                 'type'   => 'publik',
             ]);
