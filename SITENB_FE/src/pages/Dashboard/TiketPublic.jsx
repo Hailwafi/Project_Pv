@@ -140,11 +140,10 @@ const handleSearch = (e) => {
               </tr>
             </thead>
             <tbody>
-              {filteredData.map(tickets => (
+              {filteredData.map((tickets,index) => (
                 <tr key={tickets.id} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
-                  <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                    {tickets.id}
-                  </th>
+                                   <td className="px-6 py-4">{index + 1}</td>
+
                   <td className="px-6 py-4">{tickets.nama_lengkap}</td>
                   <td className="px-6 py-4">{tickets.email}</td>
                   <td className="px-6 py-4">{tickets.kategori}</td>

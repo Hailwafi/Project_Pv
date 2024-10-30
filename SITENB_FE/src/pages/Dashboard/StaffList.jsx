@@ -104,12 +104,11 @@ const StaffList = () => {
             <tbody>
            
         {filteredStaff.length > 0 ? (
-          filteredStaff.map((staff) => (
+          filteredStaff.map((staff,index) => (
             
             <tr key={staff.id}  className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700"> 
-              <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                    {staff.staff}
-                  </th>
+            
+                  <td className="px-6 py-4">{index + 1}</td>
                   <td className="px-6 py-4">{staff.nama}</td>
 
                   <td className="px-6 py-4  text-center">

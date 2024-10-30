@@ -30,18 +30,18 @@ class UserTableSeeder extends Seeder
         //assign role with permission to user
         $user = User::find(1);
         $user->assignRole($role->name);
-
-    // Kepala Sub  bag
+        
+    // Kepala Subbag
         //create data kepala subbag
         User::create([
             'email'         => 'haha@bnpt.go.id',
             'username'      => 'gemilang_parhadiyan',
-            'role'          => 'kepala_subbag',
+            'role'          => 'kepala subbag',
             'password'      => bcrypt('psikolog5tu'),
         ]);
 
         $role = Role::find(2);
-        $permissions = Permission::whereIn('name',
+        $permissions = Permission::whereIn('name', 
         [
             'users.create',
             'posts.index',
@@ -63,12 +63,16 @@ class UserTableSeeder extends Seeder
             'tickets.delete',
             'tickets.update-status',
             'tickets.assign-ticket',
+            'tickets.get-new-pegawai-tickets',
+            'tickets.search',
             'publiks.index',
             'publiks.create',
             'publiks.update',
             'publiks.delete',
             'publiks.update-status',
-            'publiks.assign-ticket',
+            'publiks.assign-publik',
+            'publiks.get-new-publik-publiks',
+            'publiks.search',
         ])->get();
 
         // Menugaskan izin ke peran
@@ -76,7 +80,7 @@ class UserTableSeeder extends Seeder
 
         //assign role with permission to kepala subbag
         $user = User::find(2);
-        $user->assignRole($role->name);
+        $user->assignRole($role->name); 
 
     // Staff
         $staffData = [
@@ -127,7 +131,7 @@ class UserTableSeeder extends Seeder
         $role->syncPermissions($permissions);
 
         // loop melalui data staf dan buat user
-        foreach ($staffData as $staff)
+        foreach ($staffData as $staff) 
         {
             $user = User::create($staff);
 

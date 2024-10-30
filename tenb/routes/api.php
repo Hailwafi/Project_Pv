@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
     // login
         Route::post('/login', [App\Http\Controllers\Api\Auth\LoginController::class, 'index']);
-
+        
     // notifikasi
         Route::get('/notifications', function() {
             return auth()->user()->notifications;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
             Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
     });
 
-        // lupa password
+    // lupa password
             Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
             Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
@@ -49,16 +49,23 @@ use Illuminate\Support\Facades\Route;
         Route::group(['middleware' => 'auth:api'], function () {
 
         // logout
-                Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
+            Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
 
         // lupa password
-        Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
-        Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
+            Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
+
+        // profile
+            Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'getProfile']);
+            Route::post('/profile/change-picture', [App\Http\Controllers\ProfileController::class, 'changeProfilePicture']);
 
         // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
             })->middleware('auth');
+
+        // message
+            Route::post('/messages', [App\Http\Controllers\MessageController::class, 'store']);
 
         // pantau pekerjaan
             Route::get('/pantau-pekerjaan', [App\Http\Controllers\MonitoringController::class, 'pantauPekerjaan'])->middleware('auth:api');
@@ -73,12 +80,19 @@ use Illuminate\Support\Facades\Route;
             Route::get('/users/search', [App\Http\Controllers\Api\Admin\UserController::class, 'search']);
 
         // memunculkan semua tiket pegawai & publik
-            Route::get('/tickets/pegawai/new', [App\Http\Controllers\TicketController::class, 'getNewPegawaiTickets']);
-            Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks']);
+            Route::get('/tickets/pegawai/new', [App\Http\Controllers\TicketController::class, 'getNewPegawaiTickets'])
+            ->middleware('permission:tickets.get-new-pegawai-tickets');
 
-        // search tiket berdasarkan nama
-            Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
-            Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
+            Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks'])
+            ->middleware('permission:publiks.get-new-publik-publiks');
+
+        // search tiket berdasarkan nama dan status
+            Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search'])
+            ->middleware('permission:tickets.search');
+
+            Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search'])
+            ->middleware('permission:publiks.search');
+
 
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
@@ -92,12 +106,12 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:posts.index|posts.store|posts.update|posts.delete');
 
         // permissions
-            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function ()
+            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function () 
             {
                 Route::get('/permissions', [App\Http\Controllers\Api\Admin\PermissionController::class, 'index']);
                 Route::get('/permissions/all', [App\Http\Controllers\Api\Admin\PermissionController::class, 'all']);
             });
-
+                        
         // roles
             Route::apiResource('/roles', App\Http\Controllers\Api\Admin\RoleController::class)
             ->middleware('permission:roles.index|roles.store|roles.update|roles.delete');
@@ -132,7 +146,7 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:publiks.update-status');
 
             Route::put('publiks/{id}/assign', [App\Http\Controllers\PublikController::class, 'assignPublik'])
-            ->middleware('permission:publiks.assign-ticket');
+            ->middleware('permission:publiks.assign-publik');           
     });
 });
 
@@ -142,11 +156,15 @@ use Illuminate\Support\Facades\Route;
         Route::group(['middleware' => 'auth:api'], function () {
 
         // logout
-                Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
+            Route::post('/logout', [App\Http\Controllers\Api\Auth\LoginController::class, 'logout']);
 
         // lupa password
-        Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
-        Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
+            Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
+
+        // profile
+            Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'getProfile']);
+            Route::post('/profile/change-picture', [App\Http\Controllers\ProfileController::class, 'changeProfilePicture']);
 
         // notifikasi
             Route::get('/notifications', function() {
@@ -163,12 +181,18 @@ use Illuminate\Support\Facades\Route;
             Route::get('/staff-list', [App\Http\Controllers\Api\Admin\UserController::class, 'getStaffList']);
 
         // memunculkan semua tiket pegawai & publik
-            Route::get('/tickets/pegawai/new', [App\Http\Controllers\TicketController::class, 'getNewPegawaiTickets']);
-            Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks']);
+            Route::get('/tickets/pegawai/new', [App\Http\Controllers\TicketController::class, 'getNewPegawaiTickets'])
+            ->middleware('permission:tickets.get-new-pegawai-tickets');
 
-        // search tiket berdasarkan nama
-            Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
-            Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
+            Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks'])
+            ->middleware('permission:publiks.get-new-publik-publiks');
+
+        // search tiket berdasarkan nama dan status
+            Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search'])
+            ->middleware('permission:tickets.search');
+
+            Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search'])
+            ->middleware('permission:publiks.search');
 
         // dashboard
             Route::get('/dashboard', App\Http\Controllers\Api\Admin\DashboardController::class);
@@ -182,12 +206,12 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:posts.index|posts.store|posts.update|posts.delete');
 
         // permissions
-            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function ()
+            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function () 
             {
                 Route::get('/permissions', [App\Http\Controllers\Api\Admin\PermissionController::class, 'index']);
                 Route::get('/permissions/all', [App\Http\Controllers\Api\Admin\PermissionController::class, 'all']);
             });
-
+                        
         // roles
             Route::apiResource('/roles', App\Http\Controllers\Api\Admin\RoleController::class)
             ->middleware('permission:roles.index|roles.store|roles.update|roles.delete');
@@ -223,7 +247,7 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:publiks.update-status');
 
             Route::put('publiks/{id}/assign', [App\Http\Controllers\PublikController::class, 'assignPublik'])
-            ->middleware('permission:publiks.assign-ticket');
+            ->middleware('permission:publiks.assign-publik');           
     });
 });
 
@@ -239,6 +263,10 @@ use Illuminate\Support\Facades\Route;
             Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
             Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
+        // profile
+            Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'getProfile']);
+            Route::post('/profile/change-picture', [App\Http\Controllers\ProfileController::class, 'changeProfilePicture']);
+            
         // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
@@ -248,30 +276,34 @@ use Illuminate\Support\Facades\Route;
             Route::get('/staff-dashboard', [App\Http\Controllers\Api\Staff\DashboardStaffController::class, 'getStaffDashboard']);
 
         // tiket staff berdasarkan ditugaskan
-                Route::get('/staff-tickets', [App\Http\Controllers\StaffTicketController::class, 'index']);
+            Route::get('/staff-tickets', [App\Http\Controllers\StaffTicketController::class, 'index']);
+
+        // search tiket berdasarkan nama dan status
+            Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
+            Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
 
         //users
             Route::apiResource('/users', App\Http\Controllers\Api\Admin\UserController::class)
             ->middleware('permission:users.create');
 
         // ticket pegawai
+            Route::get('/tickets', [App\Http\Controllers\TicketController::class, 'index']);
+
             Route::put('tickets/{id}/status', [App\Http\Controllers\TicketController::class, 'updateStatus'])
             ->middleware('permission:tickets.update-status');
 
         // ticket publik
+            Route::get('/publiks', [App\Http\Controllers\PublikController::class, 'index']);
+
             Route::put('publiks/{id}/status', [App\Http\Controllers\PublikController::class, 'updateStatus'])
             ->middleware('permission:publiks.update-status');
 
         // bukti pengerjaan ticket pegawai
             Route::post('/tickets/{ticket}/proof-of-work', [App\Http\Controllers\ProofOfWorkController::class, 'store'])
-            ->middleware('permission:proof_of_works.create');
+            ->middleware('permission:proof_of_works.create');    
 
         // bukti pengerjaan ticket publik
         Route::post('/publiks/{publik}/proof-of-work', [App\Http\Controllers\ProofOfWorkController::class, 'store'])
-        ->middleware('permission:proof_of_works.create');
-
-        // search tiket berdasarkan nama
-        Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
-        Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
+        ->middleware('permission:proof_of_works.create');    
     });
 });

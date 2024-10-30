@@ -39,20 +39,25 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'categories.delete', 'guard_name' => 'api']);
 
         //permission for tickets
-        Permission::create(['name' => 'tickets.index', 'guard_name'           => 'api']);
-        Permission::create(['name' => 'tickets.create', 'guard_name'          => 'api']);
-        Permission::create(['name' => 'tickets.update', 'guard_name'          => 'api']);
-        Permission::create(['name' => 'tickets.delete', 'guard_name'          => 'api']);
-        Permission::create(['name' => 'tickets.update-status', 'guard_name'   => 'api']);
-        Permission::create(['name' => 'tickets.assign-ticket', 'guard_name'   => 'api']);
+        Permission::create(['name' => 'tickets.index', 'guard_name'                     => 'api']);
+        Permission::create(['name' => 'tickets.create', 'guard_name'                    => 'api']);
+        Permission::create(['name' => 'tickets.update', 'guard_name'                    => 'api']);
+        Permission::create(['name' => 'tickets.delete', 'guard_name'                    => 'api']);
+        Permission::create(['name' => 'tickets.update-status', 'guard_name'             => 'api']);
+        Permission::create(['name' => 'tickets.assign-ticket', 'guard_name'             => 'api']);
+        Permission::create(['name' => 'tickets.get-new-pegawai-tickets', 'guard_name'   => 'api']);
+        Permission::create(['name' => 'tickets.search', 'guard_name'                    => 'api']);
 
         //permission for publiks
-        Permission::create(['name' => 'publiks.index', 'guard_name'         => 'api']);
-        Permission::create(['name' => 'publiks.create', 'guard_name'        => 'api']);
-        Permission::create(['name' => 'publiks.update', 'guard_name'        => 'api']);
-        Permission::create(['name' => 'publiks.delete', 'guard_name'        => 'api']);
-        Permission::create(['name' => 'publiks.update-status', 'guard_name' => 'api']);
-        Permission::create(['name' => 'publiks.assign-ticket', 'guard_name' => 'api']);
+        Permission::create(['name' => 'publiks.index', 'guard_name'                     => 'api']);
+        Permission::create(['name' => 'publiks.create', 'guard_name'                    => 'api']);
+        Permission::create(['name' => 'publiks.update', 'guard_name'                    => 'api']);
+        Permission::create(['name' => 'publiks.delete', 'guard_name'                    => 'api']);
+        Permission::create(['name' => 'publiks.update-status', 'guard_name'             => 'api']);
+        Permission::create(['name' => 'publiks.assign-publik', 'guard_name'             => 'api']);
+        Permission::create(['name' => 'publiks.get-new-publik-publiks', 'guard_name'    => 'api']);
+        Permission::create(['name' => 'publiks.search', 'guard_name'                    => 'api']);
+
 
         //permission for proof of works
         Permission::create(['name' => 'proof_of_works.create', 'guard_name' => 'api']);
