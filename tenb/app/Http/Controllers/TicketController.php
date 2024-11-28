@@ -17,20 +17,50 @@ use Illuminate\Support\Facades\Notification;
 
 class TicketController extends Controller
 {
-    public function index()
+    // public function index()
+    // {
+    //     //get ticket
+    //     $tickets = Ticket::when(request()->search, function($tickets)
+    //     {
+    //     $tickets = $tickets->where('name', 'like', '%'. request()->search . '%');
+    //     })->latest()->paginate(5);
+
+    //     //append query string to pagination links
+    //     $tickets->appends(['search' => request()->search]);
+
+    //     //return with Api Resource
+    //     return new TicketResource(true, 'List data Ticket Pegawai', $tickets);
+    // }
+
+//     public function index()
+//     {
+//         //get ticket
+//         $tickets = Ticket::when(request()->search, function($tickets)
+//         {
+//         $tickets = $tickets->where('name', 'like', '%'. request()->search . '%');
+//         })->latest()->paginate();
+
+//         //append query string to pagination links
+//         $tickets->appends(['search' => request()->search]);
+
+//         //return with Api Resource
+//         return new TicketResource(true, 'List data Ticket Pegawai', $tickets);
+//  }
+
+
+public function index()
     {
-        //get ticket
-        $tickets = Ticket::when(request()->search, function($tickets)
-        {
-        $tickets = $tickets->where('name', 'like', '%'. request()->search . '%');
-        })->latest()->paginate(5);
+        // Get ticket pegawai dengan pagination 10 per halaman
+            $tickets = Ticket::when(request()->search, function($tickets)
+            {
+                $tickets->where('name', 'like', '%' . request()->search . '%');
+            })->latest()->paginate(2); // Set pagination ke 10 per halaman
 
-        //append query string to pagination links
-        $tickets->appends(['search' => request()->search]);
+        // Append query string ke pagination links
+            $tickets->appends(['search' => request()->search]);
 
-        //return with Api Resource
         return new TicketResource(true, 'List data Ticket Pegawai', $tickets);
-    }
+}
 
     public function store(Request $request)
     {
@@ -96,10 +126,16 @@ class TicketController extends Controller
             $adminAndkepala_subbagUsers = User::whereIn('role', ['admin', 'kepala_subbag'])->get();
 
             // Kirim notifikasi ke admin dan kepala subbag
-            Notification::send($adminAndkepala_subbagUsers, new NewTicketNotification($ticket));
+            // Notification::send($adminAndkepala_subbagUsers, new NewTicketNotification($ticket));
 
-            // Kirim email kode tiket ke pengguna
-            Mail::to($ticket->email)->send(new TicketCode($ticket));
+            // // Kirim email kode tiket ke pengguna
+            // Mail::to($ticket->email)->send(new TicketCode($ticket));
+
+// Kirim email kode tiket ke pengguna
+dispatch(function () use ($ticket)
+{
+    Mail::to($ticket->email)->send(new TicketCode($ticket, true));
+})->afterResponse();
 
             return new TicketResource(true, 'Berhasil membuat Ticket Pegawai',
             [
@@ -224,7 +260,7 @@ class TicketController extends Controller
             'prioritas'   => 'required|in:rendah,sedang,tinggi', // Validasi prioritas
         ]);
 
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return response()->json($validator->errors(), 422);
         }
@@ -255,27 +291,140 @@ class TicketController extends Controller
 
     public function getNewPegawaiTickets(Request $request)
     {
-        // Ambil semua tiket pegawai tanpa filter status, lalu pilih kolom yang dibutuhkan
-        $tickets = Ticket::all()->map(function ($ticket)
-        {
-            return [
-                'nama_lengkap' => $ticket->nama_lengkap,
-                'email'        => $ticket->email,
-                'jabatan'      => $ticket->jabatan,
-                'kategori'     => $ticket->kategori,
-                'jenis_tiket'  => $ticket->jenis_tiket,
-                'status'       => $ticket->status,
-            ];
-        });
+        // Ambil semua tiket pegawai dan tambahkan URL unggah file jika ada
+            $tickets = Ticket::all()->map(function ($ticket)
+            {
+                // Cek apakah tiket memiliki file yang diunggah
+                    $fileUrl = $ticket->unggah_file ? Storage::url($ticket->unggah_file) : null;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Semua tiket pegawai BNPT berhasil ditemukan.',
-            'data'    => $tickets
-        ]);
+                return [
+                    'nama_lengkap'    => $ticket->nama_lengkap,
+                    'email'           => $ticket->email,
+                    'jabatan'         => $ticket->jabatan,
+                    'kategori'        => $ticket->kategori,
+                    'jenis_tiket'     => $ticket->jenis_tiket,
+                    'status'          => $ticket->status,
+                    'unggah_file_url' => $fileUrl, // Tambahkan URL unggah file
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Semua tiket pegawai BNPT berhasil ditemukan.',
+                'data'    => $tickets
+            ]);
     }
 
-    public function search(Request $request)
+//     public function downloadFile($ticketId)
+// {
+//     $ticket = Ticket::find($ticketId);
+
+//     if (!$ticket || !$ticket->unggah_file)
+//     {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'File tidak ditemukan.',
+//         ], 404);
+//     }
+
+//     $filePath = $ticket->unggah_file;
+
+//     if (!Storage::disk('public')->exists($filePath))
+//     {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'File tidak ditemukan di penyimpanan.',
+//         ], 404);
+//     }
+
+//     $fileContent = Storage::disk('public')->get($filePath);
+//     $mimeType = Storage::disk('public')->mimeType($filePath);
+
+//     return response($fileContent, 200)->header('Content-Type', $mimeType);
+// }
+
+// public function viewOrDownloadFile(Request $request, $ticketId)
+//     {
+//         $ticket = Ticket::find($ticketId);
+
+//         if (!$ticket || !$ticket->unggah_file)
+//         {
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'File tidak ditemukan.',
+//             ], 404);
+//         }
+
+//         $filePath = $ticket->unggah_file;
+
+//         if (!Storage::disk('public')->exists($filePath))
+//         {
+//             return response()->json([
+//                 'success' => false,
+//                 'message' => 'File tidak ditemukan di penyimpanan.',
+//             ], 404);
+//         }
+
+//         $fileContent = Storage::disk('public')->get($filePath);
+//         $mimeType = Storage::disk('public')->mimeType($filePath);
+//         $fileName = basename($filePath);
+
+//         // Cek parameter download dari query string
+//             if ($request->query('download') === 'true')
+//             {
+//                 return response($fileContent, 200)
+//                     ->header('Content-Type', $mimeType)
+//                     ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+//             }
+
+//         // Default: tampilkan di tab baru
+//             return response($fileContent, 200)
+//                 ->header('Content-Type', $mimeType)
+//                 ->header('Content-Disposition', 'inline');
+// }
+
+public function viewOrDownloadFile(Request $request, $ticketId)
+    {
+        $ticket = Ticket::find($ticketId);
+
+        if (!$ticket || !$ticket->unggah_file)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak ditemukan.',
+            ], 404);
+        }
+
+        $filePath = $ticket->unggah_file;
+
+        if (!Storage::disk('public')->exists($filePath))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak ditemukan di penyimpanan.',
+            ], 404);
+        }
+
+        $fileContent = Storage::disk('public')->get($filePath);
+        $mimeType = Storage::disk('public')->mimeType($filePath);
+        $fileName = basename($filePath);
+
+        // Cek parameter download dari query string
+            if ($request->query('download') === 'true')
+            {
+                return response($fileContent, 200)
+                    ->header('Content-Type', $mimeType)
+                    ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+            }
+
+        // Default: tampilkan di tab baru
+            return response($fileContent, 200)
+                ->header('Content-Type', $mimeType)
+                ->header('Content-Disposition', 'inline');
+}
+
+
+public function search(Request $request)
     {
         // Ambil inputan nama dan status
         $name = $request->input('name');

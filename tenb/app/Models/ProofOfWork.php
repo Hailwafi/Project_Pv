@@ -11,6 +11,7 @@ class ProofOfWork extends Model
 
     protected $fillable = [
         'ticket_id',
+        'staff_name',
         'ticket_type',
         'nama_lengkap',
         'bukti_pengerjaan',

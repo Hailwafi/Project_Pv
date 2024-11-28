@@ -15,25 +15,27 @@ class DashboardStaffController extends Controller
     {
         $staff = Auth::user();
 
-        // Total tiket pegawai yang sudah ditugaskan dari masing-masing staff
-        $jumlahTiketPegawai = Ticket::where('assigned_to', $staff->id)->count();
+        // Total tiket pegawai dan tiket publik yang ditugaskan ke staf ini
+            $jumlahTiketPegawai = Ticket::where('assigned_to', $staff->id)->count();
+            $jumlahTiketPublik = Publik::where('assigned_to', $staff->id)->count();
 
-        // Total tiket publik yang sudah ditugaskan dari masing-masing staff
-        $jumlahTiketPublik = Publik::where('assigned_to', $staff->id)->count();
+        // Total tiket keseluruhan (pegawai + publik)
+            $totalTiket = $jumlahTiketPegawai + $jumlahTiketPublik;
 
-        // Total bukti pengerjaan yang sudah dikirim dari masing-masing staff
-        $totalBuktiPengerjaan = ProofOfWork::where('staff_id', $staff->id)->count();
+        // Total bukti pengerjaan yang sudah dikirim oleh staf ini
+            $totalBuktiPengerjaan = ProofOfWork::where('staff_id', $staff->id)->count();
 
-        // Menghitung total seluruh tiket yang ditugaskan (pegawai + publik - bukti pengerjaan)
-        $totalTugas = $jumlahTiketPegawai + $jumlahTiketPublik - $totalBuktiPengerjaan;
+        // Menghitung total tugas yang ditugaskan (tiket yang belum memiliki bukti pengerjaan)
+            $totalTugas = max(0, $totalTiket - $totalBuktiPengerjaan);
 
-        return response()->json([
-            'success'                   => true,
-            'judul'                     => 'Dashboard Staff ' . $staff->username,
-            'jumlah_tiket_pegawai_bnpt' => $jumlahTiketPegawai,  
-            'jumlah_tiket_publik'       => $jumlahTiketPublik,  
-            'total_tugas'               => $totalTugas, 
-            'tiket_selesai'             => $totalBuktiPengerjaan,
-        ]);
+            return response()->json([
+                'success'                   => true,
+                'judul'                     => 'Dashboard Staff ' . $staff->username,
+                'total_tiket'               => $totalTiket,
+                'jumlah_tiket_pegawai_bnpt' => $jumlahTiketPegawai,
+                'jumlah_tiket_publik'       => $jumlahTiketPublik,
+                'total_tugas'               => $totalTugas,
+                'tiket_selesai'             => $totalBuktiPengerjaan,
+            ]);
     }
 }

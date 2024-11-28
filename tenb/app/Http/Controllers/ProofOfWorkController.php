@@ -16,28 +16,39 @@ class ProofOfWorkController extends Controller
 {
     public function store(Request $request, $ticketId)
     {
+        $staff = $request->user();
+
+        // Cek jumlah tiket yang ditugaskan ke staf
+        $jumlahTiketPegawai = Ticket::where('assigned_to', $staff->id)->count();
+        $jumlahTiketPublik = Publik::where('assigned_to', $staff->id)->count();
+        $totalBuktiPengerjaan = ProofOfWork::where('staff_id', $staff->id)->count();
+        $totalTugas = max(0, $jumlahTiketPegawai + $jumlahTiketPublik - $totalBuktiPengerjaan);
+
+        // Cek apakah staf memiliki tugas yang tersisa
+        if ($totalTugas <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pengiriman bukti pengerjaan ditolak karena tidak ada tugas yang tersisa.',
+            ], 400);
+        }
+
         // Validasi input
         $request->validate([
-            'ticket_type'      => 'required|string|in:TicketPegawai,TicketPublik',
-            'nama_lengkap'     => 'required|string|max:20',
-            'bukti_pengerjaan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'tanggal'          => 'required|date',
+            'bukti_pengerjaan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        // Cek apakah tiket ada berdasarkan tipe tiket (TicketPegawai atau TicketPublik)
-        if ($request->ticket_type === 'TicketPegawai')
-        {
-            // Cari tiket pegawai
-            $ticket = Ticket::find($ticketId);
-        } else if ($request->ticket_type === 'TicketPublik')
-        {
-            // Cari tiket publik
+        // Tentukan tipe tiket berdasarkan tabel tempat ID tiket ditemukan
+        $ticket = Ticket::find($ticketId);
+        $ticketType = 'TicketPegawai';
+
+        if (!$ticket) {
             $ticket = Publik::find($ticketId);
+            $ticketType = 'TicketPublik';
         }
 
         // Jika tiket tidak ditemukan, kembalikan error
-        if (!$ticket)
-        {
+        if (!$ticket) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tiket tidak ditemukan atau belum dibuat.'
@@ -50,11 +61,11 @@ class ProofOfWorkController extends Controller
         // Buat bukti pengerjaan
         $proofOfWork = ProofOfWork::create([
             'ticket_id'        => $ticketId,
-            'ticket_type'      => $request->ticket_type,
-            'nama_lengkap'     => $request->nama_lengkap,
+            'staff_name'       => $staff->username,
+            'tanggal'          => $request->tanggal,
+            'ticket_type'      => $ticketType, // Tipe tiket otomatis
             'bukti_pengerjaan' => $filePath,
-            'tanggal'          => $request->tanggal, // Simpan tanggal
-            'staff_id'         => $request->user()->id // Menyimpan ID staf yang meng-upload
+            'staff_id'         => $staff->id
         ]);
 
         // Ambil user admin dan kepala subbag

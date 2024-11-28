@@ -15,27 +15,49 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function index()
+    // {
+    //     // Ambil semua pengguna
+    //         $users = User::with('roles') // Memuat relasi roles
+    //             ->when(request()->search, function($query)
+    //             {
+    //                 $query->where('username', 'like', '%' . request()->search . '%')
+    //                     ->orWhere('email', 'like', '%' . request()->search . '%'); // Pencarian berdasarkan username atau email
+    //             })
+    //             ->whereDoesntHave('roles', function($query) {
+    //                 $query->where('name', 'admin'); // Tambahkan kondisi where untuk mengecualikan role 'admin'
+    //             })
+    //             ->orderBy('id', 'asc') // Mengurutkan berdasarkan ID secara ascending
+    //             ->paginate(); // Menggunakan pagination
+
+    //     // Tambahkan query string ke tautan pagination
+    //         $users->appends(['search' => request()->search]);
+
+    //     // Kembalikan dengan Api Resource
+    //         return new UserResource(true, 'List Data Users', $users);
+    // }
+
     public function index()
     {
         // Ambil semua pengguna
-            $users = User::with('roles') // Memuat relasi roles
-                ->when(request()->search, function($query) 
+            $users = User::with('roles')
+                ->when(request()->search, function($query)
                 {
                     $query->where('username', 'like', '%' . request()->search . '%')
-                        ->orWhere('email', 'like', '%' . request()->search . '%'); // Pencarian berdasarkan username atau email
+                        ->orWhere('email', 'like', '%' . request()->search . '%');
                 })
-                ->whereDoesntHave('roles', function($query) {
-                    $query->where('name', 'admin'); // Tambahkan kondisi where untuk mengecualikan role 'admin'
+                ->whereDoesntHave('roles', function($query)
+                {
+                    $query->where('name', 'admin');
                 })
-                ->orderBy('id', 'asc') // Mengurutkan berdasarkan ID secara ascending
-                ->paginate(); // Menggunakan pagination
+                ->orderBy('id', 'asc')
+                ->paginate(10);
 
         // Tambahkan query string ke tautan pagination
             $users->appends(['search' => request()->search]);
 
-        // Kembalikan dengan Api Resource
-            return new UserResource(true, 'List Data Users', $users);
-    }
+        return new UserResource(true, 'List Data Users', $users);
+ }
 
     /**
      * Store a newly created resource in storage.

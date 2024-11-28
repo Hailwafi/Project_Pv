@@ -11,13 +11,13 @@ return new class extends Migration
         Schema::create('proof_of_works', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ticket_id');
+            $table->string('staff_name');
+            $table->date('tanggal');
             $table->string('ticket_type');
-            $table->string('nama_lengkap');
             $table->string('bukti_pengerjaan');
-            $table->date('tanggal'); // Tambahkan kolom tanggal
-            $table->unsignedBigInteger('staff_id'); // Tambahkan kolom staff_id
+            $table->unsignedBigInteger('staff_id');
             $table->timestamps();
-        });        
+        });
     }
 
     public function down(): void

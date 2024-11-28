@@ -17,20 +17,33 @@ use Illuminate\Support\Facades\Notification;
 
 class PublikController extends Controller
 {
+    // public function index()
+    // {
+    //     //get ticket publik
+    //     $publiks = Publik::when(request()->search, function($publiks)
+    //     {
+    //     $publiks = $publiks->where('name', 'like', '%'. request()->search . '%');
+    //     })->latest()->paginate(5);
+
+    //     //append query string to pagination links
+    //     $publiks->appends(['search' => request()->search]);
+
+    //     //return with Api Resource
+    //     return new PublikResource(true, 'List data Ticket Publik', $publiks);
+    // }
+
     public function index()
     {
-        //get ticket publik
-        $publiks = Publik::when(request()->search, function($publiks)
-        {
-        $publiks = $publiks->where('name', 'like', '%'. request()->search . '%');
-        })->latest()->paginate(5);
+            $publiks = Publik::when(request()->search, function($publiks)
+            {
+                $publiks->where('name', 'like', '%' . request()->search . '%');
+            })->latest()->paginate(10);
 
-        //append query string to pagination links
-        $publiks->appends(['search' => request()->search]);
+        // Append query string ke pagination links
+            $publiks->appends(['search' => request()->search]);
 
-        //return with Api Resource
         return new PublikResource(true, 'List data Ticket Publik', $publiks);
-    }
+}
 
     public function store(Request $request)
     {
@@ -246,15 +259,19 @@ class PublikController extends Controller
 
     public function getNewPublikPubliks(Request $request)
     {
-        // Ambil semua tiket publik tanpa filter status, lalu pilih kolom yang dibutuhkan
-        $publikTickets = Publik::all()->map(function ($ticket)
+        // Ambil semua tiket publik dan tambahkan URL unggah file jika ada
+            $publikTickets = Publik::all()->map(function ($ticket)
         {
+            // Cek apakah tiket memiliki file yang diunggah
+                $fileUrl = $ticket->unggah_file ? Storage::url($ticket->unggah_file) : null;
+
             return [
-                'nama_lengkap' => $ticket->nama_lengkap,
-                'email'        => $ticket->email,
-                'kategori'     => $ticket->kategori,
-                'jenis_tiket'  => $ticket->jenis_tiket,
-                'status'       => $ticket->status,
+                'nama_lengkap'    => $ticket->nama_lengkap,
+                'email'           => $ticket->email,
+                'kategori'        => $ticket->kategori,
+                'jenis_tiket'     => $ticket->jenis_tiket,
+                'status'          => $ticket->status,
+                'unggah_file_url' => $fileUrl, // Tambahkan URL unggah file
             ];
         });
 
@@ -265,47 +282,77 @@ class PublikController extends Controller
         ]);
     }
 
-    // public function search(Request $request)
+    // public function downloadFilePublik($ticketpublikId)
     // {
-    //     // Ambil inputan nama dan status
-    //     $name = $request->input('name');
-    //     $status = $request->input('status');
+    //         $publik = Publik::find($ticketpublikId);
 
-    //     // Validasi input nama atau status, setidaknya salah satu harus diisi
-    //     if (!$name && !$status)
-    //     {
-    //         return response()->json(['message' => 'Nama atau status diperlukan untuk pencarian'], 422);
-    //     }
+    //     // Jika tiket tidak ditemukan atau file tidak ada, kirim respons error
+    //         if (!$publik || !$publik->unggah_file)
+    //         {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'File tidak ditemukan.',
+    //             ], 404);
+    //         }
 
-    //     // Inisialisasi query untuk mencari tiket pegawai atau publik
-    //     $query = Publik::select('nama_lengkap', 'email', 'kategori', 'jenis_tiket', 'prioritas', 'status',);
+    //         $filePath = $publik->unggah_file;
 
-    //     // Jika ada input nama, tambahkan kondisi pencarian berdasarkan nama
-    //     if ($name)
-    //     {
-    //         $query->where('nama_lengkap', 'LIKE', "%{$name}%");
-    //     }
+    //         if (!Storage::disk('public')->exists($filePath))
+    //         {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'File tidak ditemukan di penyimpanan.',
+    //             ], 404);
+    //         }
 
-    //     // Jika ada input status, tambahkan kondisi pencarian berdasarkan status
-    //     if ($status)
-    //     {
-    //         $query->where('status', 'LIKE', "%{$status}%");
-    //     }
+    //     // Nama file dan tipe MIME untuk header respons
+    //         $fileName = basename($filePath);
+    //         $mimeType = Storage::disk('public')->mimeType($filePath);
 
-    //     // Dapatkan hasil query
-    //     $publiks = $query->get();
-
-    //     // Cek apakah tiket ditemukan
-    //     if ($publiks->isEmpty())
-    //     {
-    //         return response()->json(['success' => false, 'message' => 'Tiket publik tidak ditemukan'], 404);
-    //     }
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'data' => $publiks
-    //     ], 200);
+    //     // Kirim respons unduhan file dari disk 'public'
+    //         return response()->download(Storage::disk('public')->path($filePath), $fileName, ['Content-Type' => $mimeType]);
     // }
+
+
+    public function downloadFilePublik(Request $request, $publikId)
+    {
+        $publik = Publik::find($publikId);
+
+        if (!$publik || !$publik->unggah_file)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak ditemukan.',
+            ], 404);
+        }
+
+        $filePath = $publik->unggah_file;
+
+        if (!Storage::disk('public')->exists($filePath))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak ditemukan di penyimpanan.',
+            ], 404);
+        }
+
+        $fileContent = Storage::disk('public')->get($filePath);
+        $mimeType = Storage::disk('public')->mimeType($filePath);
+        $fileName = basename($filePath);
+
+        // Cek parameter download dari query string
+            if ($request->query('download') === 'true')
+            {
+                return response($fileContent, 200)
+                    ->header('Content-Type', $mimeType)
+                    ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+            }
+
+        // Default: tampilkan di tab baru
+            return response($fileContent, 200)
+                ->header('Content-Type', $mimeType)
+                ->header('Content-Disposition', 'inline');
+    }
 
     public function search(Request $request)
     {

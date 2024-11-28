@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
     // login
         Route::post('/login', [App\Http\Controllers\Api\Auth\LoginController::class, 'index']);
-        
+
     // notifikasi
         Route::get('/notifications', function() {
             return auth()->user()->notifications;
@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
     // lupa password
             Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/verify-reset-token', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'verifyResetToken']);
             Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
     // ticket pegawai
@@ -53,12 +54,13 @@ use Illuminate\Support\Facades\Route;
 
         // lupa password
             Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/verify-reset-token', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'verifyResetToken']);
             Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
         // profile
             Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'getProfile']);
             Route::post('/profile/change-picture', [App\Http\Controllers\ProfileController::class, 'changeProfilePicture']);
-
+            Route::delete('/profile/delete-picture/{userId}', [App\Http\Controllers\ProfileController::class, 'deleteProfilePictureById']);
         // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
@@ -86,6 +88,10 @@ use Illuminate\Support\Facades\Route;
             Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks'])
             ->middleware('permission:publiks.get-new-publik-publiks');
 
+        // download unggah file tiket pegawai & publik
+            Route::get('/download-file/{ticketId}', [App\Http\Controllers\TicketController::class, 'downloadFile']);
+            Route::get('/download-file-publik/{ticketpublikId}', [App\Http\Controllers\PublikController::class, 'downloadFilePublik']);
+
         // search tiket berdasarkan nama dan status
             Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search'])
             ->middleware('permission:tickets.search');
@@ -106,12 +112,12 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:posts.index|posts.store|posts.update|posts.delete');
 
         // permissions
-            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function () 
+            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function ()
             {
                 Route::get('/permissions', [App\Http\Controllers\Api\Admin\PermissionController::class, 'index']);
                 Route::get('/permissions/all', [App\Http\Controllers\Api\Admin\PermissionController::class, 'all']);
             });
-                        
+
         // roles
             Route::apiResource('/roles', App\Http\Controllers\Api\Admin\RoleController::class)
             ->middleware('permission:roles.index|roles.store|roles.update|roles.delete');
@@ -146,7 +152,7 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:publiks.update-status');
 
             Route::put('publiks/{id}/assign', [App\Http\Controllers\PublikController::class, 'assignPublik'])
-            ->middleware('permission:publiks.assign-publik');           
+            ->middleware('permission:publiks.assign-publik');
     });
 });
 
@@ -160,12 +166,13 @@ use Illuminate\Support\Facades\Route;
 
         // lupa password
             Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/verify-reset-token', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'verifyResetToken']);
             Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
         // profile
             Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'getProfile']);
             Route::post('/profile/change-picture', [App\Http\Controllers\ProfileController::class, 'changeProfilePicture']);
-
+            Route::delete('/profile/delete-picture/{userId}', [App\Http\Controllers\ProfileController::class, 'deleteProfilePictureById']);
         // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
@@ -187,6 +194,10 @@ use Illuminate\Support\Facades\Route;
             Route::get('/publiks/publik/new', [App\Http\Controllers\PublikController::class, 'getNewPublikPubliks'])
             ->middleware('permission:publiks.get-new-publik-publiks');
 
+        // download unggah file tiket pegawai & publik
+            Route::get('/download-file/{ticketId}', [App\Http\Controllers\TicketController::class, 'downloadFile']);
+            Route::get('/download-file-publik/{ticketpublikId}', [App\Http\Controllers\PublikController::class, 'downloadFilePublik']);
+
         // search tiket berdasarkan nama dan status
             Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search'])
             ->middleware('permission:tickets.search');
@@ -206,12 +217,12 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:posts.index|posts.store|posts.update|posts.delete');
 
         // permissions
-            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function () 
+            Route::middleware(['auth:api', 'permission:permissions.index'])->group(function ()
             {
                 Route::get('/permissions', [App\Http\Controllers\Api\Admin\PermissionController::class, 'index']);
                 Route::get('/permissions/all', [App\Http\Controllers\Api\Admin\PermissionController::class, 'all']);
             });
-                        
+
         // roles
             Route::apiResource('/roles', App\Http\Controllers\Api\Admin\RoleController::class)
             ->middleware('permission:roles.index|roles.store|roles.update|roles.delete');
@@ -247,7 +258,7 @@ use Illuminate\Support\Facades\Route;
             ->middleware('permission:publiks.update-status');
 
             Route::put('publiks/{id}/assign', [App\Http\Controllers\PublikController::class, 'assignPublik'])
-            ->middleware('permission:publiks.assign-publik');           
+            ->middleware('permission:publiks.assign-publik');
     });
 });
 
@@ -261,12 +272,13 @@ use Illuminate\Support\Facades\Route;
 
         // lupa password
             Route::post('/forgot-password', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'sendResetLinkEmail']);
+            Route::post('/verify-reset-token', [App\Http\Controllers\Api\Auth\ForgotPasswordController::class, 'verifyResetToken']);
             Route::post('/reset-password', [App\Http\Controllers\Api\Auth\ResetPasswordController::class, 'reset']);
 
         // profile
             Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'getProfile']);
             Route::post('/profile/change-picture', [App\Http\Controllers\ProfileController::class, 'changeProfilePicture']);
-            
+            Route::delete('/profile/delete-picture/{userId}', [App\Http\Controllers\ProfileController::class, 'deleteProfilePictureById']);
         // notifikasi
             Route::get('/notifications', function() {
                 return auth()->user()->notifications;
@@ -282,6 +294,9 @@ use Illuminate\Support\Facades\Route;
             Route::get('search/tickets', [App\Http\Controllers\TicketController::class, 'search']);
             Route::get('search/publik-tickets', [App\Http\Controllers\PublikController::class, 'search']);
 
+      // download unggah file tiket pegawai & publik
+      Route::get('/view-or-download-file/{ticketId}', [App\Http\Controllers\TicketController::class, 'viewOrDownloadFile']);
+      Route::get('/view-or-download-file-publik/{publikId}', [App\Http\Controllers\PublikController::class, 'downloadFilePublik']);
         //users
             Route::apiResource('/users', App\Http\Controllers\Api\Admin\UserController::class)
             ->middleware('permission:users.create');
@@ -300,10 +315,10 @@ use Illuminate\Support\Facades\Route;
 
         // bukti pengerjaan ticket pegawai
             Route::post('/tickets/{ticket}/proof-of-work', [App\Http\Controllers\ProofOfWorkController::class, 'store'])
-            ->middleware('permission:proof_of_works.create');    
+            ->middleware('permission:proof_of_works.create');
 
         // bukti pengerjaan ticket publik
         Route::post('/publiks/{publik}/proof-of-work', [App\Http\Controllers\ProofOfWorkController::class, 'store'])
-        ->middleware('permission:proof_of_works.create');    
+        ->middleware('permission:proof_of_works.create');
     });
 });
