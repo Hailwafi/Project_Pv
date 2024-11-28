@@ -40,17 +40,32 @@ const StaffList = () => {
       return localStorage.getItem('role'); 
   };
 
-    const handleDetailClick = (id) => {
-      const userRole = getUserRole();                                                                      
-      if (userRole === 'admin') {
-        navigate(`/Dashboard/StaffDetail/${id}`);
-      } else if (userRole === 'kepala_subbag') {
-        navigate(`/Leader/StaffDetail/${id}`);
-      } else {
-        alert("You do not have permission to view this page.");
-      }                                                                                                                   
-    };
+  //   const handleDetailClick = (id) => {
+  //     const userRole = getUserRole();                                                                      
+  //     if (userRole === 'admin') {
+  //       navigate(`/Dashboard/StaffDetail/${id}`);
+  //     } else if (userRole === 'kepala_subbag') {
+  //       navigate(`/Leader/StaffDetail/${id}`);
+  //     } else {
+  //       alert("You do not have permission to view this page.");
+  //     }                                                                                                                   
+  //   };
     
+  const handleDetailClick = (id) => {
+    if (!id) {
+      console.error("ID tidak valid:", id);
+      alert("ID tidak ditemukan.");
+      return;
+    }
+    const userRole = getUserRole();
+    if (userRole === 'admin') {
+      navigate(`/Dashboard/StaffDetail/${id}`);
+    } else if (userRole === 'kepala_subbag') {
+      navigate(`/Leader/StaffDetail/${id}`);
+    } else {
+      alert("You do not have permission to view this page.");
+    }
+  };
   
   
     const filteredStaff = staffData.filter((staff) =>
@@ -98,6 +113,7 @@ const StaffList = () => {
               <tr>
                 <th scope="col" className="px-6 py-3">No</th>
                 <th scope="col" className="px-6 py-3">Nama Lengkap</th>
+                <th scope="col" className="px-6 py-3 text-center">Total Tugas</th>
                 <th scope="col" className="px-6 py-3 text-center">Aksi</th>
               </tr>
             </thead>
@@ -110,11 +126,12 @@ const StaffList = () => {
             
                   <td className="px-6 py-4">{index + 1}</td>
                   <td className="px-6 py-4">{staff.nama}</td>
+                  <td className="px-6 py-4 text-center">{staff.total_tugas}</td>
 
                   <td className="px-6 py-4  text-center">
 
               <button
-                onClick={() => handleDetailClick(staff.staff)} 
+                onClick={() => handleDetailClick(staff.staff_id)} 
                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
               >
                 Detail

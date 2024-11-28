@@ -6,6 +6,7 @@ import Tesnav from '../../../components/Tesnav';
 
 const Index = () => {
   
+  const [Total_tiket, setTotal_tiket] = useState(0);
   const [Totaljumlah_tiket_pegawai_bnpt, setTotaljumlah_tiket_pegawai_bnpt] = useState(0);
   const [Totaljumlah_tiket_publik, setTotaljumlah_tiket_publik] = useState(0);
   const [Totaltotal_tugas, setTotaltotal_tugas] = useState(0);
@@ -22,8 +23,9 @@ useEffect(() => {
       });
       
     
-      const { jumlah_tiket_pegawai_bnpt, jumlah_tiket_publik,total_tugas,tiket_selesai} = response.data;
+      const {total_tiket, jumlah_tiket_pegawai_bnpt, jumlah_tiket_publik,total_tugas,tiket_selesai} = response.data;
 
+      setTotal_tiket(total_tiket);
       setTotaljumlah_tiket_pegawai_bnpt(jumlah_tiket_pegawai_bnpt);
       setTotaljumlah_tiket_publik(jumlah_tiket_publik);
       setTotaltotal_tugas(total_tugas);
@@ -46,7 +48,20 @@ useEffect(() => {
               
          
     
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5 p-4 ">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4 ">
+                <a
+                  className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border bg-customBlue rounded-md hover:bg-blue-100 transition-colors"
+                >
+                  <img
+                    src="src/img/Tiket.png"
+                    alt="Logo"
+                    className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
+                  />
+                  <div className='text-white'>
+                    <p className="text-center">{Total_tiket}</p>
+                  <span>Total Tiket</span>
+                  </div>
+                </a>
                 <a
                 href="/Staff/TaskPw"
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border bg-customBlue rounded-md hover:bg-blue-100 transition-colors"

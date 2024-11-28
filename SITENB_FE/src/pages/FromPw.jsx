@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 const FromPw = () => {
   const navigate = useNavigate();
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const location = useLocation();
   const [formData, setFormData] = useState({
     nama_lengkap: "",
@@ -23,7 +23,7 @@ const FromPw = () => {
   const maxCharacters = 255;
   const [unggah_file, setUnggah_file] = useState(null);
 
-  // Data kategori, subkategori, dan jenis tiket
+
   const kategoriData = {
     layanan_pengolahan_data: {
       options: [
@@ -152,9 +152,11 @@ const FromPw = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(formData.email)) {
       toast.error("Email tidak valid!");
+      setIsSubmitting(false); 
       return;
     }
 
@@ -189,6 +191,8 @@ const FromPw = () => {
     } catch (error) {
       console.error("Error :", error.response ? error.response.data : error);
       toast.error("Email harus menggunakan domain @gmail.com.: " + (error.response ? error.response.data.message : "Kesalahan tidak terduga."));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -433,12 +437,21 @@ const FromPw = () => {
             <button  onClick={() => navigate('/TiketPw')} type="button" className="text-sm font-semibold leading-6 text-gray-900">
               Cancel
             </button>
-            <button
+            {/* <button
               type="submit"
               className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Ajukan
-            </button>
+            </button> */}
+               <button
+                type="submit"
+                disabled={isSubmitting} 
+                className={`rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                  isSubmitting ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
+                }`}
+              >
+                {isSubmitting ? 'Memproses...' : 'Ajukan'}
+              </button>
                 </div>
               </div>
             </div>

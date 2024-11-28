@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 const FormPb = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     nama_lengkap: "",
@@ -28,7 +29,7 @@ const FormPb = () => {
         kategori: location.state.kategori || '',
         jenis_tiket: location.state.jenis_tiket || '',
         sub_kategori: location.state.sub_kategori || '',
-        deskripsi: '', // Ensure deskripsi is always initialized
+        deskripsi: '',
       });
     }
   }, [location.state]);
@@ -48,8 +49,8 @@ const FormPb = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true); 
 
-    // Validasi email
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(formData.email)) {
       toast.error("Email tidak valid!");
@@ -85,6 +86,8 @@ const FormPb = () => {
     } catch (error) {
       console.error("Error :", error.response ? error.response.data : error);
       toast.error("Terjadi kesalahan: " + (error.response ? error.response.data.message : "Kesalahan tidak terduga."));
+    }finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -269,11 +272,22 @@ const FormPb = () => {
             <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
               Batal
             </button>
-            <button
+            {/* <button
               type="submit"
               className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
               Ajukan
-            </button>
+            </button> */}
+
+<button
+                type="submit"
+                disabled={isSubmitting} 
+                className={`rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+                  isSubmitting ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600'
+                }`}
+              >
+                {isSubmitting ? 'Memproses...' : 'Ajukan'}
+              </button>
+
           </div>
         </form>
       </div>

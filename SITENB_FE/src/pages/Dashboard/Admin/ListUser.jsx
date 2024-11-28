@@ -197,6 +197,11 @@ const ListUser = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10; 
+
+
   const openEditModal = (user) => {
     setSelectedUser(user);
     setIsEditModalOpen(true);
@@ -217,39 +222,71 @@ const ListUser = () => {
     setSelectedUserId(null);
   };
 
-  const fetchUsers = async () => {
+  // const fetchUsers = async () => {
+  //   const token = localStorage.getItem('token');
+  //   try {
+  //     const response = await axios.get('http://127.0.0.1:8000/api/admin/users', {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     setUsers(response.data.data.data);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error('Error fetching users:', error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchUsers = async (page = 1) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/admin/users', {
+      const response = await axios.get(`http://127.0.0.1:8000/api/admin/users?page=${page}&per_page=${itemsPerPage}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setUsers(response.data.data.data);
+      setTotalPages(response.data.data.last_page);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching users:', error);
       setLoading(false);
     }
   };
+ useEffect(() => {
+    fetchUsers(currentPage);
+  }, [currentPage]);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   const handleUpdate = () => {
-    fetchUsers();
-    closeEditModal();
+    fetchUsers(currentPage);
+    setIsEditModalOpen(false);
+    setSelectedUser(null);
   };
 
   const handleDelete = () => {
-    fetchUsers();
-    closeDeleteModal();
+    fetchUsers(currentPage);
+    setIsDeleteModalOpen(false);
+    setSelectedUserId(null);
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
 
   if (loading) {
     return <p>Loading users...</p>;
@@ -285,6 +322,37 @@ const ListUser = () => {
           <span className="ms-2">Tambah User</span>
 
         </a>
+     
+        <div className="flex justify-between items-center w-full">
+          <p>Tiket Pegawai </p>
+          <form className="flex items-center w-full sm:max-w-xs">
+          <label htmlFor="simple-search" className="sr-only">
+            Search
+          </label>
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="simple-search"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 py-2.5"
+              placeholder="Cari tiket berdasarkan nama"
+              value={searchTerm}
+              onChange={handleSearch}
+              required
+            />
+          </div>
+          <button type="submit" className="p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+            <span className="sr-only">Search</span>
+          </button>
+        </form>
+        </div>
 
         <div className="overflow-x-auto shadow-md sm:rounded-lg mt-4">
           <table className="w-full text-sm text-left rtl:text-right">
@@ -301,7 +369,7 @@ const ListUser = () => {
               {filteredUsers.map((user, index) => (
                 <tr key={user.id} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                    {index + 1}
+                  {index + 1 + (currentPage - 1) * itemsPerPage}
                   </th>
                   <td className="px-6 py-4">{user.username}</td>
                   <td className="px-6 py-4">{user.email}</td>
@@ -316,6 +384,20 @@ const ListUser = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex justify-center mt-4">
+          <button onClick={handlePreviousPage} disabled={currentPage === 1} className="px-4 py-2 mx-1 bg-gray-200 rounded">Sebelumnya</button>
+          {[...Array(totalPages)].map((_, page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page + 1)}
+              className={`px-4 py-2 mx-1 rounded ${currentPage === page + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            >
+              {page + 1}
+            </button>
+          ))}
+          <button onClick={handleNextPage} disabled={currentPage === totalPages} className="px-4 py-2 mx-1 bg-gray-200 rounded">Selanjutnya</button>
         </div>
 
         <EditUserModal

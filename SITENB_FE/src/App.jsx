@@ -12,6 +12,7 @@ const Index = lazy(() => import('./pages'));
 const Sign = lazy(() => import('./pages/Sign'));
 const Ch_pass = lazy(() => import('./pages/Ch_pass'));
 const Ck_Tiket = lazy(() => import('./pages/Ck_Tiket'));
+const TokenFrom = lazy(() => import('./pages/TokenFrom'));
 const Ft_pass = lazy(() => import('./pages/Ft_pass'));
 
 const From = lazy(() => import('./pages/From'));
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="/FromBGST" element={<FromBGST />} />
           <Route path="/FromPb" element={<FromPb />} />
           <Route path="/FromPw" element={<FromPw />} />
+          <Route path="/TokenFrom" element={<TokenFrom />} />
           <Route path="/Ft_pass" element={<Ft_pass />} />
           <Route path="/Ch_pass" element={<Ch_pass />} />
           <Route path="/Ck_Tiket/:kodetiket" element={<Ck_Tiket />} />

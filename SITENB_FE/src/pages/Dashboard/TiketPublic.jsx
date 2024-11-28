@@ -9,7 +9,6 @@ import Detail from '../../components/Detail';
 const TiketPublic = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-
   const [selectedTickets, setSelectedTickets] = useState(null); 
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [isForm1Open, setIsForm1Open] = useState(false);
@@ -21,16 +20,22 @@ const TiketPublic = () => {
   const openForm1 = () => setIsForm1Open(true);
   const closeForm1 = () => setIsForm1Open(false);
 
-  useEffect(() => {
-  const fetchData = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10; 
+
+  // useEffect(() => {
+  const fetchData = async (page = 1) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://127.0.0.1:8000/api/admin/publiks', {
+      const response = await axios.get(`http://localhost:8000/api/admin/publiks?page=${page}&per_page=${itemsPerPage}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
       setData(response.data.data.data);
+      setTotalPages(response.data.data.last_page);
+
     } catch (err) {
       setError(err);
     } finally {
@@ -38,8 +43,22 @@ const TiketPublic = () => {
     }
   };
 
-  fetchData();
-}, []);
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+// }, []);
 
 const handleDetailClick = (tickets) => {
   setSelectedTickets(tickets); 
@@ -54,7 +73,7 @@ const handleCloseModal = () => {
 const handleStatusChange = async () => {
   try {
     const token = localStorage.getItem('token');
-    await axios.put(`http://127.0.0.1:8000/api/admin/publiks/${selectedTickets.id}/status`, {
+    await axios.put(`http://localhost:8000/api/admin/publiks/${selectedTickets.id}/status`, {
       status: newStatus,
     }, {
       headers: {
@@ -62,7 +81,7 @@ const handleStatusChange = async () => {
       }
     });
 
-    const updatedData = await axios.get('http://127.0.0.1:8000/api/admin/publiks', {
+    const updatedData = await axios.get('http://localhost:8000/api/admin/publiks', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -73,13 +92,12 @@ const handleStatusChange = async () => {
     console.error('Error updating status:', error.response.data); 
   }
 };
-
 const handleSearch = (e) => {
   setSearchTerm(e.target.value);
 };
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
+  
   const filteredData = data.filter(ticket =>
     ticket.nama_lengkap.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -96,8 +114,8 @@ const handleSearch = (e) => {
         </a>
 
         <div className="flex justify-between items-center w-full">
-          <p>TiketPublic </p>
-       <form className="flex items-center w-full sm:max-w-xs">
+          <p>Tiket Public </p>
+          <form className="flex items-center w-full sm:max-w-xs">
           <label htmlFor="simple-search" className="sr-only">
             Search
           </label>
@@ -133,6 +151,7 @@ const handleSearch = (e) => {
                 <th scope="col" className="px-6 py-3">No</th>
                 <th scope="col" className="px-6 py-3">Nama Lengkap</th>
                 <th scope="col" className="px-6 py-3">Email</th>
+                <th scope="col" className="px-6 py-3">Jabatan</th>
                 <th scope="col" className="px-6 py-3">Kategori</th>
                 <th scope="col" className="px-6 py-3">Jenis Tiket</th>
                 <th scope="col" className="px-6 py-3">Status</th>
@@ -142,10 +161,11 @@ const handleSearch = (e) => {
             <tbody>
               {filteredData.map((tickets,index) => (
                 <tr key={tickets.id} className="odd:bg-white even:bg-gray-50 border-b dark:border-gray-700">
-                                   <td className="px-6 py-4">{index + 1}</td>
-
+           
+                  <td className="px-6 py-4">{index + 1}</td>
                   <td className="px-6 py-4">{tickets.nama_lengkap}</td>
                   <td className="px-6 py-4">{tickets.email}</td>
+                  <td className="px-6 py-4">{tickets.jabatan}</td>
                   <td className="px-6 py-4">{tickets.kategori}</td>
                   <td className="px-6 py-4">{tickets.jenis_tiket}</td>
                   <td className="px-6 py-4">{tickets.status}</td>
@@ -165,6 +185,20 @@ const handleSearch = (e) => {
       )}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex justify-center mt-4">
+          <button onClick={handlePreviousPage} disabled={currentPage === 1} className="px-4 py-2 mx-1 bg-gray-200 rounded">Sebelumnya</button>
+          {[...Array(totalPages)].map((_, page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page + 1)}
+              className={`px-4 py-2 mx-1 rounded ${currentPage === page + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            >
+              {page + 1}
+            </button>
+          ))}
+          <button onClick={handleNextPage} disabled={currentPage === totalPages} className="px-4 py-2 mx-1 bg-gray-200 rounded">Selanjutnya</button>
         </div>
 
         {/* <FormModal isOpen={isForm1Open} onClose={closeForm1} title="Ubah Status">
@@ -201,6 +235,7 @@ const handleSearch = (e) => {
       <option value="">Pilih Status</option>
       <option value="proses">Proses</option>
       <option value="selesai">Selesai</option>
+      <option value="close">Close</option>
     </select>
   </div>
 </FormModal>

@@ -264,10 +264,10 @@ const TaskPw = () => {
 
 
 const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
-    const [nama_lengkap, setName] = useState(''); 
+    // const [nama_lengkap, setName] = useState(''); 
     const [tanggal, setDate] = useState(''); 
     const [bukti_pengerjaan, setProofFile] = useState(null); 
-    const [ticketType, setTicketType] = useState(selectedTicket?.type || ''); // Mengatur default dari selectedTicket
+    // const [ticketType, setTicketType] = useState(selectedTicket?.type || ''); 
 
     const handleFileChange = (e) => {
         setProofFile(e.target.files[0]);
@@ -277,17 +277,16 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
 
-        // Cek apakah selectedTicket terdefinisi
-        if (!selectedTicket) {
-            alert("Ticket tidak terpilih.");
-            return;
-        }
+        // if (!selectedTicket) {
+        //     alert("Ticket tidak terpilih.");
+        //     return;
+        // }
 
         const formData = new FormData();
-        formData.append('nama_lengkap', nama_lengkap);
+        // formData.append('nama_lengkap', nama_lengkap);
         formData.append('tanggal', tanggal);
         formData.append('bukti_pengerjaan', bukti_pengerjaan);
-        formData.append('ticket_type', ticketType); // Mengirimkan ticket_type dari dropdown
+        // formData.append('ticket_type', ticketType); 
 
         try {
             await axios.post(`http://127.0.0.1:8000/api/staff/tickets/${selectedTicket.id}/proof-of-work`, formData, {
@@ -313,7 +312,7 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
                 <h2 className="text-xl font-semibold mb-4">Kirim Bukti Pengerjaan</h2>
                 <form onSubmit={handleSubmit}>
                     {/* Input Nama */}
-                    <label htmlFor="name" className="block mb-2">Nama</label>
+                    {/* <label htmlFor="name" className="block mb-2">Nama</label>
                     <input
                         id="name"
                         type="text"
@@ -321,7 +320,7 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
                         onChange={(e) => setName(e.target.value)}
                         className="w-full p-2 border rounded mb-4"
                         required
-                    />
+                    /> */}
 
                     {/* Input Tanggal */}
                     <label htmlFor="date" className="block mb-2">Tanggal</label>
@@ -335,7 +334,7 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
                     />
 
                     {/* Input Tipe Tiket */}
-                    <label htmlFor="ticket_type" className="block mb-2">Tipe Tiket</label>
+                    {/* <label htmlFor="ticket_type" className="block mb-2">Tipe Tiket</label>
                     <select
                         id="ticket_type"
                         value={ticketType}
@@ -346,7 +345,7 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
                         <option value="">Pilih Tipe Tiket</option>
                         <option value="TicketPegawai">Ticket Pegawai</option>
                         <option value="TicketPublik">Ticket Publik</option>
-                    </select>
+                    </select> */}
 
                     {/* Input Bukti Pengerjaan (Foto) */}
                     <label htmlFor="proof" className="block mb-2">Bukti Pengerjaan (Foto)</label>

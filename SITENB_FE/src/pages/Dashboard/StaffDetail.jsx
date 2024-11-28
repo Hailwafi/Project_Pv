@@ -50,7 +50,11 @@ const StaffDetail = () => {
       </a>
 
       <div className="flex justify-between items-center w-full mt-4">
-        <p>Pekerjaan Staff  {staffDetail.data.nama}</p>
+      <div className="flex flex-col">
+  <a>{staffDetail.judul}</a>
+  <a>Total Tugas :{staffDetail.total_tugas}</a>
+</div>
+
         <form className="flex items-center w-full sm:max-w-xs">
           <label htmlFor="simple-search" className="sr-only">
             Search
@@ -78,8 +82,8 @@ const StaffDetail = () => {
             <span className="sr-only">Search</span>
           </button>
         </form>
+        
       </div>
-
       <div className="overflow-x-auto shadow-md sm:rounded-lg mt-4">
         <table className="w-full text-sm text-left rtl:text-right">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

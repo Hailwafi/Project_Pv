@@ -39,14 +39,13 @@ const Sign = () => {
       localStorage.setItem('role', response.data.role);
       localStorage.setItem('permissions', JSON.stringify(response.data.permissions));
       
-      const { role } = response.data; // Ambil role dari response
-
-      // Navigasi berdasarkan role
+      const { role } = response.data; 
+      
       if (role === 'admin') {
         toast.success('Login berhasil! Mengarahkan ke halaman admin...');
         setTimeout(() => {
           navigate("/Dashboard");
-        }, 3000);
+        }, 1000);
       } else if (role === 'kepala_subbag') {
         toast.success('Login berhasil! Mengarahkan ke halaman kepala subbag...');
         setTimeout(() => {
@@ -66,7 +65,6 @@ const Sign = () => {
     }
   };
 
-  // Menampilkan/Menyembunyikan password
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
@@ -115,7 +113,7 @@ const Sign = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
-                  placeholder="Masukan Username anda"
+                  placeholder="Masukan Username Anda"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
                 />
               </div>
@@ -141,7 +139,7 @@ const Sign = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
-                  placeholder="Masukan password anda"
+                  placeholder="Masukan Password Anda"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-3"
                 />
                 <button className='absolute inset-y-0 right-0 flex items-center pr-3' type="button" onClick={togglePasswordVisibility}>

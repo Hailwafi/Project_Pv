@@ -20,16 +20,22 @@ const TiketPegawai = () => {
   const openForm1 = () => setIsForm1Open(true);
   const closeForm1 = () => setIsForm1Open(false);
 
-  useEffect(() => {
-  const fetchData = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10; 
+
+  // useEffect(() => {
+  const fetchData = async (page = 1) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/admin/tickets', {
+      const response = await axios.get(`http://localhost:8000/api/admin/tickets?page=${page}&per_page=${itemsPerPage}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
       setData(response.data.data.data);
+      setTotalPages(response.data.data.last_page);
+
     } catch (err) {
       setError(err);
     } finally {
@@ -37,8 +43,22 @@ const TiketPegawai = () => {
     }
   };
 
-  fetchData();
-}, []);
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+// }, []);
 
 const handleDetailClick = (tickets) => {
   setSelectedTickets(tickets); 
@@ -165,6 +185,20 @@ const handleSearch = (e) => {
       )}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex justify-center mt-4">
+          <button onClick={handlePreviousPage} disabled={currentPage === 1} className="px-4 py-2 mx-1 bg-gray-200 rounded">Sebelumnya</button>
+          {[...Array(totalPages)].map((_, page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page + 1)}
+              className={`px-4 py-2 mx-1 rounded ${currentPage === page + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            >
+              {page + 1}
+            </button>
+          ))}
+          <button onClick={handleNextPage} disabled={currentPage === totalPages} className="px-4 py-2 mx-1 bg-gray-200 rounded">Selanjutnya</button>
         </div>
 
         {/* <FormModal isOpen={isForm1Open} onClose={closeForm1} title="Ubah Status">

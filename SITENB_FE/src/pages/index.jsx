@@ -66,7 +66,6 @@ const handleSearch = async () => {
 // }
 // };
 try {
-  // Send a POST request to the search-ticket API
   const response = await axios.post('http://localhost:8000/api/search-ticket', {
     kode_tiket: kodeTiket,
     token_tiket: tokenTiket,

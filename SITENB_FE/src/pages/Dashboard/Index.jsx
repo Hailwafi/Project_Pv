@@ -11,6 +11,7 @@ const Index = () => {
   const [Totaltickets_selesai, setTotaltickets_selesai] = useState(0);
   const [Totaltickets_pegawai, setTotaltickets_pegawai] = useState(0);
   const [Totaltickets_publik, setTotaltickets_publik] = useState(0);
+  const [Totalticket, setTotalticket] = useState(0);
   const [Totaljumlah_kendala, setTotaljumlah_kendala] = useState(0);
   const [Totaljumlah_permohonan, setTotaljumlah_permohonan] = useState(0);
 
@@ -25,13 +26,14 @@ useEffect(() => {
       });
       
     
-      const { tickets_menunggu_pengerjaan, tickets_proses, tickets_selesai, tickets_pegawai,tickets_publik ,jumlah_kendala,jumlah_permohonan} = response.data.data;
+      const { ticket_menunggu_pengerjaan, ticket_proses, ticket_selesai, ticket_pegawai,ticket_publik ,total_ticket,jumlah_kendala,jumlah_permohonan} = response.data.data;
 
-      setTotaltickets_menunggu_pengerjaan(tickets_menunggu_pengerjaan);
-      setTotaltickets_proses(tickets_proses);
-      setTotaltickets_selesai(tickets_selesai);
-      setTotaltickets_pegawai(tickets_pegawai);
-      setTotaltickets_publik(tickets_publik);
+      setTotaltickets_menunggu_pengerjaan(ticket_menunggu_pengerjaan);
+      setTotaltickets_proses(ticket_proses);
+      setTotaltickets_selesai(ticket_selesai);
+      setTotaltickets_pegawai(ticket_pegawai);
+      setTotaltickets_publik(ticket_publik);
+      setTotalticket(total_ticket);
       setTotaljumlah_kendala(jumlah_kendala);
       setTotaljumlah_permohonan(jumlah_permohonan);
     } catch (error) {
@@ -100,10 +102,24 @@ useEffect(() => {
                 </a>
               </div>
 
-              {/* Layanan Jaringan Internet */}
+     
 
     
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-5 p-4 ">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 p-4 ">
+                <a
+                  className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border bg-customBlue rounded-md hover:bg-blue-100 transition-colors"
+                >
+                  <img
+                    src="src/img/Tiket.png"
+                    alt="Logo"
+                    className="w-11 h-11 mb-4 md:mb-0 md:mr-4"
+                  />
+                  <div className='text-white'>
+                    <p className="text-center">{Totalticket}</p>
+                  <span>Total Tiket</span>
+                  </div>
+                </a>
+
                 <a
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border bg-customBlue rounded-md hover:bg-blue-100 transition-colors"
                 >
@@ -117,6 +133,9 @@ useEffect(() => {
                   <span>Tiket Pegawai BNPT</span>
                   </div>
                 </a>
+
+
+
                 <a
                   className="flex flex-col md:flex-row items-center p-5 text-lg font-medium border bg-customBlue rounded-md hover:bg-blue-100 transition-colors"
                 >
