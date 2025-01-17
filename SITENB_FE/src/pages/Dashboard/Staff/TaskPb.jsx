@@ -312,15 +312,15 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
                 <h2 className="text-xl font-semibold mb-4">Kirim Bukti Pengerjaan</h2>
                 <form onSubmit={handleSubmit}>
                     {/* Input Nama */}
-                    <label htmlFor="name" className="block mb-2">Nama</label>
-                    <input
+                    {/* <label htmlFor="name" className="block mb-2">Nama</label> */}
+                    {/* <input
                         id="name"
                         type="text"
                         value={nama_lengkap}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full p-2 border rounded mb-4"
                         required
-                    />
+                    /> */}
 
                     {/* Input Tanggal */}
                     <label htmlFor="date" className="block mb-2">Tanggal</label>
@@ -334,7 +334,7 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
                     />
 
                     {/* Input Tipe Tiket */}
-                    <label htmlFor="ticket_type" className="block mb-2">Tipe Tiket</label>
+                    {/* <label htmlFor="ticket_type" className="block mb-2">Tipe Tiket</label>
                     <select
                         id="ticket_type"
                         value={ticketType}
@@ -345,7 +345,7 @@ const FormBuktiPengerjaan = ({ selectedTicket, onClose }) => {
                         <option value="">Pilih Tipe Tiket</option>
                         <option value="TicketPegawai">Ticket Pegawai</option>
                         <option value="TicketPublik">Ticket Publik</option>
-                    </select>
+                    </select> */}
 
                     {/* Input Bukti Pengerjaan (Foto) */}
                     <label htmlFor="proof" className="block mb-2">Bukti Pengerjaan (Foto)</label>
