@@ -36,6 +36,7 @@ class ProofOfWorkController extends Controller
         $request->validate([
             'tanggal'          => 'required|date',
             'bukti_pengerjaan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'status'           => 'required|in:proses,selesai', // Validasi status
         ]);
 
         // Tentukan tipe tiket berdasarkan tabel tempat ID tiket ditemukan
@@ -65,8 +66,14 @@ class ProofOfWorkController extends Controller
             'tanggal'          => $request->tanggal,
             'ticket_type'      => $ticketType, // Tipe tiket otomatis
             'bukti_pengerjaan' => $filePath,
-            'staff_id'         => $staff->id
+            'staff_id'         => $staff->id,
+            'status'           => $request->status // Simpan status
         ]);
+
+        // Update status tiket jika bukti pengerjaan selesai
+    if ($request->status === 'selesai') {
+        $ticket->update(['status' => 'selesai']);
+    }
 
         // Ambil user admin dan kepala subbag
         $admin_kepala_subbag = User::role(['admin', 'kepala_subbag'])->get();

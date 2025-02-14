@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import NavbarDb from '../../components/NavbarDb';
 import Tesnav from '../../components/Tesnav';
+import { AiFillTool } from "react-icons/ai";
 
 const Index = () => {
   
@@ -164,14 +165,21 @@ useEffect(() => {
 
 <table class="items-center border-spacing-none border border-slate-500">
   <thead>
-    <tr>
+    {/* <tr>
       <th class="border bg-customAbu py-4 text-white">Jumlah tiket Kendala</th>
     
-    </tr>
+    </tr> */}
+
+      <th className="border bg-customAbu py-4 text-white flex items-center gap-2">
+    <AiFillTool className="text-xl" />
+    Jumlah tiket Kendala
+  </th>
   </thead>
   <tbody>
     <tr>
-      <td class="text-center py-14">{Totaljumlah_kendala}</td>
+      <td class="text-center py-14">{Totaljumlah_kendala}
+        
+      </td>
      
     </tr>
   </tbody>

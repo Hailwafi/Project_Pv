@@ -145,11 +145,11 @@ const Detail = ({ tickets, onClose, staffList, onAssignTask, onStatusUpdate }) =
                                     <div className="mb-6">
                                         <label className="block text-sm font-medium text-gray-900">Foto</label>
                                         <div className="mt-2 flex flex-col gap-2">
-                                            <input
+                                            {/* <input
                                                 value={tickets.unggah_file}
                                                 readOnly
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                                            />
+                                            /> */}
                                             {isImageFile(tickets.unggah_file) && (
                                                 <div className="flex gap-4">
                                                     <a

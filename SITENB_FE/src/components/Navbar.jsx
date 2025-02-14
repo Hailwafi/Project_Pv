@@ -41,9 +41,9 @@ function Navbar(){
               ))}
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-              <a href="/Sign" className="text-sm font-semibold leading-6 text-gray-900">
+              {/* <a href="/Sign" className="text-sm font-semibold leading-6 text-gray-900">
               Masuk<span aria-hidden="true">&rarr;</span>
-              </a>
+              </a> */}
             </div>
           </nav>
           <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -77,14 +77,14 @@ function Navbar(){
                       </a>
                     ))}
                   </div>
-                  <div className="py-6">
+                  {/* <div className="py-6">
                     <a
                       href="/Sign"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
 Masuk
                     </a>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </DialogPanel>

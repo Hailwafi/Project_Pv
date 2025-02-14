@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('ticket_type');
             $table->string('bukti_pengerjaan');
             $table->unsignedBigInteger('staff_id');
+            $table->enum('status', ['proses', 'selesai'])->default('proses'); // Tambahkan status
             $table->timestamps();
         });
     }

@@ -25,6 +25,11 @@ const StaffDetail = () => {
     fetchStaffData();
   }, [id]);
 
+  const isImageFile = (filePath) => {
+    const ext = filePath.split('.').pop().toLowerCase();
+    return ['jpg', 'jpeg', 'png', 'gif'].includes(ext);
+};
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -102,13 +107,25 @@ const StaffDetail = () => {
                 <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                   <td className="px-6 py-4 font-medium text-gray-900">{index + 1}</td>
                   <td className="px-6 py-4">{work.tanggal}</td>
-                  <td className="px-6 py-4">{work.bukti_pengerjaan}</td>
+                  {isImageFile(work.bukti_pengerjaan) && (
+                                                <div className="px-6 py-4 ">
+                                                    <a
+                                                        href={work.bukti_pengerjaan}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-block rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+                                                    >
+                                                        Lihat Foto
+                                                    </a>
+                                                </div>
+                                            )}
                   <td className="px-6 py-4">{work.kategori}</td>
                   <td className="px-6 py-4">{work.jenis_tiket}</td>
                   <td className="px-6 py-4">{work.status}</td>
                 </tr>
               ))
             ) : (
+              
               <tr>
                 <td colSpan="6" className="px-6 py-4 text-center">
                   Tidak ada pekerjaan yang ditemukan untuk staf ini.

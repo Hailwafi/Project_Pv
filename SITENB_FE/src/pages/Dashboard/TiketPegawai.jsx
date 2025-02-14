@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FormModal from '../../components/FormModal';
 import Detail from '../../components/Detail';
+import { MdEdit } from "react-icons/md";
+import { IoIosEye } from "react-icons/io";
+
 
 
 
@@ -170,13 +173,20 @@ const handleSearch = (e) => {
                   <td className="px-6 py-4">{tickets.jenis_tiket}</td>
                   <td className="px-6 py-4">{tickets.status}</td>
                   
-                  <td className="grid grid-cols-1 gap-2 sm:grid-cols-2 p-4">
+                  <td className="grid grid-cols-1 gap-4 sm:grid-cols-3 p-4 ">
                     {/* <button onClick={openForm1} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button> */}
                     
-                    <button onClick={() => { openForm1(); setSelectedTickets(tickets); }} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+                    <button onClick={() => { openForm1(); setSelectedTickets(tickets); }} className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-800 focus:outline-none transition-all duration-200 ease-in-out"> 
+                    <MdEdit />
+
+
+                      </button>  
               
-                    <button  onClick={() => handleDetailClick(tickets)} class="font-medium text-blue-600 dark:text-blue-500 hover:underline ">Detail</button>
-  
+                   <button 
+                          onClick={() => handleDetailClick(tickets)} 
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:text-blue-800 focus:outline-none transition-all duration-200 ease-in-out">
+                          <IoIosEye className="text-xl" />
+                      </button>
                   </td>
                 </tr>
               ))}

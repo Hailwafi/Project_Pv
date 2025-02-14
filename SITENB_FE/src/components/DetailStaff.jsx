@@ -4,83 +4,83 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const DetailPegawai = ({ ticket, onClose }) => {
-    const [status, setStatus] = useState(ticket.status || 'Open');
+const DetailStaff = ({ ticket, onClose }) => {
+    // const [status, setStatus] = useState(ticket.status || 'Open');
     const [loading, setLoading] = useState(false);
 
     const formatString = (str) => str.replace(/_/g, ' ');
 
-    const handleStatusChange = async (newStatus) => {
-        try {
-            setLoading(true);
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Token tidak ditemukan. Pastikan Anda sudah login.');
-                return;
-            }
+    // const handleStatusChange = async (newStatus) => {
+    //     try {
+    //         setLoading(true);
+    //         const token = localStorage.getItem('token');
+    //         if (!token) {
+    //             alert('Token tidak ditemukan. Pastikan Anda sudah login.');
+    //             return;
+    //         }
 
-            const response = await axios.put(
-                `http://127.0.0.1:8000/api/admin/tickets/${ticket.id}/status`,
-                { status: newStatus },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+    //         const response = await axios.put(
+    //             `http://localhost:8000/api/staff/staff-tickets/${ticket.id}/status`,
+    //             { status: newStatus },
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`
+    //                 }
+    //             }
+    //         );
 
-            if (response.status === 200) {
-                setStatus(newStatus);
-                toast.success('Status berhasil diperbarui!');
-            } else {
-                toast.error('Gagal memperbarui status. Silakan coba lagi.');
-            }
-        } catch (error) {
-            console.error('Error updating status:', error);
-            toast.error('Terjadi kesalahan saat memperbarui status.');
-        } finally {
-            setLoading(false);
-        }
-    };
+    //         if (response.status === 200) {
+    //             setStatus(newStatus);
+    //             toast.success('Status berhasil diperbarui!');
+    //         } else {
+    //             toast.error('Gagal memperbarui status. Silakan coba lagi.');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error updating status:', error);
+    //         toast.error('Terjadi kesalahan saat memperbarui status.');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
-    const isImageFile = (filePath) => {
-        if (!filePath) return false; // Ensure filePath is defined
-        const ext = filePath.split('.').pop().toLowerCase();
-        return ['jpg', 'jpeg', 'png', 'gif'].includes(ext);
-    };
+    // const isImageFile = (filePath) => {
+    //     if (!filePath) return false; // Ensure filePath is defined
+    //     const ext = filePath.split('.').pop().toLowerCase();
+    //     return ['jpg', 'jpeg', 'png', 'gif'].includes(ext);
+    // };
 
-    const getFileNameFromPath = (filePath) => {
-        return filePath.split('/').pop();
-    };
+    // const getFileNameFromPath = (filePath) => {
+    //     return filePath.split('/').pop();
+    // };
 
-    const handleDownload = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Token tidak ditemukan. Pastikan Anda sudah login.');
-                return;
-            }
+    // const handleDownload = async () => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         if (!token) {
+    //             alert('Token tidak ditemukan. Pastikan Anda sudah login.');
+    //             return;
+    //         }
 
-            const response = await axios.get(`http://127.0.0.1:8000/api/view-or-download-file/${ticket.unggah_file}?download=true`, {
-                responseType: 'blob',
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+    //         const response = await axios.get(`http://127.0.0.1:8000/api/view-or-download-file/${ticket.unggah_file}?download=true`, {
+    //             responseType: 'blob',
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`
+    //             }
+    //         });
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', getFileNameFromPath(ticket.unggah_file));
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Error downloading the file:', error);
-            alert('Gagal mengunduh file. Silakan coba lagi.');
-        }
-    };
+    //         const url = window.URL.createObjectURL(new Blob([response.data]));
+    //         const link = document.createElement('a');
+    //         link.href = url;
+    //         link.setAttribute('download', getFileNameFromPath(ticket.unggah_file));
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         document.body.removeChild(link);
+    //         window.URL.revokeObjectURL(url);
+    //     } catch (error) {
+    //         console.error('Error downloading the file:', error);
+    //         alert('Gagal mengunduh file. Silakan coba lagi.');
+    //     }
+    // };
 
     const formattedDate = ticket?.created_at
         ? format(new Date(ticket.created_at), 'dd MMMM yyyy')
@@ -138,7 +138,9 @@ const DetailPegawai = ({ ticket, onClose }) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="mb-6">
+
+
+                                    {/* <div className="mb-6">
                                         <label className="block text-sm font-medium text-gray-900">Foto</label>
                                         <div className="mt-2 flex flex-col gap-2">
                                             <input
@@ -159,8 +161,11 @@ const DetailPegawai = ({ ticket, onClose }) => {
                                                 </div>
                                             )}
                                         </div>
-                                    </div>
-                                    <div className="col-span-full">
+                                    </div> */}
+
+
+
+                                    {/* <div className="col-span-full">
                                         <label className="block text-sm font-medium leading-6 text-gray-900">
                                             Deskripsi
                                         </label>
@@ -172,24 +177,8 @@ const DetailPegawai = ({ ticket, onClose }) => {
                                                 readOnly
                                             />
                                         </div>
-                                    </div>
-                                    {/* Status */}
-                                    <div>
-                                        <label className="block text-sm font-medium leading-6 text-gray-900">
-                                            Status
-                                        </label>
-                                        <div className="mt-2">
-                                            <select
-                                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
-                                                value={status}
-                                                onChange={(e) => handleStatusChange(e.target.value)}
-                                                disabled={loading}
-                                            >
-                                                <option value="proses">Proses</option>
-                                                <option value="selesai">Selesai</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    </div> */}
+                                    
                                 </div>
                             </div>
                         </div>
@@ -209,4 +198,4 @@ const DetailPegawai = ({ ticket, onClose }) => {
     );
 };
 
-export default DetailPegawai;
+export default DetailStaff;

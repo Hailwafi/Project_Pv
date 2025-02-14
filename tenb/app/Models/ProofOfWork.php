@@ -16,7 +16,8 @@ class ProofOfWork extends Model
         'nama_lengkap',
         'bukti_pengerjaan',
         'tanggal',
-        'staff_id'
+        'staff_id',
+        'status'
     ];
 
     public function ticket()

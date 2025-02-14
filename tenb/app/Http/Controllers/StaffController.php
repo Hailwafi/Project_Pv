@@ -8,54 +8,56 @@ use App\Models\User;
 
 class StaffController extends Controller
 {
-    public function getStaffTasks($staffId)
+        public function getStaffTasks($staffId)
     {
-        // Ambil detail staff berdasarkan ID, jika role-nya adalah 'staff'
-        $staff = User::where('id', $staffId)->where('role', 'staff')->first();
+        // Ambil data staff berdasarkan ID
+            $staff = User::where('id', $staffId)->where('role', 'staff')->first();
 
-        if (!$staff) 
-        {
-            return response()->json([
-                'success' => false,
-                'message' => 'Staf tidak ditemukan atau bukan role staf.',
-            ], 404);
-        }
+            if (!$staff) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Staf tidak ditemukan atau bukan role staf.',
+                ], 404);
+            }
 
-        // Ambil semua bukti pengerjaan yang terkait dengan staf berdasarkan staff_id
-        $tasks = ProofOfWork::where('staff_id', $staffId)
-            ->get()
-            ->map(function ($task) 
-            {
-                if ($task->ticket_type === 'TicketPegawai') 
+        // Ambil semua bukti pengerjaan terkait staff
+            $tasks = ProofOfWork::where('staff_id', $staffId)
+                ->get()
+                ->map(function ($task)
                 {
-                    return [
-                        'tanggal'          => $task->tanggal,
-                        'bukti_pengerjaan' => basename($task->bukti_pengerjaan), 
-                        'kategori'         => $task->ticket->kategori ?? 'N/A',
-                        'jenis_tiket'      => $task->ticket->jenis_tiket ?? 'N/A',
-                        'status'           => $task->ticket->status ?? 'N/A',
-                    ];
-                } else if ($task->ticket_type === 'TicketPublik') 
-                {
-                    return [
-                        'tanggal'          => $task->tanggal,
-                        'bukti_pengerjaan' => basename($task->bukti_pengerjaan), 
-                        'kategori'         => $task->publik->kategori ?? 'N/A',
-                        'jenis_tiket'      => $task->publik->jenis_tiket ?? 'N/A',
-                        'status'           => $task->publik->status ?? 'N/A',
-                    ];
-                }
+                    $baseUrl = url('/');
+
+                    if ($task->ticket_type === 'TicketPegawai')
+                    {
+                        return [
+                            'tanggal'          => $task->tanggal,
+                            'bukti_pengerjaan' => $task->bukti_pengerjaan ? asset('storage/proof_of_work/' . basename($task->bukti_pengerjaan)) : null,
+                            'kategori'         => $task->ticket->kategori ?? 'N/A',
+                            'jenis_tiket'      => $task->ticket->jenis_tiket ?? 'N/A',
+                            'status'           => $task->ticket->status ?? 'N/A',
+                        ];
+                    } elseif ($task->ticket_type === 'TicketPublik')
+                    {
+                        return [
+                            'tanggal'          => $task->tanggal,
+                            'bukti_pengerjaan' => $task->bukti_pengerjaan ? asset('storage/proof_of_work/' . basename($task->bukti_pengerjaan)) : null,
+                            'kategori'         => $task->publik->kategori ?? 'N/A',
+                            'jenis_tiket'      => $task->publik->jenis_tiket ?? 'N/A',
+                            'status'           => $task->publik->status ?? 'N/A',
+                        ];
+                    }
+
                 return null;
-            });
+                });
 
-        // Hitung total tugas yang sudah dikerjakan oleh staff (berdasarkan bukti pengerjaan)
+        // Total tugas
             $totalTugas = $tasks->count();
 
-        return response()->json([
-            'success'    => true,
-            'judul'      => 'Detail Staff ' . $staff->username . '',
-            'total_tugas'=> $totalTugas, // Tambahkan total tugas di sini
-            'data'       => $tasks->filter(),
-        ]);
-    }
+            return response()->json([
+                'success'    => true,
+                'judul'      => 'Detail Staff ' . $staff->username,
+                'total_tugas'=> $totalTugas,
+                'data'       => $tasks->filter(),
+]);
+}
 }

@@ -257,7 +257,7 @@ dispatch(function () use ($ticket)
         // Validasi input
         $validator = Validator::make($request->all(), [
             'assigned_to' => 'required|exists:users,id', // Pastikan assigned_to valid
-            'prioritas'   => 'required|in:rendah,sedang,tinggi', // Validasi prioritas
+            'prioritas'   => 'required|in:rendah,normal,tinggi', // Validasi prioritas
         ]);
 
         if ($validator->fails())

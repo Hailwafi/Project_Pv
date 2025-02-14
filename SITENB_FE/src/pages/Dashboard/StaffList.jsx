@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FcViewDetails } from "react-icons/fc";
+
 
 const StaffList = () => {
     const [staffData, setStaffData] = useState([]);
@@ -129,13 +131,22 @@ const StaffList = () => {
                   <td className="px-6 py-4 text-center">{staff.total_tugas}</td>
 
                   <td className="px-6 py-4  text-center">
-
+                  <button
+  onClick={() => handleDetailClick(staff.staff_id)}
+  className="font-medium text-blue-600 dark:text-blue-500 hover:underline gap-2 p-2 text-base"
+>
+  <FcViewDetails className="text-2xl" />
+  
+</button>
+{/* 
               <button
                 onClick={() => handleDetailClick(staff.staff_id)} 
                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
               >
-                Detail
-              </button>
+                <FcViewDetails />
+
+              
+              </button> */}
               </td>
 
             </tr>
